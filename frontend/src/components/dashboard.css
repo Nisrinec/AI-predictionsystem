@@ -1,0 +1,62 @@
+body {
+  font-family: Arial;
+  background: #111827;
+  color: white;
+}
+
+.sidebar {
+  width: 200px;
+  background: #1f2937;
+  height: 100vh;
+  position: fixed;
+}
+
+#wrapper {
+  margin-left: 200px;
+  padding: 20px;
+}
+
+#wrapper.fullwidth {
+  margin-left: 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.machine-card {
+  flex: 1;
+  padding: 20px;
+  border-radius: 10px;
+  background: #1f2937;
+  border-left: 6px solid gray;
+}
+
+/* STATUS COLORS */
+.status-low {
+  border-left-color: green;
+}
+
+.status-medium {
+  border-left-color: orange;
+}
+
+.status-high {
+  border-left-color: red;
+}
+
+.charts {
+  margin-top: 30px;
+}
+
+canvas {
+  background: #1f2937;
+  margin-bottom: 20px;
+}
