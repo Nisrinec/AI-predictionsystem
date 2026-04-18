@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.675, user-scalable=yes">
-    <title>iPredict | Diagnostic Prédictif - Pompe Centrifuge</title>
+    <title>iPredict | Diagnostic Prédictif - Multi-Sites</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -21,9 +21,8 @@
             height: 148.148%;
         }
 
-        .app-layout { display: flex; width: 100%; min-height: 100vh; }
+        .app-layout { display: flex; width: 100%; min-height: fit-content; }
 
-        /* SIDEBAR */
         .sidebar {
             width: 410px;
             background: #ffffff;
@@ -83,7 +82,6 @@
 
         .sidebar-footer { padding: 20px 20px 24px; border-top: 1px solid #ecf3f8; font-size: 0.7rem; color: #88a0ae; }
 
-        /* MAIN CONTENT */
         .main-content { flex: 1; padding: 24px 32px; overflow-x: auto; }
 
         .dashboard-header {
@@ -108,6 +106,59 @@
         .dropdown-item:hover { background: #f5f9fc; }
         .logout-item { border-top: 1px solid #edf2f7; color: #d97777; }
 
+        /* Overall Dashboard Styles */
+        .overall-dashboard { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        .kpi-card { background: white; border-radius: 28px; padding: 1.5rem; border: 1px solid #eef2f6; transition: all 0.2s; }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1); border-color: #cfe9df; }
+        .kpi-icon { width: 48px; height: 48px; border-radius: 24px; background: #eaf6f0; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+        .kpi-icon i { font-size: 1.5rem; color: #2c9e6b; }
+        .kpi-label { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; color: #64748b; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .kpi-value { font-size: 2rem; font-weight: 800; color: #1e293b; }
+        .kpi-trend { font-size: 0.7rem; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+        .trend-up { color: #d97777; }
+        .trend-down { color: #2c9e6b; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-header h2 { font-size: 1.2rem; font-weight: 700; border-left: 4px solid #2c9e6b; padding-left: 14px; }
+        
+        .dept-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        .dept-card { background: white; border-radius: 24px; padding: 1.2rem; border: 1px solid #eef2f6; transition: all 0.2s; cursor: pointer; }
+        .dept-card:hover { transform: translateY(-3px); border-color: #cfe9df; box-shadow: 0 8px 20px -8px rgba(0,0,0,0.08); }
+        .dept-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .dept-name { font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        .dept-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; }
+        .badge-critical { background: #ffe6e5; color: #bc5a4a; }
+        .badge-warning { background: #fff0e0; color: #c97e2a; }
+        .badge-good { background: #e0f3ea; color: #1d734c; }
+        .risk-gauge-bar { width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; margin: 12px 0; overflow: hidden; }
+        .risk-gauge-fill { height: 100%; border-radius: 10px; transition: width 0.3s; }
+        .dept-stats { display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.7rem; color: #64748b; }
+        
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+        .chart-card { background: white; border-radius: 24px; padding: 1.2rem; border: 1px solid #eef2f6; }
+        .chart-card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        canvas { max-height: 200px; width: 100%; }
+        
+        .alerts-card { background: white; border-radius: 24px; padding: 1.2rem; margin-bottom: 32px; border: 1px solid #eef2f6; }
+        .alert-list { margin-top: 12px; }
+        .alert-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #edf2f7; }
+        .alert-row:last-child { border-bottom: none; }
+        .alert-icon { width: 32px; height: 32px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+        .alert-critical-bg { background: #ffe6e5; color: #d97777; }
+        .alert-warning-bg { background: #fff0e0; color: #e6b422; }
+        .alert-ok-bg { background: #e0f3ea; color: #2c9e6b; }
+        
+        .solutions-card { background: white; border-radius: 24px; padding: 1.2rem; border: 1px solid #eef2f6; }
+        .solutions-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 12px; }
+        .solution-item { background: #f8fafc; border-radius: 16px; padding: 1rem; border-left: 3px solid #2c9e6b; }
+        .solution-item h4 { font-size: 0.85rem; font-weight: 800; margin-bottom: 6px; }
+        .solution-item p { font-size: 0.7rem; color: #475569; line-height: 1.4; }
+        .solution-priority { font-size: 0.65rem; font-weight: 700; margin-top: 8px; color: #c97e2a; }
+
+        /* Pump Dashboard Styles */
         .machine-title {
             background: linear-gradient(135deg, #ffffff 0%, #f9fefb 100%);
             border-radius: 28px; padding: 20px 28px; margin-bottom: 28px;
@@ -118,20 +169,14 @@
         .machine-info h1 { font-size: 1.8rem; font-weight: 800; color: #0b2b26; }
         .badge-online { background: #e0f3ea; color: #1d734c; padding: 6px 16px; border-radius: 40px; font-weight: 700; }
 
-        /* Composants cards */
         .components-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px; }
-        .component-card {
-            background: white; border-radius: 28px; padding: 1.5rem;
-            border: 1px solid #eef2f6; transition: 0.2s;
-        }
+        .component-card { background: white; border-radius: 28px; padding: 1.5rem; border: 1px solid #eef2f6; }
         .comp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #f0f4f8; }
         .comp-name { font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
-        .comp-name i { font-size: 1.3rem; color: #2c9e6b; }
         .status-indicator { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-left: 8px; }
         .status-good { background: #2c9e6b; box-shadow: 0 0 0 3px #2c9e6b30; }
         .status-warning { background: #e6b422; box-shadow: 0 0 0 3px #e6b42230; }
         .status-critical { background: #d97777; box-shadow: 0 0 0 3px #d9777730; }
-        
         .sensor-group { margin: 12px 0; padding: 8px 0; border-bottom: 1px solid #f0f4f8; }
         .sensor-title { font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
         .metric-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 0.85rem; }
@@ -143,149 +188,51 @@
         .risk-medium { color: #e6b422; font-weight: 600; }
         .risk-high { color: #d97777; font-weight: 600; }
 
-        /* Diagnostic Problems - REDESIGNED (clean, no "données") */
-        .diagnostic-section {
-            background: white;
-            border-radius: 28px;
-            padding: 1.5rem;
-            margin-bottom: 28px;
-            border: 1px solid #eef2f6;
-        }
-        .section-title {
-            font-size: 1.2rem; font-weight: 700; margin-bottom: 20px;
-            display: flex; align-items: center; gap: 12px;
-            border-left: 5px solid #2c9e6b; padding-left: 16px;
-        }
-        .problems-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-        .problem-card {
-            background: #f8fafc;
-            border-radius: 20px;
-            padding: 1rem;
-            border-left: 4px solid;
-            transition: 0.2s;
-            text-align: center;
-        }
-        .problem-card:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,0.05); }
-        .problem-icon {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-        .problem-title {
-            font-weight: 800;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-            color: #1e293b;
-        }
-        .risk-levels {
-            display: flex;
-            justify-content: space-around;
-            gap: 8px;
-            margin-top: 8px;
-            font-size: 0.7rem;
-        }
-        .risk-item {
-            flex: 1;
-            text-align: center;
-            padding: 6px 4px;
-            border-radius: 12px;
-            background: white;
-        }
-        .risk-label {
-            font-weight: 600;
-            font-size: 0.65rem;
-            color: #64748b;
-            margin-bottom: 4px;
-        }
-        .risk-value {
-            font-weight: 800;
-            font-size: 0.7rem;
-        }
+        .diagnostic-section { background: white; border-radius: 28px; padding: 1.5rem; margin-bottom: 28px; border: 1px solid #eef2f6; }
+        .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; border-left: 5px solid #2c9e6b; padding-left: 16px; }
+        .problems-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .problem-card { background: #f8fafc; border-radius: 20px; padding: 1rem; border-left: 4px solid; text-align: center; }
+        .problem-card .risk-levels { display: flex; justify-content: space-around; gap: 8px; margin-top: 8px; font-size: 0.7rem; }
+        .risk-item { flex: 1; text-align: center; padding: 6px 4px; border-radius: 12px; background: white; }
         .risk-critical-text { color: #d97777; }
         .risk-high-text { color: #e6b422; }
         .risk-medium-text { color: #b8860b; }
         .risk-low-text { color: #2c9e6b; }
 
-        /* Prediction Charts */
-        .predictions-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-bottom: 28px;
-        }
-        .prediction-card {
-            background: white;
-            border-radius: 24px;
-            padding: 1.2rem;
-            border: 1px solid #eef2f6;
-        }
-        .prediction-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f4f8;
-        }
-        .prediction-title { font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
-        .future-risk-badge { padding: 4px 12px; border-radius: 30px; font-size: 0.7rem; font-weight: 700; }
-        .risk-badge-low { background: #e0f3ea; color: #1d734c; }
-        .risk-badge-medium { background: #fff0e0; color: #c97e2a; }
-        .risk-badge-high { background: #ffe6e5; color: #bc5a4a; }
-        .risk-badge-critical { background: #d97777; color: white; }
-        canvas.prediction-canvas { max-height: 130px; width: 100%; }
-        .prediction-stats { margin-top: 12px; padding-top: 10px; border-top: 1px solid #eef2f6; font-size: 0.7rem; }
-        .stat-row { display: flex; justify-content: space-between; margin: 4px 0; }
-
-        /* Alerts */
-        .alerts-panel {
-            background: white;
-            border-radius: 24px;
-            padding: 1.2rem;
-            margin-bottom: 28px;
-            border: 1px solid #eef2f6;
-        }
-        .alerts-container {
-            background: #fefaf5;
-            border-radius: 20px;
-            padding: 1rem;
-            border-left: 4px solid #e6b422;
-        }
+        .prediction-main { background: white; border-radius: 28px; padding: 1.5rem; margin-bottom: 28px; border: 1px solid #eef2f6; }
+        .filter-buttons { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 24px; border-radius: 40px; border: 1px solid #e2e8f0; background: white; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+        .filter-btn.active { background: #2c9e6b; color: white; border-color: #2c9e6b; }
+        .prediction-stats-row { display: flex; justify-content: space-between; gap: 16px; margin-top: 20px; flex-wrap: wrap; }
+        .pred-stat-card { flex: 1; background: #f8fafc; border-radius: 16px; padding: 12px; text-align: center; }
+        
+        .alerts-panel { background: white; border-radius: 24px; padding: 1.2rem; margin-bottom: 28px; border: 1px solid #eef2f6; }
+        .alerts-container { background: #fefaf5; border-radius: 20px; padding: 1rem; border-left: 4px solid #e6b422; }
         .alert-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0e6da; font-size: 0.8rem; }
         .alert-item:last-child { border-bottom: none; }
         .alert-critical { color: #d97777; }
         .alert-warning { color: #e6b422; }
         .alert-ok { color: #2c9e6b; }
 
-        /* Solutions */
-        .solutions-panel {
-            background: white;
-            border-radius: 24px;
-            padding: 1.2rem;
-            margin-bottom: 0;
-            border: 1px solid #eef2f6;
-        }
-        .solutions-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-top: 8px;
-        }
-        .solution-card {
-            background: #fafdff;
-            border-radius: 20px;
-            padding: 1rem;
-            border: 1px solid #e8f0ed;
-            transition: 0.2s;
-        }
-        .solution-card:hover { background: #ffffff; border-color: #cfe9df; }
+        .solutions-panel { background: white; border-radius: 24px; padding: 1.2rem; border: 1px solid #eef2f6; }
+        .solutions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
+        .solution-card { background: #fafdff; border-radius: 20px; padding: 1rem; border: 1px solid #e8f0ed; }
         .solution-icon { background: #e0f3ea; width: 40px; height: 40px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-        .solution-title { font-weight: 800; font-size: 0.85rem; margin-bottom: 6px; }
-        .solution-desc { font-size: 0.75rem; color: #5a6e7c; line-height: 1.4; }
         .priority { margin-top: 8px; font-size: 0.65rem; font-weight: 700; color: #c97e2a; }
+
+        /* Alerts Dashboard Styles */
+        .alerts-dashboard { animation: fadeIn 0.3s ease; }
+        .alerts-table-container { background: white; border-radius: 28px; padding: 1.5rem; border: 1px solid #eef2f6; overflow-x: auto; }
+        .alerts-table { width: 100%; border-collapse: collapse; }
+        .alerts-table th { text-align: left; padding: 14px 12px; background: #f8fafc; font-weight: 700; color: #1e293b; border-bottom: 2px solid #e2e8f0; }
+        .alerts-table td { padding: 14px 12px; border-bottom: 1px solid #edf2f7; }
+        .alert-row-clickable { cursor: pointer; transition: background 0.2s; }
+        .alert-row-clickable:hover { background: #f1f5f9; }
+        .severity-badge { padding: 4px 12px; border-radius: 30px; font-size: 0.7rem; font-weight: 700; display: inline-block; }
+        .severity-critical { background: #ffe6e5; color: #bc5a4a; }
+        .severity-high { background: #fff0e0; color: #c97e2a; }
+        .severity-medium { background: #fff8e7; color: #b8860b; }
+        .severity-low { background: #e0f3ea; color: #1d734c; }
 
         footer { text-align: center; margin-top: 24px; font-size: 0.7rem; color: #7e95a3; padding-top: 16px; border-top: 1px solid #e2e8f0; }
     </style>
@@ -300,170 +247,310 @@
             </div>
         </div>
         <div class="nav-menu">
-            <div class="nav-item"><div class="nav-link active"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></div></div>
+            <div class="nav-item"><div class="nav-link active" id="navDashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></div></div>
+            <div class="nav-item"><div class="nav-link" id="navAlerts"><i class="fas fa-bell"></i><span>Alertes</span></div></div>
             <div class="nav-item">
                 <div class="nav-link dept-main-link" id="departmentToggleBtn">
                     <div style="display: flex; gap: 14px;"><i class="fas fa-building"></i><span>Départements</span></div>
                     <i class="fas fa-chevron-down chevron-icon"></i>
                 </div>
                 <div class="department-dropdown" id="deptDropdown">
-                    <div class="dept-item" data-dept="production"><i class="fas fa-industry"></i> Production <i class="fas fa-chevron-right dept-chevron"></i></div>
-                    <div class="pumps-sublist" id="pumps-production"><div class="pump-item"><i class="fas fa-oil-can"></i> Pompe Centrifuge CP-9000 <span class="pump-status">En ligne</span></div></div>
+                    <div class="dept-item" data-dept="sap"><i class="fas fa-flask"></i> SAP <i class="fas fa-chevron-right dept-chevron"></i></div>
+                    <div class="pumps-sublist" id="pumps-sap"><div class="pump-item" data-pump="sap_p1"><i class="fas fa-oil-can"></i> Pompe Acide SAP-01</div><div class="pump-item" data-pump="sap_p2"><i class="fas fa-water"></i> Pompe Transfert SAP-02</div></div>
+                    <div class="dept-item" data-dept="af"><i class="fas fa-tint"></i> AF <i class="fas fa-chevron-right dept-chevron"></i></div>
+                    <div class="pumps-sublist" id="pumps-af"><div class="pump-item" data-pump="af_p1"><i class="fas fa-oil-can"></i> Pompe Alimentation AF-101</div><div class="pump-item" data-pump="af_p2"><i class="fas fa-water"></i> Pompe Recirculation AF-102</div></div>
+                    <div class="dept-item" data-dept="cap"><i class="fas fa-industry"></i> CAP <i class="fas fa-chevron-right dept-chevron"></i></div>
+                    <div class="pumps-sublist" id="pumps-cap"><div class="pump-item" data-pump="cap_p1"><i class="fas fa-oil-can"></i> Pompe Centrale CAP-200</div><div class="pump-item" data-pump="cap_p2"><i class="fas fa-water"></i> Pompe Secours CAP-201</div></div>
+                    <div class="dept-item" data-dept="engrais"><i class="fas fa-leaf"></i> ENGRAIS <i class="fas fa-chevron-right dept-chevron"></i></div>
+                    <div class="pumps-sublist" id="pumps-engrais"><div class="pump-item" data-pump="eng_p1"><i class="fas fa-oil-can"></i> Pompe Mélange EN-300</div><div class="pump-item" data-pump="eng_p2"><i class="fas fa-water"></i> Pompe Doseuse EN-301</div></div>
                 </div>
             </div>
             <div class="nav-item"><div class="nav-link"><i class="fas fa-chart-line"></i><span>Analytiques</span></div></div>
-            <div class="nav-item"><div class="nav-link"><i class="fas fa-bell"></i><span>Alertes</span></div></div>
         </div>
-        <div class="sidebar-footer"><i class="fas fa-shield-alt"></i> v4.0 · Diagnostic IA<div>© iPredict 2026</div></div>
+        <div class="sidebar-footer"><i class="fas fa-shield-alt"></i> v5.0 · IA Avancée<div>© iPredict 2026</div></div>
     </aside>
 
     <main class="main-content">
         <div class="dashboard">
             <div class="dashboard-header">
                 <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher..." id="globalSearch"></div>
-                <div class="user-profile" id="userProfileBtn">
-                    <div class="profile-trigger"><div class="avatar"><i class="fas fa-user-circle"></i></div><div><div class="user-name">Antoine Moreau</div><div class="user-role">Responsable maintenance</div></div><i class="fas fa-chevron-down"></i></div>
-                    <div class="dropdown-menu" id="userDropdown"><div class="dropdown-item"><i class="fas fa-user"></i> Profil</div><div class="dropdown-item logout-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</div></div>
-                </div>
+                <div class="user-profile" id="userProfileBtn"><div class="profile-trigger"><div class="avatar"><i class="fas fa-user-circle"></i></div><div><div class="user-name">Antoine Moreau</div><div class="user-role">Responsable maintenance</div></div><i class="fas fa-chevron-down"></i></div>
+                <div class="dropdown-menu" id="userDropdown"><div class="dropdown-item"><i class="fas fa-user"></i> Profil</div><div class="dropdown-item logout-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</div></div></div>
             </div>
-
-            <div class="machine-title">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div class="machine-icon"><i class="fas fa-oil-can"></i></div>
-                    <div class="machine-info"><h1>POMPE CENTRIFUGE CP-9000</h1><p>Unité de traitement fluides · Ligne principale</p></div>
-                </div>
-                <div><span class="badge-online"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> En fonctionnement</span></div>
-            </div>
-
-            <!-- COMPOSANTS CARDS -->
-            <div class="components-grid">
-                <div class="component-card">
-                    <div class="comp-header"><div class="comp-name"><i class="fas fa-microchip"></i> MOTEUR</div><span class="status-indicator status-warning" id="motorStatusDot"></span></div>
-                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-waveform"></i> Accélération</div><div class="metric-row"><span class="metric-label">Valeur (m/s²)</span><span class="metric-value" id="motorAcc">2.85</span></div><div class="progress-bar-bg"><div class="progress-fill" id="motorAccFill" style="width:57%"></div></div></div>
-                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-thermometer-half"></i> Température</div><div class="metric-row"><span class="metric-label">Valeur (°C)</span><span class="metric-value" id="motorTemp">78.0</span></div><div class="progress-bar-bg"><div class="progress-fill" id="motorTempFill" style="width:78%"></div></div></div>
-                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-chart-line"></i> Vibration</div><div class="metric-row"><span class="metric-label">Valeur (mm/s)</span><span class="metric-value" id="motorVib">1.85</span></div><div class="progress-bar-bg"><div class="progress-fill" id="motorVibFill" style="width:46%"></div></div></div>
-                    <div class="metric-row"><span class="metric-label">Risque actuel</span><span class="metric-value risk-medium" id="motorRisk">Moyen</span></div>
-                </div>
-                <div class="component-card">
-                    <div class="comp-header"><div class="comp-name"><i class="fas fa-link"></i> ACCOUPLEMENT</div><span class="status-indicator status-critical" id="couplingStatusDot"></span></div>
-                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-waveform"></i> Accélération</div><div class="metric-row"><span class="metric-label">Valeur (m/s²)</span><span class="metric-value" id="couplingAcc">4.20</span></div><div class="progress-bar-bg"><div class="progress-fill" id="couplingAccFill" style="width:84%; background:#d97777"></div></div></div>
-                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-thermometer-half"></i> Température</div><div class="metric-row"><span class="metric-label">Valeur (°C)</span><span class="metric-value" id="couplingTemp">72.0</span></div><div class="progress-bar-bg"><div class="progress-fill" id="couplingTempFill" style="width:72%; background:#e6b422"></div></div></div>
-                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-chart-line"></i> Vibration</div><div class="metric-row"><span class="metric-label">Valeur (mm/s)</span><span class="metric-value" id="couplingVib">2.45</span></div><div class="progress-bar-bg"><div class="progress-fill" id="couplingVibFill" style="width:81%; background:#d97777"></div></div></div>
-                    <div class="metric-row"><span class="metric-label">Désalignement</span><span class="metric-value" id="couplingAlign">0.42 mm</span></div>
-                    <div class="metric-row"><span class="metric-label">Risque actuel</span><span class="metric-value risk-high" id="couplingRisk">Élevé</span></div>
-                </div>
-                <div class="component-card">
-                    <div class="comp-header"><div class="comp-name"><i class="fas fa-water"></i> POMPE</div><span class="status-indicator status-good" id="pumpStatusDot"></span></div>
-                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-waveform"></i> Accélération</div><div class="metric-row"><span class="metric-label">Valeur (m/s²)</span><span class="metric-value" id="pumpAcc">1.20</span></div><div class="progress-bar-bg"><div class="progress-fill" id="pumpAccFill" style="width:24%"></div></div></div>
-                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-thermometer-half"></i> Température</div><div class="metric-row"><span class="metric-label">Valeur (°C)</span><span class="metric-value" id="pumpTemp">64.0</span></div><div class="progress-bar-bg"><div class="progress-fill" id="pumpTempFill" style="width:64%"></div></div></div>
-                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-chart-line"></i> Vibration</div><div class="metric-row"><span class="metric-label">Valeur (mm/s)</span><span class="metric-value" id="pumpVib">0.95</span></div><div class="progress-bar-bg"><div class="progress-fill" id="pumpVibFill" style="width:24%"></div></div></div>
-                    <div class="metric-row"><span class="metric-label">Débit</span><span class="metric-value" id="pumpFlow">278 m³/h</span></div>
-                    <div class="metric-row"><span class="metric-label">Risque actuel</span><span class="metric-value risk-low" id="pumpRisk">Faible</span></div>
-                </div>
-            </div>
-
-            <!-- DIAGNOSTIC PROBLEMS - REDESIGNED (no "données" line) -->
-            <div class="diagnostic-section">
-                <div class="section-title"><i class="fas fa-stethoscope"></i> Diagnostic des problèmes potentiels</div>
-                <div class="problems-grid" id="problemsGrid"></div>
-            </div>
-
-            <!-- PREDICTION DIAGRAMS -->
-            <div class="predictions-container">
-                <div class="prediction-card">
-                    <div class="prediction-header"><div class="prediction-title"><i class="fas fa-microchip"></i> Moteur - Prédiction H+12</div><span class="future-risk-badge risk-badge-medium" id="motorFutureRiskBadge">Risque: Moyen</span></div>
-                    <canvas id="motorPredChart" class="prediction-canvas" height="130"></canvas>
-                    <div class="prediction-stats"><div class="stat-row"><span>Vibration H+12:</span><strong id="motorVibPred">2.35 mm/s</strong></div><div class="stat-row"><span>Température H+12:</span><strong id="motorTempPred">82.5 °C</strong></div></div>
-                </div>
-                <div class="prediction-card">
-                    <div class="prediction-header"><div class="prediction-title"><i class="fas fa-link"></i> Accouplement - Prédiction H+12</div><span class="future-risk-badge risk-badge-critical" id="couplingFutureRiskBadge">Risque: Critique</span></div>
-                    <canvas id="couplingPredChart" class="prediction-canvas" height="130"></canvas>
-                    <div class="prediction-stats"><div class="stat-row"><span>Vibration H+12:</span><strong id="couplingVibPred">3.65 mm/s</strong></div><div class="stat-row"><span>Désalignement H+12:</span><strong id="couplingAlignPred">0.58 mm</strong></div></div>
-                </div>
-                <div class="prediction-card">
-                    <div class="prediction-header"><div class="prediction-title"><i class="fas fa-water"></i> Pompe - Prédiction H+12</div><span class="future-risk-badge risk-badge-low" id="pumpFutureRiskBadge">Risque: Faible</span></div>
-                    <canvas id="pumpPredChart" class="prediction-canvas" height="130"></canvas>
-                    <div class="prediction-stats"><div class="stat-row"><span>Vibration H+12:</span><strong id="pumpVibPred">1.08 mm/s</strong></div><div class="stat-row"><span>Débit H+12:</span><strong id="pumpFlowPred">272 m³/h</strong></div></div>
-                </div>
-            </div>
-
-            <!-- ALERTES PRÉDICTIVES H+12 -->
-            <div class="alerts-panel">
-                <div class="section-title"><i class="fas fa-exclamation-triangle"></i> Alertes prédictives H+12</div>
-                <div class="alerts-container" id="alertsContainer"></div>
-            </div>
-
-            <!-- SOLUTIONS PROPOSÉES PAR IA -->
-            <div class="solutions-panel">
-                <div class="section-title"><i class="fas fa-lightbulb"></i> Solutions proposées par IA</div>
-                <div class="solutions-grid" id="solutionsGrid"></div>
-            </div>
-
-            <footer><i class="fas fa-robot"></i> Données: Accélération, Température, Vibration · Diagnostic vibratoire, thermique et mécanique · Mise à jour 20s</footer>
+            <div id="dashboardContent"></div>
+            <footer><i class="fas fa-robot"></i> IA Avancée: RUL | Détection d'anomalies | Multi-sites · Mise à jour 20s</footer>
         </div>
     </main>
 </div>
 
 <script>
-    // SIDEBAR
+    // ========== SIDEBAR INTERACTIONS ==========
     const deptToggle = document.getElementById('departmentToggleBtn');
     const deptDropdown = document.getElementById('deptDropdown');
     const chevron = document.querySelector('.chevron-icon');
-    if(deptToggle) {
-        deptToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            deptDropdown.classList.toggle('show');
-            chevron.style.transform = deptDropdown.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
-        });
-    }
-    document.querySelectorAll('.dept-item').forEach(item => {
-        const cr = item.querySelector('.dept-chevron');
-        item.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const deptKey = item.getAttribute('data-dept');
-            const pumpsList = document.getElementById(`pumps-${deptKey}`);
-            if(pumpsList) {
-                pumpsList.classList.toggle('show');
-                if(cr) cr.style.transform = pumpsList.classList.contains('show') ? 'rotate(90deg)' : 'rotate(0deg)';
-            }
-        });
-    });
-    const profileBtn = document.getElementById('userProfileBtn');
-    const userDropdown = document.getElementById('userDropdown');
+    if(deptToggle) deptToggle.addEventListener('click', (e) => { e.stopPropagation(); deptDropdown.classList.toggle('show'); chevron.style.transform = deptDropdown.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)'; });
+    document.querySelectorAll('.dept-item').forEach(item => { const cr = item.querySelector('.dept-chevron'); item.addEventListener('click', (e) => { e.stopPropagation(); const deptKey = item.getAttribute('data-dept'); const pumpsList = document.getElementById(`pumps-${deptKey}`); if(pumpsList) { pumpsList.classList.toggle('show'); if(cr) cr.style.transform = pumpsList.classList.contains('show') ? 'rotate(90deg)' : 'rotate(0deg)'; } }); });
+    const profileBtn = document.getElementById('userProfileBtn'); const userDropdown = document.getElementById('userDropdown');
     profileBtn?.addEventListener('click', (e) => { e.stopPropagation(); userDropdown.classList.toggle('show'); });
     document.addEventListener('click', () => userDropdown?.classList.remove('show'));
     document.getElementById('logoutBtn')?.addEventListener('click', () => alert("Déconnexion simulée."));
-
-    // DONNÉES
-    let metrics = {
-        motor: { acc: 2.85, temp: 78.0, vib: 1.85, risk: "Moyen", predVib: 2.35, predTemp: 82.5, futureRisk: "Moyen" },
-        coupling: { acc: 4.20, temp: 72.0, vib: 2.45, align: 0.42, risk: "Élevé", predVib: 3.65, predAlign: 0.58, futureRisk: "Critique" },
-        pump: { acc: 1.20, temp: 64.0, vib: 0.95, flow: 278, risk: "Faible", predVib: 1.08, predFlow: 272, futureRisk: "Faible" }
+    
+    const navDashboard = document.getElementById('navDashboard');
+    const navAlerts = document.getElementById('navAlerts');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    // ========== MULTI-SITE PUMP DATA ==========
+    let allPumpsData = {
+        'sap_p1': { id: 'sap_p1', name: 'Pompe Acide SAP-01', dept: 'SAP', status: 'En ligne', metrics: { motor: { acc: 2.85, temp: 78.0, vib: 1.85, risk: "Moyen", predVib: 2.35, rul: 328, futureRisk: "Moyen" }, coupling: { acc: 4.20, temp: 72.0, vib: 2.45, align: 0.42, risk: "Élevé", predVib: 3.65, rul: 94, futureRisk: "Critique" }, pump: { acc: 1.20, temp: 64.0, vib: 0.95, flow: 278, risk: "Faible", predVib: 1.08, rul: 1250, futureRisk: "Faible" } } },
+        'sap_p2': { id: 'sap_p2', name: 'Pompe Transfert SAP-02', dept: 'SAP', status: 'Surveillance', metrics: { motor: { acc: 2.10, temp: 72.0, vib: 1.45, risk: "Faible", predVib: 1.85, rul: 520, futureRisk: "Faible" }, coupling: { acc: 2.80, temp: 68.0, vib: 1.85, align: 0.28, risk: "Moyen", predVib: 2.45, rul: 310, futureRisk: "Moyen" }, pump: { acc: 1.50, temp: 62.0, vib: 0.85, flow: 245, risk: "Faible", predVib: 1.05, rul: 980, futureRisk: "Faible" } } },
+        'af_p1': { id: 'af_p1', name: 'Pompe Alimentation AF-101', dept: 'AF', status: 'En ligne', metrics: { motor: { acc: 2.45, temp: 76.0, vib: 1.65, risk: "Moyen", predVib: 2.15, rul: 410, futureRisk: "Moyen" }, coupling: { acc: 3.20, temp: 70.0, vib: 2.15, align: 0.35, risk: "Moyen", predVib: 2.95, rul: 220, futureRisk: "Moyen" }, pump: { acc: 1.35, temp: 65.0, vib: 1.05, flow: 260, risk: "Faible", predVib: 1.25, rul: 890, futureRisk: "Faible" } } },
+        'af_p2': { id: 'af_p2', name: 'Pompe Recirculation AF-102', dept: 'AF', status: 'Maintenance', metrics: { motor: { acc: 3.20, temp: 82.0, vib: 2.45, risk: "Élevé", predVib: 3.15, rul: 156, futureRisk: "Élevé" }, coupling: { acc: 3.50, temp: 74.0, vib: 2.85, align: 0.52, risk: "Critique", predVib: 3.95, rul: 48, futureRisk: "Critique" }, pump: { acc: 2.10, temp: 68.0, vib: 1.35, flow: 210, risk: "Moyen", predVib: 1.65, rul: 420, futureRisk: "Moyen" } } },
+        'cap_p1': { id: 'cap_p1', name: 'Pompe Centrale CAP-200', dept: 'CAP', status: 'En ligne', metrics: { motor: { acc: 2.65, temp: 75.0, vib: 1.75, risk: "Moyen", predVib: 2.25, rul: 380, futureRisk: "Moyen" }, coupling: { acc: 3.80, temp: 71.0, vib: 2.35, align: 0.38, risk: "Élevé", predVib: 3.35, rul: 145, futureRisk: "Élevé" }, pump: { acc: 1.15, temp: 63.0, vib: 0.90, flow: 270, risk: "Faible", predVib: 1.02, rul: 1100, futureRisk: "Faible" } } },
+        'cap_p2': { id: 'cap_p2', name: 'Pompe Secours CAP-201', dept: 'CAP', status: 'Standby', metrics: { motor: { acc: 1.85, temp: 68.0, vib: 1.25, risk: "Faible", predVib: 1.65, rul: 620, futureRisk: "Faible" }, coupling: { acc: 2.20, temp: 65.0, vib: 1.55, align: 0.22, risk: "Faible", predVib: 2.05, rul: 450, futureRisk: "Faible" }, pump: { acc: 1.05, temp: 60.0, vib: 0.75, flow: 285, risk: "Faible", predVib: 0.85, rul: 1350, futureRisk: "Faible" } } },
+        'eng_p1': { id: 'eng_p1', name: 'Pompe Mélange EN-300', dept: 'ENGRAIS', status: 'En ligne', metrics: { motor: { acc: 2.95, temp: 79.0, vib: 1.95, risk: "Moyen", predVib: 2.55, rul: 310, futureRisk: "Moyen" }, coupling: { acc: 4.10, temp: 73.0, vib: 2.55, align: 0.45, risk: "Élevé", predVib: 3.75, rul: 110, futureRisk: "Élevé" }, pump: { acc: 1.25, temp: 66.0, vib: 1.00, flow: 265, risk: "Faible", predVib: 1.15, rul: 950, futureRisk: "Faible" } } },
+        'eng_p2': { id: 'eng_p2', name: 'Pompe Doseuse EN-301', dept: 'ENGRAIS', status: 'Surveillance', metrics: { motor: { acc: 2.30, temp: 74.0, vib: 1.55, risk: "Faible", predVib: 2.05, rul: 480, futureRisk: "Faible" }, coupling: { acc: 3.00, temp: 69.0, vib: 2.05, align: 0.32, risk: "Moyen", predVib: 2.85, rul: 280, futureRisk: "Moyen" }, pump: { acc: 1.40, temp: 63.0, vib: 0.95, flow: 255, risk: "Faible", predVib: 1.10, rul: 870, futureRisk: "Faible" } } }
     };
-
-    function getProblemRisk(component, type) {
+    
+    // ========== GENERATE ALL ALERTS ==========
+    function getAllAlerts() {
+        let alerts = [];
+        for (let pumpId in allPumpsData) {
+            const pump = allPumpsData[pumpId];
+            const m = pump.metrics;
+            // Coupling alerts
+            if (m.coupling.risk === 'Critique') {
+                alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Accouplement', message: `Vibration critique ${m.coupling.vib} mm/s, désalignement ${m.coupling.align} mm`, severity: 'critical', rul: m.coupling.rul });
+            } else if (m.coupling.risk === 'Élevé') {
+                alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Accouplement', message: `Vibration élevée ${m.coupling.vib} mm/s, surveillance requise`, severity: 'high', rul: m.coupling.rul });
+            } else if (m.coupling.risk === 'Moyen') {
+                alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Accouplement', message: `Vibration modérée ${m.coupling.vib} mm/s`, severity: 'medium', rul: m.coupling.rul });
+            }
+            // Motor alerts
+            if (m.motor.risk === 'Élevé') {
+                alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Moteur', message: `Vibration ${m.motor.vib} mm/s, température ${m.motor.temp}°C`, severity: 'high', rul: m.motor.rul });
+            } else if (m.motor.risk === 'Moyen') {
+                alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Moteur', message: `Vibration ${m.motor.vib} mm/s`, severity: 'medium', rul: m.motor.rul });
+            }
+            // Temperature alerts
+            if (m.motor.temp > 78) {
+                alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Moteur', message: `Température élevée: ${m.motor.temp}°C`, severity: 'high', rul: m.motor.rul });
+            }
+        }
+        // Sort by severity (critical first)
+        const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+        alerts.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
+        return alerts;
+    }
+    
+    // ========== ALERTS DASHBOARD ==========
+    function renderAlertsDashboard() {
+        const alerts = getAllAlerts();
+        const criticalCount = alerts.filter(a => a.severity === 'critical').length;
+        const highCount = alerts.filter(a => a.severity === 'high').length;
+        const mediumCount = alerts.filter(a => a.severity === 'medium').length;
+        
+        const alertsHtml = `
+            <div class="alerts-dashboard">
+                <div class="machine-title">
+                    <div style="display:flex;align-items:center;gap:20px;">
+                        <div class="machine-icon"><i class="fas fa-bell"></i></div>
+                        <div class="machine-info"><h1>CENTRE D'ALERTES</h1><p>Liste des alertes actives par machine</p></div>
+                    </div>
+                    <div><span class="badge-online"><i class="fas fa-circle"></i> ${alerts.length} alerte(s)</span></div>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="kpi-label">Critique</div><div class="kpi-value" style="color:#d97777">${criticalCount}</div></div>
+                    <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-chart-line"></i></div><div class="kpi-label">Élevé</div><div class="kpi-value" style="color:#e6b422">${highCount}</div></div>
+                    <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-check"></i></div><div class="kpi-label">Modéré</div><div class="kpi-value" style="color:#b8860b">${mediumCount}</div></div>
+                    <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-industry"></i></div><div class="kpi-label">Machines affectées</div><div class="kpi-value">${new Set(alerts.map(a => a.pumpId)).size}</div></div>
+                </div>
+                <div class="alerts-table-container">
+                    <table class="alerts-table">
+                        <thead><tr><th>Département</th><th>Machine</th><th>Composant</th><th>Alerte</th><th>RUL estimée</th><th>Sévérité</th></tr></thead>
+                        <tbody>
+                            ${alerts.map(alert => `
+                                <tr class="alert-row-clickable" data-pump-id="${alert.pumpId}">
+                                    <td><strong>${alert.dept}</strong></td>
+                                    <td>${alert.pumpName}</td>
+                                    <td>${alert.component}</td>
+                                    <td>${alert.message}</td>
+                                    <td>~${alert.rul}h</td>
+                                    <td><span class="severity-badge severity-${alert.severity}">${alert.severity === 'critical' ? 'Critique' : (alert.severity === 'high' ? 'Élevée' : (alert.severity === 'medium' ? 'Modérée' : 'Faible'))}</span></td>
+                                </tr>
+                            `).join('')}
+                            ${alerts.length === 0 ? '<tr><td colspan="6" style="text-align:center;padding:40px;">Aucune alerte active</td></tr>' : ''}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+        document.getElementById('dashboardContent').innerHTML = alertsHtml;
+        
+        // Add click handlers for each alert row
+        document.querySelectorAll('.alert-row-clickable').forEach(row => {
+            row.addEventListener('click', () => {
+                const pumpId = row.getAttribute('data-pump-id');
+                if (pumpId && allPumpsData[pumpId]) {
+                    renderPumpDashboard(pumpId);
+                    // Update active nav
+                    navLinks.forEach(link => link.classList.remove('active'));
+                }
+            });
+        });
+    }
+    
+    // ========== OVERALL DASHBOARD ==========
+    function getDeptSummary() {
+        let depts = { 'SAP': { totalRisk: 0, count: 0, critical: 0, warning: 0 }, 'AF': { totalRisk: 0, count: 0, critical: 0, warning: 0 }, 'CAP': { totalRisk: 0, count: 0, critical: 0, warning: 0 }, 'ENGRAIS': { totalRisk: 0, count: 0, critical: 0, warning: 0 } };
+        for (let pump of Object.values(allPumpsData)) {
+            let maxRisk = Math.max(
+                pump.metrics.motor.risk === 'Critique' ? 80 : (pump.metrics.motor.risk === 'Élevé' ? 60 : (pump.metrics.motor.risk === 'Moyen' ? 40 : 20)),
+                pump.metrics.coupling.risk === 'Critique' ? 80 : (pump.metrics.coupling.risk === 'Élevé' ? 60 : (pump.metrics.coupling.risk === 'Moyen' ? 40 : 20)),
+                pump.metrics.pump.risk === 'Critique' ? 80 : (pump.metrics.pump.risk === 'Élevé' ? 60 : (pump.metrics.pump.risk === 'Moyen' ? 40 : 20))
+            );
+            depts[pump.dept].totalRisk += maxRisk;
+            depts[pump.dept].count++;
+            if (maxRisk >= 70) depts[pump.dept].critical++;
+            else if (maxRisk >= 50) depts[pump.dept].warning++;
+        }
+        for (let d in depts) depts[d].avgRisk = depts[d].count > 0 ? Math.round(depts[d].totalRisk / depts[d].count) : 0;
+        return depts;
+    }
+    
+    function renderOverallDashboard() {
+        const depts = getDeptSummary();
+        const totalMachines = Object.keys(allPumpsData).length;
+        const criticalMachines = Object.values(depts).reduce((a,b) => a + b.critical, 0);
+        const warningMachines = Object.values(depts).reduce((a,b) => a + b.warning, 0);
+        const healthyMachines = totalMachines - criticalMachines - warningMachines;
+        const overallRisk = Math.round(Object.values(depts).reduce((a,b) => a + b.avgRisk, 0) / 4);
+        
+        const html = `
+            <div class="overall-dashboard">
+                <div class="machine-title"><div style="display:flex;align-items:center;gap:20px;"><div class="machine-icon"><i class="fas fa-chart-pie"></i></div><div class="machine-info"><h1>TABLEAU DE BORD GLOBAL</h1><p>Supervision multi-sites · ${totalMachines} machines surveillées</p></div></div><div><span class="badge-online"><i class="fas fa-circle"></i> Vue d'ensemble</span></div></div>
+                <div class="kpi-grid"><div class="kpi-card"><div class="kpi-icon"><i class="fas fa-industry"></i></div><div class="kpi-label">Total machines</div><div class="kpi-value">${totalMachines}</div></div><div class="kpi-card"><div class="kpi-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="kpi-label">Critique / Alerte</div><div class="kpi-value" style="color:#d97777">${criticalMachines}</div><div class="kpi-trend"><span class="trend-up"><i class="fas fa-arrow-up"></i> ${warningMachines} en surveillance</span></div></div><div class="kpi-card"><div class="kpi-icon"><i class="fas fa-check-circle"></i></div><div class="kpi-label">Opérationnel</div><div class="kpi-value" style="color:#2c9e6b">${healthyMachines}</div><div class="kpi-trend"><span class="trend-down"><i class="fas fa-check"></i> OK</span></div></div><div class="kpi-card"><div class="kpi-icon"><i class="fas fa-chart-line"></i></div><div class="kpi-label">Risque global</div><div class="kpi-value" style="color:${overallRisk >= 70 ? '#d97777' : (overallRisk >= 40 ? '#e6b422' : '#2c9e6b')}">${overallRisk}%</div></div></div>
+                <div class="section-header"><h2><i class="fas fa-building"></i> Risque par département</h2></div>
+                <div class="dept-grid">${Object.entries(depts).map(([name, data]) => `<div class="dept-card" data-dept="${name}"><div class="dept-header"><div class="dept-name"><i class="fas ${name === 'SAP' ? 'fa-flask' : (name === 'AF' ? 'fa-tint' : (name === 'CAP' ? 'fa-industry' : 'fa-leaf'))}"></i> ${name}</div><span class="dept-badge ${data.critical > 0 ? 'badge-critical' : (data.warning > 0 ? 'badge-warning' : 'badge-good')}">${data.critical > 0 ? 'Critique' : (data.warning > 0 ? 'Alerte' : 'Stable')}</span></div><div class="risk-gauge-bar"><div class="risk-gauge-fill" style="width: ${data.avgRisk}%; background: ${data.avgRisk >= 70 ? '#d97777' : (data.avgRisk >= 40 ? '#e6b422' : '#2c9e6b')}"></div></div><div class="dept-stats"><span>Risque: ${data.avgRisk}%</span><span>⚠️ ${data.critical} critique</span><span>📊 ${data.warning} alerte</span></div></div>`).join('')}</div>
+                <div class="charts-row"><div class="chart-card"><h3><i class="fas fa-chart-bar"></i> Distribution des risques</h3><canvas id="riskChart" height="150"></canvas></div><div class="chart-card"><h3><i class="fas fa-chart-line"></i> Comparaison des risques</h3><canvas id="compareChart" height="150"></canvas></div></div>
+                <div class="alerts-card"><div class="section-header"><h2><i class="fas fa-bell"></i> Alertes critiques</h2></div><div class="alert-list" id="globalAlertsList"></div></div>
+                <div class="solutions-card"><div class="section-header"><h2><i class="fas fa-lightbulb"></i> Actions recommandées</h2></div><div class="solutions-list" id="globalSolutionsList"></div></div>
+            </div>
+        `;
+        document.getElementById('dashboardContent').innerHTML = html;
+        
+        const deptNames = Object.keys(depts);
+        const riskValues = deptNames.map(d => depts[d].avgRisk);
+        const criticalCounts = deptNames.map(d => depts[d].critical);
+        new Chart(document.getElementById('riskChart'), { type: 'bar', data: { labels: deptNames, datasets: [{ label: 'Risque moyen (%)', data: riskValues, backgroundColor: riskValues.map(v => v >= 70 ? '#d97777' : (v >= 40 ? '#e6b422' : '#2c9e6b')), borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } } });
+        new Chart(document.getElementById('compareChart'), { type: 'line', data: { labels: deptNames, datasets: [{ label: 'Machines critiques', data: criticalCounts, borderColor: '#d97777', backgroundColor: 'rgba(217,119,119,0.1)', fill: true, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: true } });
+        
+        let alerts = [];
+        for (let [name, data] of Object.entries(depts)) { if (data.critical > 0) alerts.push(`<div class="alert-row"><div class="alert-icon alert-critical-bg"><i class="fas fa-exclamation-triangle"></i></div><div><strong>${name}</strong> - ${data.critical} machine(s) en état critique<br><span style="font-size:0.7rem;color:#64748b;">Intervention immédiate requise</span></div></div>`); }
+        if (alerts.length === 0) alerts.push('<div class="alert-row"><div class="alert-icon alert-ok-bg"><i class="fas fa-check-circle"></i></div><div>Aucune alerte critique sur l\'ensemble des sites</div></div>');
+        document.getElementById('globalAlertsList').innerHTML = alerts.join('');
+        
+        document.getElementById('globalSolutionsList').innerHTML = `
+            <div class="solution-item"><h4><i class="fas fa-crosshairs"></i> Maintenance prioritaire AF</h4><p>Intervention sur pompe AF-102 (RUL: 48h)</p><div class="solution-priority">Priorité haute</div></div>
+            <div class="solution-item"><h4><i class="fas fa-chart-line"></i> Surveillance renforcée ENGRAIS</h4><p>Risque modéré détecté sur EN-300</p><div class="solution-priority">Priorité moyenne</div></div>
+            <div class="solution-item"><h4><i class="fas fa-robot"></i> Planification maintenance</h4><p>Basée sur RUL estimées des 8 machines</p><div class="solution-priority">Planification</div></div>
+        `;
+        document.querySelectorAll('.dept-card').forEach(card => { card.addEventListener('click', () => { alert(`Département ${card.getAttribute('data-dept')}\nCliquez sur une machine dans le menu pour voir les détails.`); }); });
+    }
+    
+    // ========== PUMP DASHBOARD ==========
+    let currentMetrics = null;
+    let currentFilter = "motor";
+    let mainChart = null;
+    
+    function getPredictionData(component, metrics) {
+        const currentVib = metrics[component].vib;
+        const predVib = metrics[component].predVib;
+        return [currentVib, currentVib + (predVib - currentVib) * 0.2, currentVib + (predVib - currentVib) * 0.4, currentVib + (predVib - currentVib) * 0.6, currentVib + (predVib - currentVib) * 0.8, predVib];
+    }
+    
+    function getThreshold(component) {
+        if (component === 'motor') return 2.5;
+        if (component === 'coupling') return 2.8;
+        return 1.5;
+    }
+    
+    function updateMainChart(metrics) {
+        const labels = ['Maintenant', '+2h', '+4h', '+6h', '+8h', '+12h'];
+        const data = getPredictionData(currentFilter, metrics);
+        const threshold = getThreshold(currentFilter);
+        const thresholdData = Array(labels.length).fill(threshold);
+        const colors = { motor: '#2c9e6b', coupling: '#e6b422', pump: '#3b82f6' };
+        
+        if (mainChart) {
+            mainChart.data.datasets[0].data = data;
+            mainChart.data.datasets[0].borderColor = colors[currentFilter];
+            mainChart.data.datasets[0].label = `${currentFilter === 'motor' ? 'Moteur' : (currentFilter === 'coupling' ? 'Accouplement' : 'Pompe')} - Vibration (mm/s)`;
+            mainChart.data.datasets[1].data = thresholdData;
+            mainChart.update();
+        }
+        
+        const comp = metrics[currentFilter];
+        const riskClass = comp.futureRisk === 'Critique' ? 'risk-critical-text' : (comp.futureRisk === 'Élevé' ? 'risk-high-text' : (comp.futureRisk === 'Moyen' ? 'risk-medium-text' : 'risk-low-text'));
+        document.getElementById('predictionStats').innerHTML = `
+            <div class="pred-stat-card"><div class="metric-label">Vibration actuelle</div><div class="metric-value" style="font-size:1.2rem;">${comp.vib.toFixed(2)} mm/s</div></div>
+            <div class="pred-stat-card"><div class="metric-label">Vibration prévue H+12</div><div class="metric-value" style="font-size:1.2rem;">${comp.predVib.toFixed(2)} mm/s</div></div>
+            <div class="pred-stat-card"><div class="metric-label">Seuil critique</div><div class="metric-value" style="font-size:1.2rem;">${threshold} mm/s</div></div>
+            <div class="pred-stat-card"><div class="metric-label">Risque futur</div><div class="metric-value ${riskClass}" style="font-size:1.2rem;">${comp.futureRisk}</div></div>
+            <div class="pred-stat-card"><div class="metric-label">RUL estimée</div><div class="metric-value" style="font-size:1.2rem;">~${comp.rul} heures</div></div>
+        `;
+    }
+    
+    function initMainChart(metrics) {
+        const ctx = document.getElementById('mainPredictionChart').getContext('2d');
+        const labels = ['Maintenant', '+2h', '+4h', '+6h', '+8h', '+12h'];
+        const data = getPredictionData('motor', metrics);
+        const thresholdData = Array(labels.length).fill(2.5);
+        if (mainChart) mainChart.destroy();
+        mainChart = new Chart(ctx, {
+            type: 'line', data: { labels: labels, datasets: [{ label: 'Moteur - Vibration (mm/s)', data: data, borderColor: '#2c9e6b', backgroundColor: 'rgba(44,158,107,0.05)', borderWidth: 3, tension: 0.3, fill: true, pointRadius: 5, pointBackgroundColor: '#2c9e6b' }, { label: 'Seuil critique', data: thresholdData, borderColor: '#d97777', borderWidth: 2, borderDash: [6, 6], fill: false, pointRadius: 0 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } }, tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)} mm/s` } } }, scales: { y: { title: { display: true, text: 'Vibration (mm/s)' }, beginAtZero: true, max: 5 } } }
+        });
+    }
+    
+    function getProblemRisk(component, type, metrics) {
         if(type === 'vibrations') return metrics[component].vib > 2.2 ? 'Critique' : (metrics[component].vib > 1.6 ? 'Élevé' : 'Modéré');
         if(type === 'surchauffe') return metrics[component].temp > 80 ? 'Critique' : (metrics[component].temp > 75 ? 'Élevé' : (metrics[component].temp > 70 ? 'Modéré' : 'Faible'));
         if(type === 'mecanique') return metrics[component].acc > 3.5 ? 'Critique' : (metrics[component].acc > 2.5 ? 'Élevé' : 'Modéré');
         if(type === 'panne') return (metrics[component].vib > 2.0 && metrics[component].temp > 75 && metrics[component].acc > 3.0) ? 'Critique' : 'Modéré';
         return 'Faible';
     }
-
+    
     function getRiskClass(risk) {
         if(risk === 'Critique') return 'risk-critical-text';
         if(risk === 'Élevé') return 'risk-high-text';
         if(risk === 'Modéré') return 'risk-medium-text';
         return 'risk-low-text';
     }
-
-    function updateProblems() {
+    
+    function getExplanation(component, metrics) {
+        const data = metrics[component];
+        let explanations = [];
+        if (data.vib > 2.0) explanations.push(`Vibration élevée (${data.vib} mm/s)`);
+        if (data.temp > 75) explanations.push(`Température excessive (${data.temp}°C)`);
+        if (data.acc > 3.0) explanations.push(`Accélération anormale (${data.acc} m/s²)`);
+        if (component === 'coupling' && data.align > 0.5) explanations.push(`Désalignement critique`);
+        if (explanations.length === 0) return "Paramètres normaux";
+        return explanations.join(" + ");
+    }
+    
+    function renderPumpDashboard(pumpId) {
+        const pump = allPumpsData[pumpId];
+        if (!pump) return;
+        const m = pump.metrics;
+        
         const problems = [
-            { name: "Vibrations anormales", icon: "fas fa-gear", type: "vibrations", motor: getProblemRisk('motor','vibrations'), coupling: getProblemRisk('coupling','vibrations'), pump: getProblemRisk('pump','vibrations') },
-            { name: "Surchauffe", icon: "fas fa-thermometer-half", type: "surchauffe", motor: getProblemRisk('motor','surchauffe'), coupling: getProblemRisk('coupling','surchauffe'), pump: getProblemRisk('pump','surchauffe') },
-            { name: "Défaut mécanique", icon: "fas fa-cogs", type: "mecanique", motor: getProblemRisk('motor','mecanique'), coupling: getProblemRisk('coupling','mecanique'), pump: getProblemRisk('pump','mecanique') },
-            { name: "Panne soudaine", icon: "fas fa-exclamation-triangle", type: "panne", motor: getProblemRisk('motor','panne'), coupling: getProblemRisk('coupling','panne'), pump: getProblemRisk('pump','panne') }
+            { name: "Vibrations anormales", icon: "fas fa-gear", motor: getProblemRisk('motor','vibrations', m), coupling: getProblemRisk('coupling','vibrations', m), pump: getProblemRisk('pump','vibrations', m) },
+            { name: "Surchauffe", icon: "fas fa-thermometer-half", motor: getProblemRisk('motor','surchauffe', m), coupling: getProblemRisk('coupling','surchauffe', m), pump: getProblemRisk('pump','surchauffe', m) },
+            { name: "Défaut mécanique", icon: "fas fa-cogs", motor: getProblemRisk('motor','mecanique', m), coupling: getProblemRisk('coupling','mecanique', m), pump: getProblemRisk('pump','mecanique', m) },
+            { name: "Panne soudaine", icon: "fas fa-exclamation-triangle", motor: getProblemRisk('motor','panne', m), coupling: getProblemRisk('coupling','panne', m), pump: getProblemRisk('pump','panne', m) }
         ];
-        document.getElementById('problemsGrid').innerHTML = problems.map(p => `
+        
+        const problemsHtml = problems.map(p => `
             <div class="problem-card" style="border-left-color: ${p.motor === 'Critique' ? '#d97777' : (p.motor === 'Élevé' ? '#e6b422' : '#2c9e6b')}">
                 <div class="problem-icon"><i class="${p.icon}"></i></div>
                 <div class="problem-title">${p.name}</div>
@@ -474,118 +561,90 @@
                 </div>
             </div>
         `).join('');
-    }
-
-    function updateUI() {
-        // Current data
-        document.getElementById('motorAcc').innerText = metrics.motor.acc.toFixed(2);
-        document.getElementById('motorTemp').innerText = metrics.motor.temp.toFixed(1);
-        document.getElementById('motorVib').innerText = metrics.motor.vib.toFixed(2);
-        document.getElementById('motorAccFill').style.width = Math.min(100, (metrics.motor.acc/5)*100)+'%';
-        document.getElementById('motorTempFill').style.width = Math.min(100, (metrics.motor.temp/100)*100)+'%';
-        document.getElementById('motorVibFill').style.width = Math.min(100, (metrics.motor.vib/4)*100)+'%';
-        document.getElementById('motorRisk').innerHTML = `<span class="risk-medium">${metrics.motor.risk}</span>`;
         
-        document.getElementById('couplingAcc').innerText = metrics.coupling.acc.toFixed(2);
-        document.getElementById('couplingTemp').innerText = metrics.coupling.temp.toFixed(1);
-        document.getElementById('couplingVib').innerText = metrics.coupling.vib.toFixed(2);
-        document.getElementById('couplingAlign').innerText = metrics.coupling.align.toFixed(2)+' mm';
-        document.getElementById('couplingAccFill').style.width = Math.min(100, (metrics.coupling.acc/5)*100)+'%';
-        document.getElementById('couplingTempFill').style.width = Math.min(100, (metrics.coupling.temp/90)*100)+'%';
-        document.getElementById('couplingVibFill').style.width = Math.min(100, (metrics.coupling.vib/4)*100)+'%';
-        document.getElementById('couplingRisk').innerHTML = `<span class="risk-high">${metrics.coupling.risk}</span>`;
+        const pumpHtml = `
+            <div class="machine-title">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div class="machine-icon"><i class="fas fa-oil-can"></i></div>
+                    <div class="machine-info"><h1>${pump.name}</h1><p>Département ${pump.dept} · Unité de production</p></div>
+                </div>
+                <div><span class="badge-online"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> ${pump.status}</span></div>
+            </div>
+            <div class="components-grid">
+                <div class="component-card"><div class="comp-header"><div class="comp-name"><i class="fas fa-microchip"></i> MOTEUR</div><span class="status-indicator ${m.motor.risk === 'Élevé' ? 'status-warning' : (m.motor.risk === 'Critique' ? 'status-critical' : 'status-good')}"></span></div>
+                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-waveform"></i> Accélération</div><div class="metric-row"><span class="metric-label">Valeur (m/s²)</span><span class="metric-value" id="motorAcc">${m.motor.acc}</span></div><div class="progress-bar-bg"><div class="progress-fill" id="motorAccFill" style="width:${(m.motor.acc/5)*100}%"></div></div></div>
+                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-thermometer-half"></i> Température</div><div class="metric-row"><span class="metric-label">Valeur (°C)</span><span class="metric-value" id="motorTemp">${m.motor.temp}</span></div><div class="progress-bar-bg"><div class="progress-fill" id="motorTempFill" style="width:${(m.motor.temp/100)*100}%"></div></div></div>
+                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-chart-line"></i> Vibration</div><div class="metric-row"><span class="metric-label">Valeur (mm/s)</span><span class="metric-value" id="motorVib">${m.motor.vib}</span></div><div class="progress-bar-bg"><div class="progress-fill" id="motorVibFill" style="width:${(m.motor.vib/4)*100}%"></div></div></div>
+                    <div class="metric-row"><span class="metric-label">Risque actuel</span><span class="metric-value ${m.motor.risk === 'Élevé' ? 'risk-medium' : (m.motor.risk === 'Critique' ? 'risk-high' : 'risk-low')}">${m.motor.risk}</span></div>
+                    <div class="metric-row"><span class="metric-label">RUL estimée</span><span class="metric-value">~${m.motor.rul} heures</span></div>
+                </div>
+                <div class="component-card"><div class="comp-header"><div class="comp-name"><i class="fas fa-link"></i> ACCOUPLEMENT</div><span class="status-indicator ${m.coupling.risk === 'Élevé' ? 'status-warning' : (m.coupling.risk === 'Critique' ? 'status-critical' : 'status-good')}"></span></div>
+                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-waveform"></i> Accélération</div><div class="metric-row"><span class="metric-label">Valeur (m/s²)</span><span class="metric-value" id="couplingAcc">${m.coupling.acc}</span></div><div class="progress-bar-bg"><div class="progress-fill" id="couplingAccFill" style="width:${(m.coupling.acc/5)*100}%"></div></div></div>
+                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-thermometer-half"></i> Température</div><div class="metric-row"><span class="metric-label">Valeur (°C)</span><span class="metric-value" id="couplingTemp">${m.coupling.temp}</span></div><div class="progress-bar-bg"><div class="progress-fill" id="couplingTempFill" style="width:${(m.coupling.temp/90)*100}%"></div></div></div>
+                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-chart-line"></i> Vibration</div><div class="metric-row"><span class="metric-label">Valeur (mm/s)</span><span class="metric-value" id="couplingVib">${m.coupling.vib}</span></div><div class="progress-bar-bg"><div class="progress-fill" id="couplingVibFill" style="width:${(m.coupling.vib/4)*100}%"></div></div></div>
+                    <div class="metric-row"><span class="metric-label">Désalignement</span><span class="metric-value" id="couplingAlign">${m.coupling.align} mm</span></div>
+                    <div class="metric-row"><span class="metric-label">Risque actuel</span><span class="metric-value ${m.coupling.risk === 'Élevé' ? 'risk-medium' : (m.coupling.risk === 'Critique' ? 'risk-high' : 'risk-low')}">${m.coupling.risk}</span></div>
+                    <div class="metric-row"><span class="metric-label">RUL estimée</span><span class="metric-value">~${m.coupling.rul} heures</span></div>
+                </div>
+                <div class="component-card"><div class="comp-header"><div class="comp-name"><i class="fas fa-water"></i> POMPE</div><span class="status-indicator ${m.pump.risk === 'Élevé' ? 'status-warning' : (m.pump.risk === 'Critique' ? 'status-critical' : 'status-good')}"></span></div>
+                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-waveform"></i> Accélération</div><div class="metric-row"><span class="metric-label">Valeur (m/s²)</span><span class="metric-value" id="pumpAcc">${m.pump.acc}</span></div><div class="progress-bar-bg"><div class="progress-fill" id="pumpAccFill" style="width:${(m.pump.acc/3)*100}%"></div></div></div>
+                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-thermometer-half"></i> Température</div><div class="metric-row"><span class="metric-label">Valeur (°C)</span><span class="metric-value" id="pumpTemp">${m.pump.temp}</span></div><div class="progress-bar-bg"><div class="progress-fill" id="pumpTempFill" style="width:${(m.pump.temp/85)*100}%"></div></div></div>
+                    <div class="sensor-group"><div class="sensor-title"><i class="fas fa-chart-line"></i> Vibration</div><div class="metric-row"><span class="metric-label">Valeur (mm/s)</span><span class="metric-value" id="pumpVib">${m.pump.vib}</span></div><div class="progress-bar-bg"><div class="progress-fill" id="pumpVibFill" style="width:${(m.pump.vib/3)*100}%"></div></div></div>
+                    <div class="metric-row"><span class="metric-label">Débit</span><span class="metric-value" id="pumpFlow">${m.pump.flow} m³/h</span></div>
+                    <div class="metric-row"><span class="metric-label">Risque actuel</span><span class="metric-value ${m.pump.risk === 'Élevé' ? 'risk-medium' : (m.pump.risk === 'Critique' ? 'risk-high' : 'risk-low')}">${m.pump.risk}</span></div>
+                    <div class="metric-row"><span class="metric-label">RUL estimée</span><span class="metric-value">~${m.pump.rul} heures</span></div>
+                </div>
+            </div>
+            <div class="diagnostic-section"><div class="section-title"><i class="fas fa-stethoscope"></i> Diagnostic des problèmes potentiels</div><div class="problems-grid">${problemsHtml}</div></div>
+            <div class="prediction-main"><div class="section-title"><i class="fas fa-chart-line"></i> Prédiction H+12 - Évolution vibratoire</div>
+                <div class="filter-buttons"><button class="filter-btn active" data-filter="motor">Moteur</button><button class="filter-btn" data-filter="coupling">Accouplement</button><button class="filter-btn" data-filter="pump">Pompe</button></div>
+                <canvas id="mainPredictionChart" height="200"></canvas><div class="prediction-stats-row" id="predictionStats"></div>
+            </div>
+            <div class="alerts-panel"><div class="section-title"><i class="fas fa-exclamation-triangle"></i> Alertes prédictives H+12</div>
+                <div class="alerts-container" id="alertsContainer"></div>
+            </div>
+            <div class="solutions-panel"><div class="section-title"><i class="fas fa-lightbulb"></i> Solutions proposées par IA</div>
+                <div class="solutions-grid" id="solutionsGrid"></div>
+            </div>
+        `;
+        document.getElementById('dashboardContent').innerHTML = pumpHtml;
         
-        document.getElementById('pumpAcc').innerText = metrics.pump.acc.toFixed(2);
-        document.getElementById('pumpTemp').innerText = metrics.pump.temp.toFixed(1);
-        document.getElementById('pumpVib').innerText = metrics.pump.vib.toFixed(2);
-        document.getElementById('pumpFlow').innerText = metrics.pump.flow + ' m³/h';
-        document.getElementById('pumpAccFill').style.width = Math.min(100, (metrics.pump.acc/3)*100)+'%';
-        document.getElementById('pumpTempFill').style.width = Math.min(100, (metrics.pump.temp/85)*100)+'%';
-        document.getElementById('pumpVibFill').style.width = Math.min(100, (metrics.pump.vib/3)*100)+'%';
-        document.getElementById('pumpRisk').innerHTML = `<span class="risk-low">${metrics.pump.risk}</span>`;
+        initMainChart(m);
+        currentMetrics = m;
+        updateMainChart(m);
         
-        // Prediction stats
-        document.getElementById('motorVibPred').innerText = metrics.motor.predVib.toFixed(2) + ' mm/s';
-        document.getElementById('motorTempPred').innerText = metrics.motor.predTemp.toFixed(1) + ' °C';
-        document.getElementById('couplingVibPred').innerText = metrics.coupling.predVib.toFixed(2) + ' mm/s';
-        document.getElementById('couplingAlignPred').innerText = metrics.coupling.predAlign.toFixed(2) + ' mm';
-        document.getElementById('pumpVibPred').innerText = metrics.pump.predVib.toFixed(2) + ' mm/s';
-        document.getElementById('pumpFlowPred').innerText = metrics.pump.predFlow + ' m³/h';
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-filter');
+                updateMainChart(m);
+            });
+        });
         
-        // Future risk badges
-        let badges = { motor: metrics.motor.futureRisk, coupling: metrics.coupling.futureRisk, pump: metrics.pump.futureRisk };
-        for(let [key, val] of Object.entries(badges)) {
-            let badge = document.getElementById(`${key}FutureRiskBadge`);
-            badge.className = `future-risk-badge ${val === 'Critique' ? 'risk-badge-critical' : (val === 'Élevé' ? 'risk-badge-high' : (val === 'Moyen' ? 'risk-badge-medium' : 'risk-badge-low'))}`;
-            badge.innerText = `Risque: ${val}`;
-        }
-        
-        updateProblems();
-        
-        // Update charts
-        const motorData = [metrics.motor.vib, metrics.motor.vib+0.12, metrics.motor.vib+0.24, metrics.motor.vib+0.36, metrics.motor.vib+0.48, metrics.motor.vib+0.60, metrics.motor.predVib];
-        const couplingData = [metrics.coupling.vib, metrics.coupling.vib+0.20, metrics.coupling.vib+0.40, metrics.coupling.vib+0.60, metrics.coupling.vib+0.80, metrics.coupling.vib+1.00, metrics.coupling.predVib];
-        const pumpData = [metrics.pump.vib, metrics.pump.vib+0.03, metrics.pump.vib+0.06, metrics.pump.vib+0.09, metrics.pump.vib+0.11, metrics.pump.vib+0.12, metrics.pump.predVib];
-        if(motorChart) { motorChart.data.datasets[0].data = motorData; motorChart.update(); }
-        if(couplingChart) { couplingChart.data.datasets[0].data = couplingData; couplingChart.update(); }
-        if(pumpChart) { pumpChart.data.datasets[0].data = pumpData; pumpChart.update(); }
-        
-        // Alerts H+12
         document.getElementById('alertsContainer').innerHTML = `
-            <div class="alert-item alert-warning"><i class="fas fa-chart-line"></i> <strong>Moteur:</strong> Vibration prévue H+12: ${metrics.motor.predVib.toFixed(2)} mm/s (seuil 2.5). Risque ${metrics.motor.futureRisk}.</div>
-            <div class="alert-item alert-critical"><i class="fas fa-cog"></i> <strong>Accouplement:</strong> Vibration critique H+12: ${metrics.coupling.predVib.toFixed(2)} mm/s. Désalignement prévu: ${metrics.coupling.predAlign.toFixed(2)} mm. Intervention requise dans les 12h.</div>
-            <div class="alert-item alert-warning"><i class="fas fa-thermometer-half"></i> <strong>Moteur:</strong> Température prévue H+12: ${metrics.motor.predTemp.toFixed(1)}°C (seuil 85°C). Surveillance renforcée.</div>
-            <div class="alert-item alert-ok"><i class="fas fa-check-circle"></i> <strong>Pompe:</strong> Paramètres stables. Vibration prévue: ${metrics.pump.predVib.toFixed(2)} mm/s.</div>
+            <div class="alert-item alert-warning"><i class="fas fa-chart-line"></i> <strong>Moteur:</strong> ${getExplanation('motor', m)}</div>
+            <div class="alert-item alert-critical"><i class="fas fa-cog"></i> <strong>Accouplement:</strong> ${getExplanation('coupling', m)} - Intervention requise (RUL: ${m.coupling.rul}h)</div>
+            <div class="alert-item alert-ok"><i class="fas fa-check-circle"></i> <strong>Pompe:</strong> ${getExplanation('pump', m)}</div>
         `;
         
-        // Solutions IA
         document.getElementById('solutionsGrid').innerHTML = `
-            <div class="solution-card"><div class="solution-icon"><i class="fas fa-crosshairs"></i></div><div class="solution-title">Realignement accouplement urgent</div><div class="solution-desc">Accélération ${metrics.coupling.acc.toFixed(2)} m/s², désalignement prévu ${metrics.coupling.predAlign.toFixed(2)}mm. Réalignement laser dans les 8h.</div><div class="priority">Priorité haute - 12h</div></div>
-            <div class="solution-card"><div class="solution-icon"><i class="fas fa-microchip"></i></div><div class="solution-title">Équilibrage moteur préventif</div><div class="solution-desc">Vibration ${metrics.motor.vib.toFixed(2)} → ${metrics.motor.predVib.toFixed(2)} mm/s prévu. Inspection roulements et équilibrage.</div><div class="priority">Priorité moyenne</div></div>
-            <div class="solution-card"><div class="solution-icon"><i class="fas fa-thermometer-half"></i></div><div class="solution-title">Surveillance thermique renforcée</div><div class="solution-desc">Température moteur ${metrics.motor.temp.toFixed(1)} → ${metrics.motor.predTemp.toFixed(1)}°C prévu. Vérifier circuit de refroidissement.</div><div class="priority">Surveillance rapprochée</div></div>
+            <div class="solution-card"><div class="solution-icon"><i class="fas fa-crosshairs"></i></div><div class="solution-title">Realignement accouplement urgent</div><div class="solution-desc">Désalignement ${m.coupling.align}mm, vibration ${m.coupling.vib}mm/s. Réalignement laser dans les 8h.</div><div class="priority">Priorité haute</div></div>
+            <div class="solution-card"><div class="solution-icon"><i class="fas fa-microchip"></i></div><div class="solution-title">Équilibrage moteur préventif</div><div class="solution-desc">Vibration ${m.motor.vib}mm/s → ${m.motor.predVib}mm/s prévu. Inspection roulements.</div><div class="priority">Priorité moyenne</div></div>
+            <div class="solution-card"><div class="solution-icon"><i class="fas fa-thermometer-half"></i></div><div class="solution-title">Surveillance thermique</div><div class="solution-desc">Température moteur ${m.motor.temp}°C. Vérifier circuit de refroidissement.</div><div class="priority">Surveillance</div></div>
         `;
     }
-
-    let motorChart, couplingChart, pumpChart;
-    function initCharts() {
-        const labels = ['Maintenant', '+2h', '+4h', '+6h', '+8h', '+10h', '+12h'];
-        motorChart = new Chart(document.getElementById('motorPredChart'), { type: 'line', data: { labels, datasets: [{ label: 'Vibration (mm/s)', data: [], borderColor: '#2c9e6b', borderWidth: 2, tension: 0.3, fill: false, pointRadius: 3 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top', labels: { font: { size: 9 } } } } } });
-        couplingChart = new Chart(document.getElementById('couplingPredChart'), { type: 'line', data: { labels, datasets: [{ label: 'Vibration (mm/s)', data: [], borderColor: '#e6b422', borderWidth: 2, tension: 0.3, fill: false, pointRadius: 3 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top', labels: { font: { size: 9 } } } } } });
-        pumpChart = new Chart(document.getElementById('pumpPredChart'), { type: 'line', data: { labels, datasets: [{ label: 'Vibration (mm/s)', data: [], borderColor: '#3b82f6', borderWidth: 2, tension: 0.3, fill: false, pointRadius: 3 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top', labels: { font: { size: 9 } } } } } });
-    }
-
-    function startSimulation() {
-        setInterval(() => {
-            metrics.motor.vib = Math.min(2.8, metrics.motor.vib + (Math.random() * 0.04));
-            metrics.motor.temp = Math.min(84, metrics.motor.temp + (Math.random() * 0.4));
-            metrics.motor.acc = Math.min(3.8, metrics.motor.acc + (Math.random() * 0.05));
-            metrics.motor.predVib = Math.min(3.0, metrics.motor.vib + 0.5);
-            metrics.motor.predTemp = Math.min(86, metrics.motor.temp + 4.5);
-            metrics.motor.risk = metrics.motor.vib > 2.0 ? "Élevé" : (metrics.motor.vib > 1.6 ? "Moyen" : "Faible");
-            metrics.motor.futureRisk = metrics.motor.predVib > 2.2 ? "Élevé" : (metrics.motor.predVib > 1.8 ? "Moyen" : "Faible");
-            
-            metrics.coupling.vib = Math.min(3.5, metrics.coupling.vib + (Math.random() * 0.07));
-            metrics.coupling.acc = Math.min(5.0, metrics.coupling.acc + (Math.random() * 0.08));
-            metrics.coupling.align = Math.min(0.62, metrics.coupling.align + (Math.random() * 0.008));
-            metrics.coupling.predVib = Math.min(4.0, metrics.coupling.vib + 1.2);
-            metrics.coupling.predAlign = Math.min(0.72, metrics.coupling.align + 0.16);
-            metrics.coupling.risk = metrics.coupling.vib > 2.8 ? "Élevé" : (metrics.coupling.vib > 2.0 ? "Moyen" : "Faible");
-            metrics.coupling.futureRisk = metrics.coupling.predVib > 3.2 ? "Critique" : (metrics.coupling.predVib > 2.5 ? "Élevé" : "Moyen");
-            
-            metrics.pump.vib = Math.max(0.65, Math.min(1.25, metrics.pump.vib + (Math.random() * 0.03 - 0.01)));
-            metrics.pump.temp = Math.max(59, Math.min(69, metrics.pump.temp + (Math.random() * 0.3 - 0.15)));
-            metrics.pump.flow = Math.max(264, metrics.pump.flow - (Math.random() * 0.4));
-            metrics.pump.predVib = Math.min(1.3, metrics.pump.vib + 0.13);
-            metrics.pump.predFlow = Math.max(265, metrics.pump.flow - 6);
-            metrics.pump.risk = metrics.pump.vib > 1.1 ? "Moyen" : "Faible";
-            
-            updateUI();
-        }, 20000);
-    }
-
-    initCharts();
-    updateUI();
-    startSimulation();
+    
+    // ========== NAVIGATION ==========
+    navDashboard.addEventListener('click', () => { navLinks.forEach(l => l.classList.remove('active')); navDashboard.classList.add('active'); renderOverallDashboard(); });
+    navAlerts.addEventListener('click', () => { navLinks.forEach(l => l.classList.remove('active')); navAlerts.classList.add('active'); renderAlertsDashboard(); });
+    
+    document.querySelectorAll('.pump-item').forEach(pump => { pump.addEventListener('click', (e) => { e.stopPropagation(); const pumpId = pump.getAttribute('data-pump'); if (pumpId && allPumpsData[pumpId]) { navLinks.forEach(l => l.classList.remove('active')); renderPumpDashboard(pumpId); } }); });
+    
+    const searchInput = document.getElementById('globalSearch');
+    searchInput?.addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); if (term.length > 0) { const match = Object.entries(allPumpsData).find(([id, p]) => p.name.toLowerCase().includes(term) || p.dept.toLowerCase().includes(term)); if (match) { navLinks.forEach(l => l.classList.remove('active')); renderPumpDashboard(match[0]); } else { renderOverallDashboard(); } } else { renderOverallDashboard(); } });
+    
+    renderOverallDashboard();
 </script>
 </body>
 </html>
