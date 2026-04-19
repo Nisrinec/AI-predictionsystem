@@ -10,30 +10,46 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* Fix: Remove transform scaling that causes empty space, use viewport meta instead */
         body {
             background: #f0f4f8;
             font-family: 'Inter', sans-serif;
             color: #1a2c3e;
-            overflow-x: hidden;
-            transform: scale(0.675);
-            transform-origin: top left;
-            width: 148.148%;
-            height: 148.148%;
+            overflow: hidden;
+            height: 100vh;
         }
 
-        .app-layout { display: flex; width: 100%; min-height: fit-content; }
+        .app-layout { 
+            display: flex; 
+            width: 100%; 
+            height: 100vh;
+            overflow: hidden;
+        }
 
+        /* SIDEBAR - fixed, never scrolls */
         .sidebar {
-            width: 410px;
+            width: 310px;
             background: #ffffff;
             border-right: 1px solid #e2edf2;
             display: flex;
             flex-direction: column;
-            position: sticky;
-            top: 0;
-            height: cover;
+            height: 100vh;
+            flex-shrink: 0;
+            overflow-y: auto;
             box-shadow: 4px 0 20px rgba(0,0,0,0.02);
             z-index: 10;
+        }
+
+        /* Custom scrollbar for sidebar (optional) */
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: #eef2f6;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
         }
 
         .brand-area { padding: 28px 24px; border-bottom: 1px solid #ecf3f8; margin-bottom: 20px; }
@@ -82,12 +98,38 @@
 
         .sidebar-footer { padding: 20px 20px 24px; border-top: 1px solid #ecf3f8; font-size: 0.7rem; color: #88a0ae; }
 
-        .main-content { flex: 1; padding: 24px 32px; overflow-x: auto; }
+        /* MAIN CONTENT - scrollable area */
+        .main-content { 
+            flex: 1; 
+            padding: 24px 32px; 
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        /* Custom scrollbar for main content */
+        .main-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .main-content::-webkit-scrollbar-track {
+            background: #eef2f6;
+            border-radius: 3px;
+        }
+        .main-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .dashboard {
+            max-width: 100%;
+        }
 
         .dashboard-header {
             display: flex; justify-content: space-between; align-items: center;
             background: white; padding: 10px 24px; border-radius: 60px;
             border: 1px solid #eef2f6; margin-bottom: 28px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
         }
         .search-wrapper { display: flex; align-items: center; background: #f8fafc; border-radius: 48px; padding: 8px 18px; border: 1px solid #e2e8f0; }
         .search-wrapper input { border: none; padding: 6px 12px; font-size: 0.9rem; background: transparent; outline: none; }
@@ -243,7 +285,7 @@
         <div class="brand-area">
             <div class="logo">
                 <div class="logo-icon"><i class="fas fa-gear"></i></div>
-                <div class="logo-text"><h2>iPredict </h2><p>diagnostic prédictif</p></div>
+                <div class="logo-text"><h2>iPredict</h2><p>Prédictive basée sur l’IA</p></div>
             </div>
         </div>
         <div class="nav-menu">
@@ -265,7 +307,7 @@
                     <div class="pumps-sublist" id="pumps-engrais"><div class="pump-item" data-pump="eng_p1"><i class="fas fa-oil-can"></i> Pompe Mélange EN-300</div><div class="pump-item" data-pump="eng_p2"><i class="fas fa-water"></i> Pompe Doseuse EN-301</div></div>
                 </div>
             </div>
-            <div class="nav-item"><div class="nav-link"><i class="fas fa-chart-line"></i><span>Analytiques</span></div></div>
+            <!-- <div class="nav-item"><div class="nav-link"><i class="fas fa-chart-line"></i><span>Analytiques</span></div></div> -->
         </div>
         <div class="sidebar-footer"><i class="fas fa-shield-alt"></i> v5.0 · IA Avancée<div>© iPredict 2026</div></div>
     </aside>
@@ -274,11 +316,11 @@
         <div class="dashboard">
             <div class="dashboard-header">
                 <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher..." id="globalSearch"></div>
-                <div class="user-profile" id="userProfileBtn"><div class="profile-trigger"><div class="avatar"><i class="fas fa-user-circle"></i></div><div><div class="user-name">Antoine Moreau</div><div class="user-role">Responsable maintenance</div></div><i class="fas fa-chevron-down"></i></div>
+                <div class="user-profile" id="userProfileBtn"><div class="profile-trigger"><div class="avatar"><i class="fas fa-user-circle"></i></div><div><div class="user-name">Sara alaoui</div><div class="user-role">Responsable maintenance</div></div><i class="fas fa-chevron-down"></i></div>
                 <div class="dropdown-menu" id="userDropdown"><div class="dropdown-item"><i class="fas fa-user"></i> Profil</div><div class="dropdown-item logout-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</div></div></div>
             </div>
             <div id="dashboardContent"></div>
-            <footer><i class="fas fa-robot"></i> IA Avancée: RUL | Détection d'anomalies | Multi-sites · Mise à jour 20s</footer>
+            <footer><i class="fas fa-robot"></i> IA Avancée: RUL | Détection d'anomalies | Multi-sites</footer>
         </div>
     </main>
 </div>
@@ -317,7 +359,6 @@
         for (let pumpId in allPumpsData) {
             const pump = allPumpsData[pumpId];
             const m = pump.metrics;
-            // Coupling alerts
             if (m.coupling.risk === 'Critique') {
                 alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Accouplement', message: `Vibration critique ${m.coupling.vib} mm/s, désalignement ${m.coupling.align} mm`, severity: 'critical', rul: m.coupling.rul });
             } else if (m.coupling.risk === 'Élevé') {
@@ -325,18 +366,15 @@
             } else if (m.coupling.risk === 'Moyen') {
                 alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Accouplement', message: `Vibration modérée ${m.coupling.vib} mm/s`, severity: 'medium', rul: m.coupling.rul });
             }
-            // Motor alerts
             if (m.motor.risk === 'Élevé') {
                 alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Moteur', message: `Vibration ${m.motor.vib} mm/s, température ${m.motor.temp}°C`, severity: 'high', rul: m.motor.rul });
             } else if (m.motor.risk === 'Moyen') {
                 alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Moteur', message: `Vibration ${m.motor.vib} mm/s`, severity: 'medium', rul: m.motor.rul });
             }
-            // Temperature alerts
             if (m.motor.temp > 78) {
                 alerts.push({ pumpId: pumpId, pumpName: pump.name, dept: pump.dept, component: 'Moteur', message: `Température élevée: ${m.motor.temp}°C`, severity: 'high', rul: m.motor.rul });
             }
         }
-        // Sort by severity (critical first)
         const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
         alerts.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
         return alerts;
@@ -371,10 +409,10 @@
                             ${alerts.map(alert => `
                                 <tr class="alert-row-clickable" data-pump-id="${alert.pumpId}">
                                     <td><strong>${alert.dept}</strong></td>
-                                    <td>${alert.pumpName}</td>
+                                    <td>${alert.pumpName}</span></td>
                                     <td>${alert.component}</td>
-                                    <td>${alert.message}</td>
-                                    <td>~${alert.rul}h</td>
+                                    <td>${alert.message}</span></td>
+                                    <td>~${alert.rul}h</span></td>
                                     <td><span class="severity-badge severity-${alert.severity}">${alert.severity === 'critical' ? 'Critique' : (alert.severity === 'high' ? 'Élevée' : (alert.severity === 'medium' ? 'Modérée' : 'Faible'))}</span></td>
                                 </tr>
                             `).join('')}
@@ -386,13 +424,11 @@
         `;
         document.getElementById('dashboardContent').innerHTML = alertsHtml;
         
-        // Add click handlers for each alert row
         document.querySelectorAll('.alert-row-clickable').forEach(row => {
             row.addEventListener('click', () => {
                 const pumpId = row.getAttribute('data-pump-id');
                 if (pumpId && allPumpsData[pumpId]) {
                     renderPumpDashboard(pumpId);
-                    // Update active nav
                     navLinks.forEach(link => link.classList.remove('active'));
                 }
             });
@@ -603,7 +639,7 @@
             <div class="alerts-panel"><div class="section-title"><i class="fas fa-exclamation-triangle"></i> Alertes prédictives H+12</div>
                 <div class="alerts-container" id="alertsContainer"></div>
             </div>
-            <div class="solutions-panel"><div class="section-title"><i class="fas fa-lightbulb"></i> Solutions proposées par IA</div>
+            <div class="solutions-panel"><div class="section-title"><i class="fas fa-lightbulb"></i> Solutions proposées</div>
                 <div class="solutions-grid" id="solutionsGrid"></div>
             </div>
         `;
