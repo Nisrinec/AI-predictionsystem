@@ -275,8 +275,67 @@
         .severity-high { background: #fff0e0; color: #c97e2a; }
         .severity-medium { background: #fff8e7; color: #b8860b; }
         .severity-low { background: #e0f3ea; color: #1d734c; }
-
+/* ---------- Profile Page Styles (add to your <style>) ---------- */
+.profile-container { max-width: 1000px; margin: 0 auto; }
+.profile-horizontal-card { background: white; border-radius: 32px; border: 1px solid #eef2f6; overflow: hidden; }
+.profile-cover { background: linear-gradient(135deg, #2c9e6b10, #eaf6f0); padding: 30px 40px; display: flex; align-items: center; gap: 30px; flex-wrap: wrap; border-bottom: 1px solid #e2edf2; }
+.profile-avatar-large { width: 90px; height: 90px; background: #2c9e6b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-transform: uppercase; }
+.profile-titles h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+.profile-titles p { color: #6f8f9e; }
+.profile-fields { padding: 30px 40px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+.field-group { display: flex; flex-direction: column; }
+.field-group label { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #64748b; margin-bottom: 6px; }
+.field-group input, .field-group .field-value { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 12px 18px; font-size: 0.9rem; }
+.field-group input:focus { outline: none; border-color: #2c9e6b; box-shadow: 0 0 0 2px #2c9e6b20; }
+.password-section { padding: 20px 40px 40px 40px; border-top: 1px solid #ecf3f8; }
+.password-section h3 { font-size: 1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.password-row { display: flex; gap: 20px; flex-wrap: wrap; }
+.password-row .field-group { flex: 1; }
+.profile-actions { padding: 0 40px 40px 40px; display: flex; gap: 16px; }
+.btn-primary { background: #2c9e6b; color: white; border: none; padding: 12px 28px; border-radius: 40px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.btn-primary:hover { background: #238358; }
+.btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; padding: 12px 28px; border-radius: 40px; font-weight: 600; cursor: pointer; }
+.form-message { margin-top: 16px; border-radius: 28px; padding: 10px 16px; font-size: 0.8rem; }
+.success-message { background: #e0f3ea; color: #1d734c; }
+.error-message { background: #ffe6e5; color: #bc5a4a; }
         footer { text-align: center; margin-top: 24px; font-size: 0.7rem; color: #7e95a3; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+        .bell-subscribe {
+    border: none;
+    border-radius: 40px;
+    padding: 6px 18px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    font-family: inherit;
+}
+.bell-subscribe:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    filter: brightness(0.97);
+}
+.bell-icon-btn {
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #f1f5f9;
+    color: #334155;
+}
+.bell-icon-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    filter: brightness(0.96);
+}
     </style>
 </head>
 <body>
@@ -352,7 +411,41 @@
         'eng_p1': { id: 'eng_p1', name: 'Pompe Mélange EN-300', dept: 'ENGRAIS', status: 'En ligne', metrics: { motor: { acc: 2.95, temp: 79.0, vib: 1.95, risk: "Moyen", predVib: 2.55, rul: 310, futureRisk: "Moyen" }, coupling: { acc: 4.10, temp: 73.0, vib: 2.55, align: 0.45, risk: "Élevé", predVib: 3.75, rul: 110, futureRisk: "Élevé" }, pump: { acc: 1.25, temp: 66.0, vib: 1.00, flow: 265, risk: "Faible", predVib: 1.15, rul: 950, futureRisk: "Faible" } } },
         'eng_p2': { id: 'eng_p2', name: 'Pompe Doseuse EN-301', dept: 'ENGRAIS', status: 'Surveillance', metrics: { motor: { acc: 2.30, temp: 74.0, vib: 1.55, risk: "Faible", predVib: 2.05, rul: 480, futureRisk: "Faible" }, coupling: { acc: 3.00, temp: 69.0, vib: 2.05, align: 0.32, risk: "Moyen", predVib: 2.85, rul: 280, futureRisk: "Moyen" }, pump: { acc: 1.40, temp: 63.0, vib: 0.95, flow: 255, risk: "Faible", predVib: 1.10, rul: 870, futureRisk: "Faible" } } }
     };
-    
+    // ========== EMAIL NOTIFICATION SYSTEM ==========
+let emailSubscriptions = JSON.parse(localStorage.getItem('emailSubscriptions') || '{}');
+
+function simulateEmail(pumpId, pumpName) {
+    alert(`📧 SIMULATION: Email envoyé à responsable@ipredict.com\nObjet: ALERTE - ${pumpName} est EN PANNE !\n\nMachine: ${pumpName}\nStatut: Critique (RUL < 100h)\nIntervention requise immédiatement.`);
+    console.log(`[EMAIL] To: responsable@ipredict.com - ${pumpName} en panne`);
+}
+
+function toggleSubscription(pumpId) {
+    emailSubscriptions[pumpId] = !emailSubscriptions[pumpId];
+    localStorage.setItem('emailSubscriptions', JSON.stringify(emailSubscriptions));
+    if (!emailSubscriptions[pumpId]) localStorage.removeItem(`notified_${pumpId}`);
+    return emailSubscriptions[pumpId];
+}
+
+function isSubscribed(pumpId) {
+    return emailSubscriptions[pumpId] === true;
+}
+
+// Periodically check subscribed machines for failure (every 30 seconds)
+setInterval(() => {
+    for (let [pumpId, subscribed] of Object.entries(emailSubscriptions)) {
+        if (!subscribed) continue;
+        const pump = allPumpsData[pumpId];
+        if (!pump) continue;
+        const isPanne = pump.metrics.coupling.risk === 'Critique' || pump.metrics.motor.risk === 'Critique';
+        const alreadyNotified = localStorage.getItem(`notified_${pumpId}`) === 'true';
+        if (isPanne && !alreadyNotified) {
+            simulateEmail(pumpId, pump.name);
+            localStorage.setItem(`notified_${pumpId}`, 'true');
+        } else if (!isPanne) {
+            localStorage.removeItem(`notified_${pumpId}`);
+        }
+    }
+}, 30000);
     // ========== GENERATE ALL ALERTS ==========
     function getAllAlerts() {
         let alerts = [];
@@ -604,7 +697,12 @@
                     <div class="machine-icon"><i class="fas fa-oil-can"></i></div>
                     <div class="machine-info"><h1>${pump.name}</h1><p>Département ${pump.dept} · Unité de production</p></div>
                 </div>
-                <div><span class="badge-online"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> ${pump.status}</span></div>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+        <button id="notifyBellBtn" class="bell-icon-btn" style="background: ${isSubscribed(pumpId) ? '#2c9e6b' : '#f1f5f9'}; color: ${isSubscribed(pumpId) ? 'white' : '#334155'};">
+            <i class="fas fa-bell"></i>
+        </button>
+        <span class="badge-online"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> ${pump.status}</span>
+    </div>
             </div>
             <div class="components-grid">
                 <div class="component-card"><div class="comp-header"><div class="comp-name"><i class="fas fa-microchip"></i> MOTEUR</div><span class="status-indicator ${m.motor.risk === 'Élevé' ? 'status-warning' : (m.motor.risk === 'Critique' ? 'status-critical' : 'status-good')}"></span></div>
@@ -657,7 +755,19 @@
                 updateMainChart(m);
             });
         });
-        
+        const notifyBtn = document.getElementById('notifyBellBtn');
+if (notifyBtn) {
+    notifyBtn.addEventListener('click', () => {
+        const nowSubscribed = toggleSubscription(pumpId);
+        notifyBtn.style.background = nowSubscribed ? '#2c9e6b' : '#f1f5f9';
+        notifyBtn.style.color = nowSubscribed ? 'white' : '#334155';
+        // If machine is already in failure and subscribed now, send immediate alert
+        if (nowSubscribed && (m.coupling.risk === 'Critique' || m.motor.risk === 'Critique')) {
+            simulateEmail(pumpId, pump.name);
+            localStorage.setItem(`notified_${pumpId}`, 'true');
+        }
+    });
+}
         document.getElementById('alertsContainer').innerHTML = `
             <div class="alert-item alert-warning"><i class="fas fa-chart-line"></i> <strong>Moteur:</strong> ${getExplanation('motor', m)}</div>
             <div class="alert-item alert-critical"><i class="fas fa-cog"></i> <strong>Accouplement:</strong> ${getExplanation('coupling', m)} - Intervention requise (RUL: ${m.coupling.rul}h)</div>
@@ -681,6 +791,138 @@
     searchInput?.addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); if (term.length > 0) { const match = Object.entries(allPumpsData).find(([id, p]) => p.name.toLowerCase().includes(term) || p.dept.toLowerCase().includes(term)); if (match) { navLinks.forEach(l => l.classList.remove('active')); renderPumpDashboard(match[0]); } else { renderOverallDashboard(); } } else { renderOverallDashboard(); } });
     
     renderOverallDashboard();
+    // ========== USER MANAGEMENT (add to your existing <script>) ==========
+let currentUser = {
+    fullName: "Sara alaoui",
+    role: "Responsable maintenance",
+    email: "sara.alaoui@ipredict.com",
+    passwordHash: btoa("secure123")
+};
+
+function loadUserFromStorage() {
+    const stored = localStorage.getItem("ipredict_user");
+    if(stored) {
+        try {
+            const parsed = JSON.parse(stored);
+            currentUser = { ...currentUser, ...parsed };
+        } catch(e) {}
+    }
+    updateHeaderUI();
+}
+function saveUserToStorage() {
+    localStorage.setItem("ipredict_user", JSON.stringify({ 
+        fullName: currentUser.fullName, 
+        role: currentUser.role, 
+        email: currentUser.email, 
+        passwordHash: currentUser.passwordHash 
+    }));
+}
+function updateHeaderUI() {
+    const nameSpan = document.getElementById("headerUserName");
+    const roleSpan = document.getElementById("headerUserRole");
+    const avatarDiv = document.getElementById("headerAvatar");
+    if(nameSpan) nameSpan.innerText = currentUser.fullName;
+    if(roleSpan) roleSpan.innerText = currentUser.role;
+    if(avatarDiv) avatarDiv.innerText = currentUser.fullName.charAt(0).toUpperCase();
+}
+function verifyPassword(plain) { return btoa(plain) === currentUser.passwordHash; }
+function updatePassword(plain) { currentUser.passwordHash = btoa(plain); saveUserToStorage(); }
+function updateProfile(newName, newEmail, newRole) {
+    currentUser.fullName = newName;
+    currentUser.email = newEmail;
+    currentUser.role = newRole;
+    saveUserToStorage();
+    updateHeaderUI();
+}
+function escapeHtml(str) { return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+
+// ========== PROFILE PAGE RENDERING (horizontal layout) ==========
+function renderProfilePage() {
+    const profileHtml = `
+        <div class="profile-container">
+            <div class="profile-horizontal-card">
+                <div class="profile-cover">
+                    <div class="profile-avatar-large" id="profileAvatarLarge">${currentUser.fullName.charAt(0).toUpperCase()}</div>
+                    <div class="profile-titles">
+                        <h2>Mon profil</h2>
+                        <p>Gérez vos informations personnelles et votre mot de passe</p>
+                    </div>
+                </div>
+                <div class="profile-fields">
+                    <div class="field-group"><label>Nom complet</label><input type="text" id="editFullName" value="${escapeHtml(currentUser.fullName)}"></div>
+                    <div class="field-group"><label>Email</label><input type="email" id="editEmail" value="${escapeHtml(currentUser.email)}"></div>
+                    <div class="field-group"><label>Rôle</label><input type="text" id="editRole" value="${escapeHtml(currentUser.role)}"></div>
+                    <div class="field-group"><label>Identifiant</label><div class="field-value">responsable.maintenance@ipredict</div></div>
+                </div>
+                <div class="password-section">
+                    <h3><i class="fas fa-lock"></i> Modifier le mot de passe</h3>
+                    <div class="password-row">
+                        <div class="field-group"><label>Mot de passe actuel</label><input type="password" id="oldPassword" placeholder="••••••••"></div>
+                        <div class="field-group"><label>Nouveau mot de passe</label><input type="password" id="newPassword" placeholder="••••••••"></div>
+                        <div class="field-group"><label>Confirmer</label><input type="password" id="confirmPassword" placeholder="••••••••"></div>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="btn-primary" id="saveProfileBtn">Enregistrer</button>
+                    <button class="btn-secondary" id="cancelProfileBtn">Annuler</button>
+                </div>
+                <div id="profileFormMessage" style="padding:0 40px 40px 40px;"></div>
+            </div>
+        </div>
+    `;
+    document.getElementById('dashboardContent').innerHTML = profileHtml;
+
+    document.getElementById('saveProfileBtn').addEventListener('click', () => {
+        const newName = document.getElementById('editFullName').value.trim();
+        const newEmail = document.getElementById('editEmail').value.trim();
+        const newRole = document.getElementById('editRole').value.trim();
+        if (!newName || !newEmail) { showProfileMsg("Veuillez remplir tous les champs", "error"); return; }
+        updateProfile(newName, newEmail, newRole);
+        const oldPwd = document.getElementById('oldPassword').value;
+        const newPwd = document.getElementById('newPassword').value;
+        const confirmPwd = document.getElementById('confirmPassword').value;
+        if (oldPwd || newPwd || confirmPwd) {
+            if (!verifyPassword(oldPwd)) { showProfileMsg("Mot de passe actuel incorrect", "error"); return; }
+            if (newPwd !== confirmPwd) { showProfileMsg("Les nouveaux mots de passe ne correspondent pas", "error"); return; }
+            if (newPwd.length < 4) { showProfileMsg("Le mot de passe doit contenir au moins 4 caractères", "error"); return; }
+            updatePassword(newPwd);
+            showProfileMsg("Profil et mot de passe mis à jour avec succès", "success");
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        } else {
+            showProfileMsg("Profil mis à jour (mot de passe inchangé)", "success");
+        }
+        updateHeaderUI();
+        const avatarLarge = document.getElementById('profileAvatarLarge');
+        if(avatarLarge) avatarLarge.innerText = currentUser.fullName.charAt(0).toUpperCase();
+    });
+    document.getElementById('cancelProfileBtn').addEventListener('click', () => {
+        // Return to overall dashboard – assumes renderOverallDashboard exists
+        if(typeof renderOverallDashboard === 'function') renderOverallDashboard();
+        else location.reload();
+    });
+}
+function showProfileMsg(msg, type) {
+    const container = document.getElementById('profileFormMessage');
+    if(container) {
+        container.innerHTML = `<div class="form-message ${type === 'success' ? 'success-message' : 'error-message'}">${msg}</div>`;
+        setTimeout(() => { if(container) container.innerHTML = ''; }, 3000);
+    }
+}
+
+// ========== ATTACH PROFILE MENU EVENT (add this after your existing dropdown code) ==========
+// Make sure you have a reference to the profile menu item (already in your HTML)
+const profileMenuItem = document.querySelector('#userDropdown .dropdown-item:first-child');
+if(profileMenuItem) {
+    profileMenuItem.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('userDropdown')?.classList.remove('show');
+        renderProfilePage();
+    });
+}
+// Initial load user data from localStorage
+loadUserFromStorage();
 </script>
 </body>
 </html>
