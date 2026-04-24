@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.9, user-scalable=yes">
-    <title>iPredict | Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>iPredict | Maintenance Prédictive IA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -19,13 +19,12 @@
             color: #1a2c3e;
         }
 
-        /* ========= APP LAYOUT ========= */
         .app-layout {
             display: flex;
             min-height: 100vh;
         }
 
-        /* ========= SIDEBAR ========= */
+        /* Sidebar */
         .sidebar {
             width: 280px;
             background: linear-gradient(180deg, #0a1f1c 0%, #071513 100%);
@@ -119,7 +118,6 @@
             opacity: 0.6;
         }
 
-        /* ========= MAIN CONTENT ========= */
         .main-content {
             flex: 1;
             margin-left: 280px;
@@ -127,7 +125,6 @@
             min-height: 100vh;
         }
 
-        /* Header with logout */
         .dashboard-header {
             display: flex;
             justify-content: space-between;
@@ -168,7 +165,6 @@
             border-color: #d97777;
         }
 
-        /* KPI Cards */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -187,7 +183,6 @@
         .kpi-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1);
-            border-color: #cbd5e1;
         }
 
         .kpi-icon {
@@ -210,7 +205,6 @@
             font-size: 2rem;
             font-weight: 800;
             color: #0f172a;
-            margin-bottom: 4px;
         }
 
         .kpi-label {
@@ -219,7 +213,6 @@
             font-weight: 500;
         }
 
-        /* Section Cards */
         .section-card {
             background: white;
             border-radius: 24px;
@@ -246,27 +239,43 @@
             color: #0f2c28;
         }
 
-        /* Search bar inside tables */
         .table-search {
-            margin-bottom: 16px;
             display: flex;
             justify-content: flex-end;
+            margin-bottom: 20px;
         }
 
-        .table-search input {
-            padding: 8px 16px;
-            border-radius: 40px;
-            border: 1px solid #e2e8f0;
-            background: #f8fafc;
+        .search-box {
+            position: relative;
             width: 260px;
-            font-size: 0.85rem;
-            outline: none;
-            transition: 0.2s;
         }
 
-        .table-search input:focus {
+        .search-box input {
+            width: 100%;
+            padding: 12px 18px 12px 46px;
+            border: 1px solid #d1d9e6;
+            border-radius: 50px;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            font-size: 0.95rem;
+            color: #000000;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
             border-color: #2c9e6b;
-            box-shadow: 0 0 0 3px rgba(44,158,107,0.1);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(44,158,107,0.12);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #000000;
+            font-size: 1rem;
+            pointer-events: none;
         }
 
         .btn-primary {
@@ -285,24 +294,24 @@
         }
 
         .btn-primary:hover {
-            background: #1e7b54;
+            background: #248a5c;
             transform: translateY(-1px);
         }
 
         .btn-outline {
             background: transparent;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #2c9e6b;
             padding: 6px 14px;
             border-radius: 30px;
             font-size: 0.7rem;
             cursor: pointer;
             transition: 0.2s;
             margin-right: 6px;
+            color: #2c9e6b;
         }
 
         .btn-outline:hover {
-            border-color: #2c9e6b;
-            color: #2c9e6b;
+            background: #eaf6f0;
         }
 
         .btn-danger {
@@ -364,6 +373,37 @@
             background: #fff0e0;
             color: #c97e2a;
         }
+        
+        .badge-maintenance {
+            background: #ffe0e0;
+            color: #b91c1c;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 20px;
+        }
+
+        .stat-title {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
 
         footer {
             text-align: center;
@@ -371,34 +411,37 @@
             font-size: 0.7rem;
             color: #94a3b8;
         }
+        
+        .password-mask {
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 <div class="app-layout">
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="brand-area">
             <div class="logo">
-                <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="logo-icon"><i class="fas fa-gear"></i></div>
                 <div class="logo-text">
                     <h2>iPredict</h2>
-                    <p>industrial intelligence</p>
+                    <p>Prédictive IA · Industrie 4.0</p>
                 </div>
             </div>
         </div>
         <div class="nav-menu">
             <div class="nav-item"><div class="nav-link active" id="navDashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></div></div>
             <div class="nav-item"><div class="nav-link" id="navUsers"><i class="fas fa-users"></i><span>Utilisateurs</span></div></div>
-            <div class="nav-item"><div class="nav-link" id="navMachines"><i class="fas fa-microchip"></i><span>Machines</span></div></div>
+            <div class="nav-item"><div class="nav-link" id="navMachines"><i class="fas fa-industry"></i><span>Machines</span></div></div>
             <div class="nav-item"><div class="nav-link" id="navDepartments"><i class="fas fa-building"></i><span>Départements</span></div></div>
         </div>
         <div class="sidebar-footer">
-            <i class="fas fa-shield-alt"></i> v5.0 · IA prédictive
+            <i class="fas fa-brain"></i> IA prédictive · v2.1
             <div>© iPredict 2026</div>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main-content">
         <div class="dashboard-header">
             <div class="header-title">
@@ -410,402 +453,304 @@
             </div>
         </div>
 
-        <div id="dynamicContent">
-            <!-- Dynamic content loaded here -->
-        </div>
+        <div id="dynamicContent"></div>
 
-        <footer><i class="fas fa-robot"></i> iPredict - Maintenance prédictive IA · Gestion centralisée</footer>
+        <footer><i class="fas fa-robot"></i> iPredict - Surveillance intelligente · Alerts & Maintenance prédictive</footer>
     </main>
 </div>
 
 <script>
-    // ========== DATA ==========
-    // Only admin can manage users - simulate current user as admin
-    const currentUser = { id: 1, name: "Admin", role: "Admin" };
-    
+    // ========================
+    // DATA MODELS with phone_number (numéro) and password_hash
+    // ========================
     let users = [
-        { id: 1, name: "Sara Alaoui", email: "sara.alaoui@ipredict.com", role: "Admin" },
-        { id: 2, name: "Antoine Moreau", email: "antoine.moreau@ipredict.com", role: "Responsable maintenance" },
-        { id: 3, name: "Claire Bernard", email: "claire.bernard@ipredict.com", role: "Technicienne" }
+        { id: 1, full_name: "Sara Alaoui", email: "sara.alaoui@ipredict.com", phone_number: "+212 6 12 34 56 78", password_hash: "sara@2024", role: "Admin", is_active: true, department_id: 1 },
+        { id: 2, full_name: "Antoine Moreau", email: "antoine.moreau@ipredict.com", phone_number: "+33 6 45 67 89 01", password_hash: "antoineM123", role: "Responsable maintenance", is_active: true, department_id: 2 },
+        { id: 3, full_name: "Claire Bernard", email: "claire.bernard@ipredict.com", phone_number: "+33 7 89 12 34 56", password_hash: "claireB456", role: "Technicienne", is_active: true, department_id: 3 }
     ];
-
-    let machines = [
-        { id: 1, name: "Pompe HRS 601ABP04", dept: "SAP", status: "Active" },
-        { id: 2, name: "Pompe Transfert SAP-02", dept: "SAP", status: "Active" },
-        { id: 3, name: "Pompe Alimentation AF-101", dept: "AF", status: "Active" },
-        { id: 4, name: "Pompe Recirculation AF-102", dept: "AF", status: "Maintenance" },
-        { id: 5, name: "Pompe Centrale CAP-200", dept: "CAP", status: "Active" },
-        { id: 6, name: "Pompe Secours CAP-201", dept: "CAP", status: "Standby" },
-        { id: 7, name: "Pompe Mélange EN-300", dept: "ENGRAIS", status: "Active" },
-        { id: 8, name: "Pompe Doseuse EN-301", dept: "ENGRAIS", status: "Surveillance" }
-    ];
-
+    
     let departments = [
-        { id: 1, name: "SAP", machineCount: 2 },
-        { id: 2, name: "AF", machineCount: 2 },
-        { id: 3, name: "CAP", machineCount: 2 },
-        { id: 4, name: "ENGRAIS", machineCount: 2 }
+        { id: 1, department_name: "SAP", department_code: "SAP01", description: "Service Acide Phosphorique" },
+        { id: 2, department_name: "AF", department_code: "AF02", description: "Atelier Filtration" },
+        { id: 3, department_name: "CAP", department_code: "CAP03", description: "Captage & Pompage" },
+        { id: 4, department_name: "ENGRAIS", department_code: "ENG04", description: "Production Engrais" }
     ];
-
+    
+    let machines = [
+        { id: 1, machine_name: "Pompe HRS 601ABP04", department_id: 1, machine_code: "PMP-101", machine_type: "Centrifuge", status: "Active", installation_date: "2022-03-15" },
+        { id: 2, machine_name: "Pompe Transfert SAP-02", department_id: 1, machine_code: "PMP-102", machine_type: "Volumétrique", status: "Active", installation_date: "2021-11-20" },
+        { id: 3, machine_name: "Pompe Alimentation AF-101", department_id: 2, machine_code: "PMP-201", machine_type: "Centrifuge", status: "Active", installation_date: "2023-01-10" },
+        { id: 4, machine_name: "Pompe Recirculation AF-102", department_id: 2, machine_code: "PMP-202", machine_type: "Turbo", status: "Maintenance", installation_date: "2020-09-05" },
+        { id: 5, machine_name: "Pompe Centrale CAP-200", department_id: 3, machine_code: "PMP-301", machine_type: "Multistage", status: "Active", installation_date: "2022-08-12" },
+        { id: 6, machine_name: "Pompe Secours CAP-201", department_id: 3, machine_code: "PMP-302", machine_type: "Centrifuge", status: "Standby", installation_date: "2023-05-01" },
+        { id: 7, machine_name: "Pompe Mélange EN-300", department_id: 4, machine_code: "PMP-401", machine_type: "Axial", status: "Surveillance", installation_date: "2021-12-18" },
+        { id: 8, machine_name: "Pompe Doseuse EN-301", department_id: 4, machine_code: "PMP-402", machine_type: "Dosage", status: "Active", installation_date: "2022-06-22" }
+    ];
+    
+    let alerts = [
+        { id: 101, machine_id: 4, alert_type: "Vibration excessive", severity: "Haute", alert_message: "Niveau vibration dépasse seuil critique", created_at: "2026-04-23", status: "Active" },
+        { id: 102, machine_id: 7, alert_type: "Température anormale", severity: "Moyenne", alert_message: "Roulements surchauffe détectée", created_at: "2026-04-22", status: "Active" }
+    ];
+    
+    let maintenance_history = [
+        { id: 1, machine_id: 4, intervention_date: "2026-04-01", intervention_type: "Réparation pompe", description: "Remplacement joint mécanique", technician_name: "Claire Bernard", result: "Terminé" }
+    ];
+    
+    // IDs counters
     let nextUserId = 4;
     let nextMachineId = 9;
     let nextDeptId = 5;
     
     let currentView = "dashboard";
-    let userSearchTerm = "";
-    let machineSearchTerm = "";
-    let deptSearchTerm = "";
-
-    function updateDepartmentCounts() {
-        const counts = {};
-        machines.forEach(m => { counts[m.dept] = (counts[m.dept] || 0) + 1; });
-        departments.forEach(d => { d.machineCount = counts[d.name] || 0; });
+    let userSearch = "";
+    let machineSearch = "";
+    let deptSearch = "";
+    
+    function getDepartmentName(deptId) {
+        let dept = departments.find(d => d.id === deptId);
+        return dept ? dept.department_name : "N/A";
     }
-
-    function filterData(data, searchTerm) {
+    
+    function getMachinesCountByDept(deptId) {
+        return machines.filter(m => m.department_id === deptId).length;
+    }
+    
+    function filterData(data, searchTerm, fields) {
         if (!searchTerm) return data;
         const term = searchTerm.toLowerCase();
         return data.filter(item => {
-            return Object.values(item).some(value => 
-                String(value).toLowerCase().includes(term)
-            );
+            return fields.some(field => {
+                let val = item[field];
+                if (val !== undefined && val !== null) {
+                    return String(val).toLowerCase().includes(term);
+                }
+                return false;
+            });
         });
     }
-
-    // ========== RENDER FUNCTIONS ==========
+    
+    // Helper to mask password for display (show asterisks but keep hint)
+    function maskPassword(pwd) {
+        if (!pwd) return "—";
+        if (pwd.length <= 6) return "•".repeat(pwd.length);
+        return pwd.substring(0,2) + "••••" + pwd.substring(pwd.length-2);
+    }
+    
+    // ========== DASHBOARD ==========
     function renderDashboard() {
         currentView = "dashboard";
-        document.getElementById('pageTitle').innerText = "Tableau de bord";
-        updateDepartmentCounts();
-        let totalAlerts = machines.filter(m => m.status === "Maintenance" || m.status === "Surveillance").length;
-
+        document.getElementById('pageTitle').innerText = "Tableau de bord prédictif";
+        
+        const totalMachines = machines.length;
+        const totalDepartments = departments.length;
+        const totalUsers = users.length;
+        const activeAlerts = alerts.filter(a => a.status === "Active").length;
+        const machinesMaintenance = machines.filter(m => m.status === "Maintenance").length;
+        
+        let deptStats = departments.map(d => ({ name: d.department_name, count: getMachinesCountByDept(d.id) }));
+        let statusCount = {
+            Active: machines.filter(m => m.status === "Active").length,
+            Maintenance: machinesMaintenance,
+            Surveillance: machines.filter(m => m.status === "Surveillance").length,
+            Standby: machines.filter(m => m.status === "Standby").length
+        };
+        
         const html = `
             <div class="kpi-grid">
-                <div class="kpi-card">
-                    <div class="kpi-icon"><i class="fas fa-users"></i></div>
-                    <div class="kpi-value">${users.length}</div>
-                    <div class="kpi-label">Utilisateurs</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon"><i class="fas fa-microchip"></i></div>
-                    <div class="kpi-value">${machines.length}</div>
-                    <div class="kpi-label">Machines surveillées</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon"><i class="fas fa-building"></i></div>
-                    <div class="kpi-value">${departments.length}</div>
-                    <div class="kpi-label">Départements</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                    <div class="kpi-value">${totalAlerts}</div>
-                    <div class="kpi-label">Alertes actives</div>
+                <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-building"></i></div><div class="kpi-value">${totalDepartments}</div><div class="kpi-label">Départements</div></div>
+                <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-microchip"></i></div><div class="kpi-value">${totalMachines}</div><div class="kpi-label">Machines</div></div>
+                <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-users"></i></div><div class="kpi-value">${totalUsers}</div><div class="kpi-label">Utilisateurs</div></div>
+                <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="kpi-value">${activeAlerts}</div><div class="kpi-label">Alertes actives</div></div>
+            </div>
+            <div class="section-card">
+                <div class="section-header"><h3><i class="fas fa-chart-simple"></i> Analyse & indicateurs</h3></div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-title">MACHINES PAR DÉPARTEMENT</div>${deptStats.map(d => `<div class="stat-row"><span>${d.name}</span><strong>${d.count}</strong></div>`).join('')}</div>
+                    <div class="stat-card"><div class="stat-title">STATUT OPÉRATIONNEL</div>${Object.entries(statusCount).map(([k,v]) => `<div class="stat-row"><span>${k}</span><strong>${v}</strong></div>`).join('')}</div>
+                    <div class="stat-card"><div class="stat-title">ALERTES & MAINTENANCE</div><div class="stat-row"><span>Alertes actives</span><strong>${activeAlerts}</strong></div><div class="stat-row"><span>Interventions</span><strong>${maintenance_history.length}</strong></div></div>
                 </div>
             </div>
-
             <div class="section-card">
-                <div class="section-header">
-                    <h3><i class="fas fa-tachometer-alt"></i> Vue d'ensemble</h3>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                    <div style="background: #f8fafc; padding: 16px; border-radius: 20px;">
-                        <div style="font-size: 0.7rem; color: #64748b;">Machines par département</div>
-                        <div style="margin-top: 12px;">
-                            ${departments.map(d => `<div style="display: flex; justify-content: space-between; margin-bottom: 10px;"><span>${d.name}</span><strong>${d.machineCount}</strong></div>`).join('')}
-                        </div>
-                    </div>
-                    <div style="background: #f8fafc; padding: 16px; border-radius: 20px;">
-                        <div style="font-size: 0.7rem; color: #64748b;">Statut des machines</div>
-                        <div style="margin-top: 12px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;"><span>Active</span><strong>${machines.filter(m => m.status === 'Active').length}</strong></div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;"><span>Maintenance</span><strong>${machines.filter(m => m.status === 'Maintenance').length}</strong></div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;"><span>Surveillance</span><strong>${machines.filter(m => m.status === 'Surveillance').length}</strong></div>
-                        </div>
-                    </div>
-                    <div style="background: #f8fafc; padding: 16px; border-radius: 20px;">
-                        <div style="font-size: 0.7rem; color: #64748b;">Utilisateurs par rôle</div>
-                        <div style="margin-top: 12px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;"><span>Admin</span><strong>${users.filter(u => u.role === 'Admin').length}</strong></div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;"><span>Responsable</span><strong>${users.filter(u => u.role === 'Responsable maintenance').length}</strong></div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;"><span>Technicien</span><strong>${users.filter(u => u.role === 'Technicienne').length}</strong></div>
-                        </div>
-                    </div>
-                </div>
+                <div class="section-header"><h3><i class="fas fa-bell"></i> Alertes prédictives</h3></div>
+                <div class="table-wrapper"><table><thead><tr><th>Machine</th><th>Type</th><th>Sévérité</th><th>Date</th><th>Status</th></tr></thead><tbody>
+                    ${alerts.map(alert => { const m = machines.find(m => m.id === alert.machine_id); return `<tr><td><strong>${m ? m.machine_name : 'N/A'}</strong></td><td>${alert.alert_type}</td><td><span class="badge badge-warning">${alert.severity}</span></td><td>${alert.created_at}</td><td><span class="badge badge-active">${alert.status}</span></td></tr>`; }).join('')}
+                    ${alerts.length === 0 ? '<tr><td colspan="5" style="text-align:center">Aucune alerte</td></tr>' : ''}
+                </tbody></table></div>
             </div>
         `;
         document.getElementById('dynamicContent').innerHTML = html;
     }
-
+    
+    // ========== USERS MANAGEMENT with NUMERO (phone) and PASSWORD ==========
     function renderUsers() {
         currentView = "users";
-        document.getElementById('pageTitle').innerText = "Gestion des utilisateurs";
-        const filteredUsers = filterData(users, userSearchTerm);
+        document.getElementById('pageTitle').innerText = "Gestion des utilisateurs (Identifiants & Accès)";
+        let filtered = filterData(users, userSearch, ['full_name', 'email', 'phone_number', 'role']);
         const html = `
             <div class="section-card">
-                <div class="section-header">
-                    <h3><i class="fas fa-user-friends"></i> Utilisateurs</h3>
-                    <button class="btn-primary" onclick="addUser()"><i class="fas fa-plus"></i> Nouvel utilisateur</button>
-                </div>
-                <div class="table-search">
-                    <input type="text" id="userSearchInput" placeholder="🔍 Rechercher un utilisateur..." value="${escapeHtml(userSearchTerm)}">
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody id="usersTableBody"></tbody>
-                    </table>
-                </div>
-                ${filteredUsers.length === 0 ? '<div style="text-align:center;padding:40px;color:#94a3b8;">Aucun utilisateur trouvé</div>' : ''}
+                <div class="section-header"><h3><i class="fas fa-user-shield"></i> Utilisateurs · Téléphone & Mot de passe</h3><button class="btn-primary" onclick="addUser()"><i class="fas fa-plus"></i> Ajouter</button></div>
+                <div class="table-search"><div class="search-box"><i class="fas fa-search search-icon"></i><input type="text" id="userSearchInput" placeholder="Nom, email, téléphone..." value="${escapeHtml(userSearch)}"></div></div>
+                <div class="table-wrapper"><table><thead><tr><th>Nom complet</th><th>Email</th><th>Numéro (Téléphone)</th><th>Mot de passe (hash)</th><th>Rôle</th><th>Département</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="usersTableBody"></tbody></table></div>
+                ${filtered.length === 0 ? '<div style="text-align:center;padding:30px">Aucun utilisateur trouvé</div>' : ''}
             </div>
         `;
         document.getElementById('dynamicContent').innerHTML = html;
-        
         const tbody = document.getElementById('usersTableBody');
-        if (tbody) {
-            tbody.innerHTML = filteredUsers.map(u => `
+        if(tbody) {
+            tbody.innerHTML = filtered.map(u => `
                 <tr>
-                    <td><strong>${escapeHtml(u.name)}</strong></td>
+                    <td><strong>${escapeHtml(u.full_name)}</strong></td>
                     <td>${escapeHtml(u.email)}</td>
+                    <td><i class="" style="color:#2c9e6b; margin-right:6px;"></i>${escapeHtml(u.phone_number || '—')}</td>
+                    <td><span class="password-mask"> ${maskPassword(u.password_hash)}</span></td>
                     <td><span class="badge badge-active">${escapeHtml(u.role)}</span></td>
-                    <td>
-                        <button class="btn-outline" onclick="editUser(${u.id})"><i class="fas fa-edit"></i> Modifier</button>
-                        <button class="btn-danger" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i> Supprimer</button>
-                    </td>
+                    <td>${getDepartmentName(u.department_id)}</td>
+                    <td>${u.is_active ? 'Actif' : 'Inactif'}</td>
+                    <td><button class="btn-outline" onclick="editUser(${u.id})"><i class="fas fa-edit"></i> Modifier</button> <button class="btn-danger" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i> Suppr.</button></td>
                 </tr>
             `).join('');
         }
-        
-        const searchInput = document.getElementById('userSearchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                userSearchTerm = e.target.value;
-                renderUsers();
-            });
-        }
+        document.getElementById('userSearchInput')?.addEventListener('input', (e) => { userSearch = e.target.value; renderUsers(); });
     }
-
-    function renderMachines() {
-        currentView = "machines";
-        document.getElementById('pageTitle').innerText = "Gestion des machines";
-        const filteredMachines = filterData(machines, machineSearchTerm);
-        const html = `
-            <div class="section-card">
-                <div class="section-header">
-                    <h3><i class="fas fa-microchip"></i> Machines</h3>
-                    <button class="btn-primary" onclick="addMachine()"><i class="fas fa-plus"></i> Ajouter machine</button>
-                </div>
-                <div class="table-search">
-                    <input type="text" id="machineSearchInput" placeholder="🔍 Rechercher une machine..." value="${escapeHtml(machineSearchTerm)}">
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead><tr><th>Nom</th><th>Département</th><th>Statut</th><th>Actions</th></tr></thead>
-                        <tbody id="machinesTableBody"></tbody>
-                    </table>
-                </div>
-                ${filteredMachines.length === 0 ? '<div style="text-align:center;padding:40px;color:#94a3b8;">Aucune machine trouvée</div>' : ''}
-            </div>
-        `;
-        document.getElementById('dynamicContent').innerHTML = html;
-        
-        const tbody = document.getElementById('machinesTableBody');
-        if (tbody) {
-            tbody.innerHTML = filteredMachines.map(m => `
-                <tr>
-                    <td><strong>${escapeHtml(m.name)}</strong></td>
-                    <td>${escapeHtml(m.dept)}</td>
-                    <td><span class="badge ${m.status === 'Active' ? 'badge-active' : 'badge-warning'}">${escapeHtml(m.status)}</span></td>
-                    <td>
-                        <button class="btn-outline" onclick="editMachine(${m.id})"><i class="fas fa-edit"></i> Modifier</button>
-                        <button class="btn-danger" onclick="deleteMachine(${m.id})"><i class="fas fa-trash"></i> Supprimer</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-        
-        const searchInput = document.getElementById('machineSearchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                machineSearchTerm = e.target.value;
-                renderMachines();
-            });
-        }
-    }
-
-    function renderDepartments() {
-        currentView = "departments";
-        document.getElementById('pageTitle').innerText = "Gestion des départements";
-        updateDepartmentCounts();
-        const filteredDepts = filterData(departments, deptSearchTerm);
-        const html = `
-            <div class="section-card">
-                <div class="section-header">
-                    <h3><i class="fas fa-building"></i> Départements</h3>
-                    <button class="btn-primary" onclick="addDept()"><i class="fas fa-plus"></i> Nouveau département</button>
-                </div>
-                <div class="table-search">
-                    <input type="text" id="deptSearchInput" placeholder="🔍 Rechercher un département..." value="${escapeHtml(deptSearchTerm)}">
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead><tr><th>Nom</th><th>Machines associées</th><th>Actions</th></tr></thead>
-                        <tbody id="deptsTableBody"></tbody>
-                    </table>
-                </div>
-                ${filteredDepts.length === 0 ? '<div style="text-align:center;padding:40px;color:#94a3b8;">Aucun département trouvé</div>' : ''}
-            </div>
-        `;
-        document.getElementById('dynamicContent').innerHTML = html;
-        
-        const tbody = document.getElementById('deptsTableBody');
-        if (tbody) {
-            tbody.innerHTML = filteredDepts.map(d => `
-                <tr>
-                    <td><strong>${escapeHtml(d.name)}</strong></td>
-                    <td>${d.machineCount} machine(s)</td>
-                    <td>
-                        <button class="btn-outline" onclick="editDept(${d.id})"><i class="fas fa-edit"></i> Modifier</button>
-                        <button class="btn-danger" onclick="deleteDept(${d.id})"><i class="fas fa-trash"></i> Supprimer</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-        
-        const searchInput = document.getElementById('deptSearchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                deptSearchTerm = e.target.value;
-                renderDepartments();
-            });
-        }
-    }
-
-    // ========== CRUD USERS (Admin only) ==========
+    
     function addUser() {
         let name = prompt("Nom complet:");
-        if (!name) return;
+        if(!name) return;
         let email = prompt("Email:");
-        if (!email) return;
+        if(!email) return;
+        let phone = prompt("Numéro de téléphone (ex: +212 6XX XXX XXX):", "+212 ");
+        let pwd = prompt("Mot de passe (hash / mot de passe visible):", "user123");
         let role = prompt("Rôle (Admin, Responsable maintenance, Technicienne):", "Technicienne");
-        users.push({ id: nextUserId++, name, email, role: role || "Technicienne" });
+        let deptId = prompt("ID Département (1:SAP, 2:AF, 3:CAP, 4:ENGRAIS):", "1");
+        if (!pwd) pwd = "defaultPwd";
+        users.push({ 
+            id: nextUserId++, 
+            full_name: name, 
+            email, 
+            phone_number: phone || "Non renseigné",
+            password_hash: pwd,
+            role: role || "Technicienne", 
+            is_active: true, 
+            department_id: parseInt(deptId) || 1 
+        });
         renderUsers();
     }
-
+    
     function editUser(id) {
-        let user = users.find(u => u.id === id);
-        if (!user) return;
-        let newName = prompt("Modifier le nom:", user.name);
-        if (newName) user.name = newName;
-        let newEmail = prompt("Modifier l'email:", user.email);
-        if (newEmail) user.email = newEmail;
-        let newRole = prompt("Modifier le rôle:", user.role);
-        if (newRole) user.role = newRole;
+        let u = users.find(u => u.id === id);
+        if(!u) return;
+        let newName = prompt("Modifier nom complet:", u.full_name);
+        if(newName) u.full_name = newName;
+        let newEmail = prompt("Email:", u.email);
+        if(newEmail) u.email = newEmail;
+        let newPhone = prompt("Numéro de téléphone:", u.phone_number || "");
+        if(newPhone !== null) u.phone_number = newPhone;
+        let newPwd = prompt("Nouveau mot de passe (laissez vide pour conserver actuel):", "");
+        if(newPwd && newPwd.trim() !== "") u.password_hash = newPwd;
+        let newRole = prompt("Rôle:", u.role);
+        if(newRole) u.role = newRole;
         renderUsers();
     }
-
-    function deleteUser(id) {
-        if (confirm("Supprimer cet utilisateur ?")) {
-            users = users.filter(u => u.id !== id);
-            renderUsers();
-        }
+    
+    function deleteUser(id) { 
+        if(confirm("Supprimer définitivement cet utilisateur ?")) { 
+            users = users.filter(u => u.id !== id); 
+            renderUsers(); 
+        } 
     }
-
-    // ========== CRUD MACHINES ==========
+    
+    // ========== MACHINES MANAGEMENT ==========
+    function renderMachines() {
+        currentView = "machines";
+        document.getElementById('pageTitle').innerText = "Machines & composants critiques";
+        let filtered = filterData(machines, machineSearch, ['machine_name', 'machine_code', 'machine_type']);
+        const html = `
+            <div class="section-card">
+                <div class="section-header"><h3><i class="fas fa-industry"></i> Parc machines</h3><button class="btn-primary" onclick="addMachine()"><i class="fas fa-plus"></i> Nouvelle machine</button></div>
+                <div class="table-search"><div class="search-box"><i class="fas fa-search search-icon"></i><input type="text" id="machineSearchInput" placeholder="Nom, code..." value="${escapeHtml(machineSearch)}"></div></div>
+                <div class="table-wrapper"><table><thead><tr><th>Machine</th><th>Code</th><th>Type</th><th>Département</th><th>Statut</th><th>Installation</th><th>Actions</th></tr></thead><tbody id="machinesTableBody"></tbody></table></div>
+            </div>
+        `;
+        document.getElementById('dynamicContent').innerHTML = html;
+        const tbody = document.getElementById('machinesTableBody');
+        if(tbody) {
+            tbody.innerHTML = filtered.map(m => {
+                let statusClass = m.status === 'Active' ? 'badge-active' : (m.status === 'Maintenance' ? 'badge-maintenance' : 'badge-warning');
+                return `<tr><td><strong>${escapeHtml(m.machine_name)}</strong></td><td>${escapeHtml(m.machine_code)}</td><td>${escapeHtml(m.machine_type)}</td><td>${getDepartmentName(m.department_id)}</td><td><span class="badge ${statusClass}">${escapeHtml(m.status)}</span></td><td>${m.installation_date || 'N/A'}</td><td><button class="btn-outline" onclick="editMachine(${m.id})"><i class="fas fa-edit"></i> Modifier</button> <button class="btn-danger" onclick="deleteMachine(${m.id})"><i class="fas fa-trash"></i></button></td></tr>`;
+            }).join('');
+        }
+        document.getElementById('machineSearchInput')?.addEventListener('input', (e) => { machineSearch = e.target.value; renderMachines(); });
+    }
+    
     function addMachine() {
-        let name = prompt("Nom de la machine:");
-        if (!name) return;
-        let dept = prompt("Département (SAP, AF, CAP, ENGRAIS):", "SAP");
-        let status = prompt("Statut (Active, Maintenance, Surveillance, Standby):", "Active");
-        machines.push({ id: nextMachineId++, name, dept: dept || "SAP", status: status || "Active" });
+        let name = prompt("Nom machine:");
+        if(!name) return;
+        let code = prompt("Code unique:");
+        let deptId = prompt("Département ID (1:SAP,2:AF,3:CAP,4:ENGRAIS):","1");
+        let mtype = prompt("Type", "Centrifuge");
+        machines.push({ id: nextMachineId++, machine_name: name, machine_code: code || `MC${nextMachineId}`, machine_type: mtype, status: "Active", department_id: parseInt(deptId) || 1, installation_date: new Date().toISOString().slice(0,10) });
         renderMachines();
     }
-
     function editMachine(id) {
-        let machine = machines.find(m => m.id === id);
-        if (!machine) return;
-        let newName = prompt("Modifier le nom:", machine.name);
-        if (newName) machine.name = newName;
-        let newDept = prompt("Modifier le département:", machine.dept);
-        if (newDept) machine.dept = newDept;
-        let newStatus = prompt("Modifier le statut (Active, Maintenance, Surveillance, Standby):", machine.status);
-        if (newStatus) machine.status = newStatus;
+        let m = machines.find(m => m.id === id);
+        if(!m) return;
+        let newName = prompt("Nom machine:", m.machine_name); if(newName) m.machine_name = newName;
+        let newStatus = prompt("Statut (Active, Maintenance, Surveillance, Standby):", m.status); if(newStatus) m.status = newStatus;
         renderMachines();
     }
-
-    function deleteMachine(id) {
-        if (confirm("Supprimer cette machine ?")) {
-            machines = machines.filter(m => m.id !== id);
-            renderMachines();
+    function deleteMachine(id) { if(confirm("Supprimer la machine ?")) { machines = machines.filter(m => m.id !== id); renderMachines(); } }
+    
+    // ========== DEPARTMENTS MANAGEMENT ==========
+    function renderDepartments() {
+        currentView = "departments";
+        document.getElementById('pageTitle').innerText = "Départements & structures";
+        let filtered = filterData(departments, deptSearch, ['department_name', 'department_code']);
+        const html = `
+            <div class="section-card">
+                <div class="section-header"><h3><i class="fas fa-building"></i> Départements industriels</h3><button class="btn-primary" onclick="addDept()"><i class="fas fa-plus"></i> Ajouter département</button></div>
+                <div class="table-search"><div class="search-box"><i class="fas fa-search search-icon"></i><input type="text" id="deptSearchInput" placeholder="Nom ou code..." value="${escapeHtml(deptSearch)}"></div></div>
+                <div class="table-wrapper"><table><thead><tr><th>Nom département</th><th>Code</th><th>Description</th><th>Machines</th><th>Actions</th></tr></thead><tbody id="deptsTableBody"></tbody></table></div>
+            </div>
+        `;
+        document.getElementById('dynamicContent').innerHTML = html;
+        const tbody = document.getElementById('deptsTableBody');
+        if(tbody) {
+            tbody.innerHTML = filtered.map(d => `<tr><td><strong>${escapeHtml(d.department_name)}</strong></td><td>${escapeHtml(d.department_code)}</td><td>${escapeHtml(d.description || '')}</td><td>${getMachinesCountByDept(d.id)} machines</td><td><button class="btn-outline" onclick="editDept(${d.id})"><i class="fas fa-edit"></i></button> <button class="btn-danger" onclick="deleteDept(${d.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('');
         }
+        document.getElementById('deptSearchInput')?.addEventListener('input', (e) => { deptSearch = e.target.value; renderDepartments(); });
     }
-
-    // ========== CRUD DEPARTMENTS ==========
+    
     function addDept() {
         let name = prompt("Nom du département:");
-        if (!name) return;
-        departments.push({ id: nextDeptId++, name, machineCount: 0 });
+        if(!name) return;
+        let code = prompt("Code unique:", name.slice(0,3).toUpperCase());
+        departments.push({ id: nextDeptId++, department_name: name, department_code: code || name.slice(0,4), description: "Nouveau département" });
         renderDepartments();
     }
-
     function editDept(id) {
-        let dept = departments.find(d => d.id === id);
-        if (!dept) return;
-        let newName = prompt("Modifier le nom:", dept.name);
-        if (newName) dept.name = newName;
+        let d = departments.find(d => d.id === id);
+        if(!d) return;
+        let newName = prompt("Nouveau nom:", d.department_name);
+        if(newName) d.department_name = newName;
         renderDepartments();
     }
-
     function deleteDept(id) {
-        if (confirm("Supprimer ce département ? Les machines associées ne seront pas supprimées.")) {
-            departments = departments.filter(d => d.id !== id);
-            renderDepartments();
-        }
+        let used = machines.some(m => m.department_id === id);
+        if(used) { alert("Impossible: des machines sont associées à ce département."); return; }
+        if(confirm("Supprimer ce département ?")) { departments = departments.filter(d => d.id !== id); renderDepartments(); }
     }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    // ========== LOGOUT ==========
-    const logoutBtn = document.getElementById('logoutBtn');
-    logoutBtn.addEventListener('click', () => {
-        if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-            alert('Déconnexion réussie. Au revoir !');
-            // In a real app, redirect to login page
-        }
-    });
-
-    // ========== NAVIGATION ==========
-    document.getElementById('navDashboard').addEventListener('click', () => {
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        document.getElementById('navDashboard').classList.add('active');
-        renderDashboard();
-    });
-    document.getElementById('navUsers').addEventListener('click', () => {
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        document.getElementById('navUsers').classList.add('active');
-        renderUsers();
-    });
-    document.getElementById('navMachines').addEventListener('click', () => {
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        document.getElementById('navMachines').classList.add('active');
-        renderMachines();
-    });
-    document.getElementById('navDepartments').addEventListener('click', () => {
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        document.getElementById('navDepartments').classList.add('active');
-        renderDepartments();
-    });
-
-    // Initial render
+    
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+    
+    // Navigation
+    document.getElementById('navDashboard').addEventListener('click', () => { setActive('navDashboard'); renderDashboard(); });
+    document.getElementById('navUsers').addEventListener('click', () => { setActive('navUsers'); renderUsers(); });
+    document.getElementById('navMachines').addEventListener('click', () => { setActive('navMachines'); renderMachines(); });
+    document.getElementById('navDepartments').addEventListener('click', () => { setActive('navDepartments'); renderDepartments(); });
+    function setActive(activeId) { document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active')); document.getElementById(activeId).classList.add('active'); }
+    
+    document.getElementById('logoutBtn')?.addEventListener('click', () => { alert("Déconnexion sécurisée."); });
+    
     renderDashboard();
 </script>
 </body>
