@@ -24,7 +24,6 @@
             min-height: 100vh;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 280px;
             background: linear-gradient(180deg, #0a1f1c 0%, #071513 100%);
@@ -330,6 +329,22 @@
             color: white;
         }
 
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #475569;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
         .table-wrapper {
             overflow-x: auto;
         }
@@ -411,10 +426,126 @@
             font-size: 0.7rem;
             color: #94a3b8;
         }
-        
-        .password-mask {
-            font-family: monospace;
-            letter-spacing: 1px;
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-container {
+            background: white;
+            border-radius: 24px;
+            width: 550px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            margin: 0;
+            color: #0f2c28;
+            font-size: 1.2rem;
+        }
+        .modal-close {
+            font-size: 28px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: 0.2s;
+        }
+        .modal-close:hover {
+            color: #e74c3c;
+        }
+        .modal-body {
+            padding: 24px;
+        }
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #1e2f3f;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #2c9e6b;
+            box-shadow: 0 0 0 3px rgba(44,158,107,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.85rem;
+            z-index: 1100;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .notification.success { background: #2c9e6b; }
+        .notification.error { background: #e74c3c; }
+        .notification.info { background: #3498db; }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
@@ -459,60 +590,66 @@
     </main>
 </div>
 
+<!-- Modal Template -->
+<div id="modalOverlay" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 id="modalTitle">Titre</h3>
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Dynamic form content -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal()">Annuler</button>
+            <button class="btn-primary" id="modalSaveBtn" onclick="saveModal()">Enregistrer</button>
+        </div>
+    </div>
+</div>
+<script src="js/session-check.js"></script>
 <script>
-    // ========================
-    // DATA MODELS with phone_number (numéro) and password_hash
-    // ========================
-    let users = [
-        { id: 1, full_name: "Sara Alaoui", email: "sara.alaoui@ipredict.com", phone_number: "+212 6 12 34 56 78", password_hash: "sara@2024", role: "Admin", is_active: true, department_id: 1 },
-        { id: 2, full_name: "Antoine Moreau", email: "antoine.moreau@ipredict.com", phone_number: "+33 6 45 67 89 01", password_hash: "antoineM123", role: "Responsable maintenance", is_active: true, department_id: 2 },
-        { id: 3, full_name: "Claire Bernard", email: "claire.bernard@ipredict.com", phone_number: "+33 7 89 12 34 56", password_hash: "claireB456", role: "Technicienne", is_active: true, department_id: 3 }
-    ];
+    // API Configuration
+    const API_URL = 'http://localhost:3000/api';
     
-    let departments = [
-        { id: 1, department_name: "SAP", department_code: "SAP01", description: "Service Acide Phosphorique" },
-        { id: 2, department_name: "AF", department_code: "AF02", description: "Atelier Filtration" },
-        { id: 3, department_name: "CAP", department_code: "CAP03", description: "Captage & Pompage" },
-        { id: 4, department_name: "ENGRAIS", department_code: "ENG04", description: "Production Engrais" }
-    ];
-    
-    let machines = [
-        { id: 1, machine_name: "Pompe HRS 601ABP04", department_id: 1, machine_code: "PMP-101", machine_type: "Centrifuge", status: "Active", installation_date: "2022-03-15" },
-        { id: 2, machine_name: "Pompe Transfert SAP-02", department_id: 1, machine_code: "PMP-102", machine_type: "Volumétrique", status: "Active", installation_date: "2021-11-20" },
-        { id: 3, machine_name: "Pompe Alimentation AF-101", department_id: 2, machine_code: "PMP-201", machine_type: "Centrifuge", status: "Active", installation_date: "2023-01-10" },
-        { id: 4, machine_name: "Pompe Recirculation AF-102", department_id: 2, machine_code: "PMP-202", machine_type: "Turbo", status: "Maintenance", installation_date: "2020-09-05" },
-        { id: 5, machine_name: "Pompe Centrale CAP-200", department_id: 3, machine_code: "PMP-301", machine_type: "Multistage", status: "Active", installation_date: "2022-08-12" },
-        { id: 6, machine_name: "Pompe Secours CAP-201", department_id: 3, machine_code: "PMP-302", machine_type: "Centrifuge", status: "Standby", installation_date: "2023-05-01" },
-        { id: 7, machine_name: "Pompe Mélange EN-300", department_id: 4, machine_code: "PMP-401", machine_type: "Axial", status: "Surveillance", installation_date: "2021-12-18" },
-        { id: 8, machine_name: "Pompe Doseuse EN-301", department_id: 4, machine_code: "PMP-402", machine_type: "Dosage", status: "Active", installation_date: "2022-06-22" }
-    ];
-    
-    let alerts = [
-        { id: 101, machine_id: 4, alert_type: "Vibration excessive", severity: "Haute", alert_message: "Niveau vibration dépasse seuil critique", created_at: "2026-04-23", status: "Active" },
-        { id: 102, machine_id: 7, alert_type: "Température anormale", severity: "Moyenne", alert_message: "Roulements surchauffe détectée", created_at: "2026-04-22", status: "Active" }
-    ];
-    
-    let maintenance_history = [
-        { id: 1, machine_id: 4, intervention_date: "2026-04-01", intervention_type: "Réparation pompe", description: "Remplacement joint mécanique", technician_name: "Claire Bernard", result: "Terminé" }
-    ];
-    
-    // IDs counters
-    let nextUserId = 4;
-    let nextMachineId = 9;
-    let nextDeptId = 5;
-    
+    // Global state
+    let users = [];
+    let machines = [];
+    let departments = [];
     let currentView = "dashboard";
     let userSearch = "";
     let machineSearch = "";
     let deptSearch = "";
     
+    // Modal state
+    let currentModalType = null;
+    let currentEditId = null;
+    
+    // Helper Functions
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> ${message}`;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.3s';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+    
     function getDepartmentName(deptId) {
-        let dept = departments.find(d => d.id === deptId);
+        let dept = departments.find(d => d.department_id === deptId);
         return dept ? dept.department_name : "N/A";
     }
     
-    function getMachinesCountByDept(deptId) {
-        return machines.filter(m => m.department_id === deptId).length;
+    function maskPassword(pwd) {
+        if (!pwd) return "—";
+        return "••••••••";
     }
     
     function filterData(data, searchTerm, fields) {
@@ -529,229 +666,712 @@
         });
     }
     
-    // Helper to mask password for display (show asterisks but keep hint)
-    function maskPassword(pwd) {
-        if (!pwd) return "—";
-        if (pwd.length <= 6) return "•".repeat(pwd.length);
-        return pwd.substring(0,2) + "••••" + pwd.substring(pwd.length-2);
+    // ============ LOGOUT FUNCTION ============
+    function logout() {
+        // Clear all session data
+        localStorage.removeItem('ipredict_session');
+        sessionStorage.removeItem('ipredict_logged_in');
+        sessionStorage.removeItem('user_role');
+        
+        // Show logout message
+        showNotification('Déconnexion réussie', 'success');
+        
+        // Redirect to login page after short delay
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 500);
     }
     
-    // ========== DASHBOARD ==========
+    // ============ API CALLS ============
+    async function fetchUsers() {
+        try {
+            const response = await fetch(`${API_URL}/users`);
+            users = await response.json();
+            if (currentView === 'users') renderUsers();
+            if (currentView === 'dashboard') renderDashboard();
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    }
+    
+    async function fetchMachines() {
+        try {
+            const response = await fetch(`${API_URL}/machines`);
+            machines = await response.json();
+            if (currentView === 'machines') renderMachines();
+            if (currentView === 'dashboard') renderDashboard();
+        } catch (error) {
+            console.error('Error fetching machines:', error);
+        }
+    }
+    
+    async function fetchDepartments() {
+        try {
+            const response = await fetch(`${API_URL}/departments`);
+            departments = await response.json();
+            if (currentView === 'departments') renderDepartments();
+            if (currentView === 'dashboard') renderDashboard();
+        } catch (error) {
+            console.error('Error fetching departments:', error);
+        }
+    }
+    
+    async function loadAllData() {
+        await Promise.all([
+            fetchUsers(),
+            fetchMachines(),
+            fetchDepartments()
+        ]);
+        if (currentView === 'dashboard') renderDashboard();
+    }
+    
+    // ============ USER CRUD ============
+    async function createUser(userData) {
+        try {
+            const response = await fetch(`${API_URL}/users`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Error creating user');
+            }
+            await fetchUsers();
+            showNotification('Utilisateur créé avec succès', 'success');
+            closeModal();
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    async function updateUser(id, userData) {
+        try {
+            const response = await fetch(`${API_URL}/users/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Error updating user');
+            }
+            await fetchUsers();
+            showNotification('Utilisateur modifié avec succès', 'success');
+            closeModal();
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    async function deleteUserAPI(id) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) return;
+        try {
+            const response = await fetch(`${API_URL}/users/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Error deleting user');
+            await fetchUsers();
+            showNotification('Utilisateur supprimé avec succès', 'success');
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    // ============ MACHINE CRUD ============
+    async function createMachine(machineData) {
+        try {
+            const response = await fetch(`${API_URL}/machines`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(machineData)
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Error creating machine');
+            }
+            await fetchMachines();
+            showNotification('Machine créée avec succès', 'success');
+            closeModal();
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    async function updateMachine(id, machineData) {
+        try {
+            const response = await fetch(`${API_URL}/machines/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(machineData)
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Error updating machine');
+            }
+            await fetchMachines();
+            showNotification('Machine modifiée avec succès', 'success');
+            closeModal();
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    async function deleteMachineAPI(id) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer cette machine ?')) return;
+        try {
+            const response = await fetch(`${API_URL}/machines/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Error deleting machine');
+            await fetchMachines();
+            showNotification('Machine supprimée avec succès', 'success');
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    // ============ DEPARTMENT CRUD ============
+    async function createDepartment(deptData) {
+        try {
+            const response = await fetch(`${API_URL}/departments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(deptData)
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Error creating department');
+            }
+            await fetchDepartments();
+            showNotification('Département créé avec succès', 'success');
+            closeModal();
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    async function updateDepartment(id, deptData) {
+        try {
+            const response = await fetch(`${API_URL}/departments/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(deptData)
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Error updating department');
+            }
+            await fetchDepartments();
+            showNotification('Département modifié avec succès', 'success');
+            closeModal();
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    async function deleteDepartmentAPI(id) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce département ?')) return;
+        try {
+            const response = await fetch(`${API_URL}/departments/${id}`, { method: 'DELETE' });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Cannot delete department with associated machines/users');
+            }
+            await fetchDepartments();
+            showNotification('Département supprimé avec succès', 'success');
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    // ============ MODAL FUNCTIONS ============
+    function openModal() {
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+    
+    function closeModal() {
+        document.getElementById('modalOverlay').classList.remove('active');
+        currentModalType = null;
+        currentEditId = null;
+    }
+    
+    function saveModal() {
+        if (currentModalType === 'user') saveUserForm();
+        else if (currentModalType === 'machine') saveMachineForm();
+        else if (currentModalType === 'department') saveDepartmentForm();
+    }
+    
+    // User Modal
+    function openUserModal(editId = null) {
+        currentModalType = 'user';
+        currentEditId = editId;
+        
+        const user = editId ? users.find(u => u.user_id === editId) : null;
+        const isEdit = !!user;
+        
+        document.getElementById('modalTitle').innerText = isEdit ? 'Modifier l\'utilisateur' : 'Ajouter un utilisateur';
+        
+        const deptOptions = departments.map(d => `<option value="${d.department_id}" ${user && user.department_id === d.department_id ? 'selected' : ''}>${d.department_name}</option>`).join('');
+        
+        document.getElementById('modalBody').innerHTML = `
+            <form id="modalForm">
+                <div class="form-group">
+                    <label>Nom complet *</label>
+                    <input type="text" id="userFullName" value="${escapeHtml(user?.full_name || '')}" required>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="userEmail" value="${escapeHtml(user?.email || '')}" required>
+                </div>
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="text" id="userPhone" value="${escapeHtml(user?.phone_number || '')}" placeholder="+212 XXXXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe ${isEdit ? '(laisser vide pour conserver)' : '*'}</label>
+                    <input type="password" id="userPassword" ${!isEdit ? 'required' : ''} placeholder="••••••••">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Rôle *</label>
+                        <select id="userRole">
+                            <option value="Admin" ${user?.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                            <option value="Responsable maintenance" ${user?.role === 'Responsable maintenance' ? 'selected' : ''}>Responsable maintenance</option>
+                            <option value="Technicienne" ${user?.role === 'Technicienne' ? 'selected' : ''}>Technicienne</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Département</label>
+                        <select id="userDepartment">
+                            <option value="">Aucun</option>
+                            ${deptOptions}
+                        </select>
+                    </div>
+                </div>
+                ${isEdit ? `
+                <div class="form-group">
+                    <label>Statut</label>
+                    <select id="userStatus">
+                        <option value="true" ${user.is_active ? 'selected' : ''}>Actif</option>
+                        <option value="false" ${!user.is_active ? 'selected' : ''}>Inactif</option>
+                    </select>
+                </div>
+                ` : ''}
+            </form>
+        `;
+        openModal();
+    }
+    
+    function saveUserForm() {
+        const full_name = document.getElementById('userFullName')?.value;
+        const email = document.getElementById('userEmail')?.value;
+        const phone_number = document.getElementById('userPhone')?.value;
+        const password = document.getElementById('userPassword')?.value;
+        const role = document.getElementById('userRole')?.value;
+        const department_id = document.getElementById('userDepartment')?.value;
+        
+        if (!full_name || !email) {
+            showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+            return;
+        }
+        
+        const userData = {
+            full_name,
+            email,
+            phone_number: phone_number || null,
+            role,
+            department_id: department_id ? parseInt(department_id) : null
+        };
+        
+        if (currentEditId) {
+            if (password && password.trim()) userData.password_hash = password;
+            const status = document.getElementById('userStatus')?.value;
+            if (status) userData.is_active = status === 'true';
+            updateUser(currentEditId, userData);
+        } else {
+            if (!password) {
+                showNotification('Veuillez entrer un mot de passe', 'error');
+                return;
+            }
+            userData.password_hash = password;
+            createUser(userData);
+        }
+    }
+    
+    // Machine Modal
+    function openMachineModal(editId = null) {
+        currentModalType = 'machine';
+        currentEditId = editId;
+        
+        const machine = editId ? machines.find(m => m.machine_id === editId) : null;
+        const isEdit = !!machine;
+        
+        document.getElementById('modalTitle').innerText = isEdit ? 'Modifier la machine' : 'Ajouter une machine';
+        
+        const deptOptions = departments.map(d => `<option value="${d.department_id}" ${machine && machine.department_id === d.department_id ? 'selected' : ''}>${d.department_name}</option>`).join('');
+        
+        document.getElementById('modalBody').innerHTML = `
+            <form id="modalForm">
+                <div class="form-group">
+                    <label>Nom de la machine *</label>
+                    <input type="text" id="machineName" value="${escapeHtml(machine?.machine_name || '')}" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Code machine *</label>
+                        <input type="text" id="machineCode" value="${escapeHtml(machine?.machine_code || '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <input type="text" id="machineType" value="${escapeHtml(machine?.machine_type || '')}" placeholder="Centrifuge, Turbo...">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Statut</label>
+                        <select id="machineStatus">
+                            <option value="Active" ${machine?.status === 'Active' ? 'selected' : ''}>Active</option>
+                            <option value="Maintenance" ${machine?.status === 'Maintenance' ? 'selected' : ''}>Maintenance</option>
+                            <option value="Surveillance" ${machine?.status === 'Surveillance' ? 'selected' : ''}>Surveillance</option>
+                            <option value="Standby" ${machine?.status === 'Standby' ? 'selected' : ''}>Standby</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Département</label>
+                        <select id="machineDepartment">
+                            <option value="">Aucun</option>
+                            ${deptOptions}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Date d'installation</label>
+                    <input type="date" id="machineDate" value="${machine?.installation_date ? new Date(machine.installation_date).toISOString().split('T')[0] : ''}">
+                </div>
+            </form>
+        `;
+        openModal();
+    }
+    
+    function saveMachineForm() {
+        const machine_name = document.getElementById('machineName')?.value;
+        const machine_code = document.getElementById('machineCode')?.value;
+        const machine_type = document.getElementById('machineType')?.value;
+        const status = document.getElementById('machineStatus')?.value;
+        const department_id = document.getElementById('machineDepartment')?.value;
+        const installation_date = document.getElementById('machineDate')?.value;
+        
+        if (!machine_name || !machine_code) {
+            showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+            return;
+        }
+        
+        const machineData = {
+            machine_name,
+            machine_code,
+            machine_type: machine_type || null,
+            status: status || 'Active',
+            department_id: department_id ? parseInt(department_id) : null,
+            installation_date: installation_date || null
+        };
+        
+        if (currentEditId) {
+            updateMachine(currentEditId, machineData);
+        } else {
+            createMachine(machineData);
+        }
+    }
+    
+    // Department Modal
+    function openDepartmentModal(editId = null) {
+        currentModalType = 'department';
+        currentEditId = editId;
+        
+        const dept = editId ? departments.find(d => d.department_id === editId) : null;
+        const isEdit = !!dept;
+        
+        document.getElementById('modalTitle').innerText = isEdit ? 'Modifier le département' : 'Ajouter un département';
+        
+        document.getElementById('modalBody').innerHTML = `
+            <form id="modalForm">
+                <div class="form-group">
+                    <label>Nom du département *</label>
+                    <input type="text" id="deptName" value="${escapeHtml(dept?.department_name || '')}" required>
+                </div>
+                <div class="form-group">
+                    <label>Code département *</label>
+                    <input type="text" id="deptCode" value="${escapeHtml(dept?.department_code || '')}" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="deptDescription" rows="3" placeholder="Description du département...">${escapeHtml(dept?.description || '')}</textarea>
+                </div>
+            </form>
+        `;
+        openModal();
+    }
+    
+    function saveDepartmentForm() {
+        const department_name = document.getElementById('deptName')?.value;
+        const department_code = document.getElementById('deptCode')?.value;
+        const description = document.getElementById('deptDescription')?.value;
+        
+        if (!department_name || !department_code) {
+            showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+            return;
+        }
+        
+        const deptData = {
+            department_name,
+            department_code,
+            description: description || null
+        };
+        
+        if (currentEditId) {
+            updateDepartment(currentEditId, deptData);
+        } else {
+            createDepartment(deptData);
+        }
+    }
+    
+    // ============ RENDER FUNCTIONS ============
     function renderDashboard() {
         currentView = "dashboard";
-        document.getElementById('pageTitle').innerText = "Tableau de bord prédictif";
+        document.getElementById('pageTitle').innerText = "Admin Dashboard";
         
         const totalMachines = machines.length;
         const totalDepartments = departments.length;
         const totalUsers = users.length;
-        const activeAlerts = alerts.filter(a => a.status === "Active").length;
-        const machinesMaintenance = machines.filter(m => m.status === "Maintenance").length;
         
-        let deptStats = departments.map(d => ({ name: d.department_name, count: getMachinesCountByDept(d.id) }));
-        let statusCount = {
-            Active: machines.filter(m => m.status === "Active").length,
-            Maintenance: machinesMaintenance,
-            Surveillance: machines.filter(m => m.status === "Surveillance").length,
-            Standby: machines.filter(m => m.status === "Standby").length
-        };
+        const activeMachines = machines.filter(m => m.status === 'Active').length;
+        const maintenanceMachines = machines.filter(m => m.status === 'Maintenance').length;
+        
+        const roleCount = {};
+        users.forEach(u => {
+            roleCount[u.role] = (roleCount[u.role] || 0) + 1;
+        });
         
         const html = `
             <div class="kpi-grid">
                 <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-building"></i></div><div class="kpi-value">${totalDepartments}</div><div class="kpi-label">Départements</div></div>
                 <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-microchip"></i></div><div class="kpi-value">${totalMachines}</div><div class="kpi-label">Machines</div></div>
                 <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-users"></i></div><div class="kpi-value">${totalUsers}</div><div class="kpi-label">Utilisateurs</div></div>
-                <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="kpi-value">${activeAlerts}</div><div class="kpi-label">Alertes actives</div></div>
+                <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="kpi-value">${maintenanceMachines}</div><div class="kpi-label">En maintenance</div></div>
             </div>
             <div class="section-card">
                 <div class="section-header"><h3><i class="fas fa-chart-simple"></i> Analyse & indicateurs</h3></div>
                 <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-title">MACHINES PAR DÉPARTEMENT</div>${deptStats.map(d => `<div class="stat-row"><span>${d.name}</span><strong>${d.count}</strong></div>`).join('')}</div>
-                    <div class="stat-card"><div class="stat-title">STATUT OPÉRATIONNEL</div>${Object.entries(statusCount).map(([k,v]) => `<div class="stat-row"><span>${k}</span><strong>${v}</strong></div>`).join('')}</div>
-                    <div class="stat-card"><div class="stat-title">ALERTES & MAINTENANCE</div><div class="stat-row"><span>Alertes actives</span><strong>${activeAlerts}</strong></div><div class="stat-row"><span>Interventions</span><strong>${maintenance_history.length}</strong></div></div>
+                    <div class="stat-card">
+                        <div class="stat-title">MACHINES PAR STATUT</div>
+                        <div class="stat-row"><span>Actives</span><strong>${activeMachines}</strong></div>
+                        <div class="stat-row"><span>En maintenance</span><strong>${maintenanceMachines}</strong></div>
+                        <div class="stat-row"><span>Autres</span><strong>${totalMachines - activeMachines - maintenanceMachines}</strong></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">UTILISATEURS PAR RÔLE</div>
+                        ${Object.entries(roleCount).map(([role, count]) => `<div class="stat-row"><span>${role}</span><strong>${count}</strong></div>`).join('')}
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">DÉPARTEMENTS</div>
+                        ${departments.slice(0, 4).map(d => `<div class="stat-row"><span>${d.department_name}</span><strong>${d.machine_count || 0} machines</strong></div>`).join('')}
+                    </div>
                 </div>
-            </div>
-            <div class="section-card">
-                <div class="section-header"><h3><i class="fas fa-bell"></i> Alertes prédictives</h3></div>
-                <div class="table-wrapper"><table><thead><tr><th>Machine</th><th>Type</th><th>Sévérité</th><th>Date</th><th>Status</th></tr></thead><tbody>
-                    ${alerts.map(alert => { const m = machines.find(m => m.id === alert.machine_id); return `<tr><td><strong>${m ? m.machine_name : 'N/A'}</strong></td><td>${alert.alert_type}</td><td><span class="badge badge-warning">${alert.severity}</span></td><td>${alert.created_at}</td><td><span class="badge badge-active">${alert.status}</span></td></tr>`; }).join('')}
-                    ${alerts.length === 0 ? '<tr><td colspan="5" style="text-align:center">Aucune alerte</td></tr>' : ''}
-                </tbody></table></div>
             </div>
         `;
         document.getElementById('dynamicContent').innerHTML = html;
     }
     
-    // ========== USERS MANAGEMENT with NUMERO (phone) and PASSWORD ==========
     function renderUsers() {
         currentView = "users";
-        document.getElementById('pageTitle').innerText = "Gestion des utilisateurs (Identifiants & Accès)";
+        document.getElementById('pageTitle').innerText = "Gestion des utilisateurs";
         let filtered = filterData(users, userSearch, ['full_name', 'email', 'phone_number', 'role']);
+        
         const html = `
             <div class="section-card">
-                <div class="section-header"><h3><i class="fas fa-user-shield"></i> Utilisateurs · Téléphone & Mot de passe</h3><button class="btn-primary" onclick="addUser()"><i class="fas fa-plus"></i> Ajouter</button></div>
-                <div class="table-search"><div class="search-box"><i class="fas fa-search search-icon"></i><input type="text" id="userSearchInput" placeholder="Nom, email, téléphone..." value="${escapeHtml(userSearch)}"></div></div>
-                <div class="table-wrapper"><table><thead><tr><th>Nom complet</th><th>Email</th><th>Numéro (Téléphone)</th><th>Mot de passe (hash)</th><th>Rôle</th><th>Département</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="usersTableBody"></tbody></table></div>
-                ${filtered.length === 0 ? '<div style="text-align:center;padding:30px">Aucun utilisateur trouvé</div>' : ''}
+                <div class="section-header">
+                    <h3><i class="fas fa-user-shield"></i> Utilisateurs</h3>
+                    <button class="btn-primary" onclick="openUserModal()"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="table-search">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="userSearchInput" placeholder="Nom, email, téléphone..." value="${escapeHtml(userSearch)}">
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Rôle</th><th>Département</th><th>Statut</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         `;
         document.getElementById('dynamicContent').innerHTML = html;
+        
         const tbody = document.getElementById('usersTableBody');
-        if(tbody) {
+        if (tbody) {
             tbody.innerHTML = filtered.map(u => `
                 <tr>
                     <td><strong>${escapeHtml(u.full_name)}</strong></td>
                     <td>${escapeHtml(u.email)}</td>
-                    <td><i class="" style="color:#2c9e6b; margin-right:6px;"></i>${escapeHtml(u.phone_number || '—')}</td>
-                    <td><span class="password-mask"> ${maskPassword(u.password_hash)}</span></td>
+                    <td>${escapeHtml(u.phone_number || '—')}</td>
                     <td><span class="badge badge-active">${escapeHtml(u.role)}</span></td>
                     <td>${getDepartmentName(u.department_id)}</td>
                     <td>${u.is_active ? 'Actif' : 'Inactif'}</td>
-                    <td><button class="btn-outline" onclick="editUser(${u.id})"><i class="fas fa-edit"></i> Modifier</button> <button class="btn-danger" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i> Suppr.</button></td>
+                    <td>
+                        <button class="btn-outline" onclick="openUserModal(${u.user_id})"><i class="fas fa-edit"></i> Modifier</button>
+                        <button class="btn-danger" onclick="deleteUserAPI(${u.user_id})"><i class="fas fa-trash"></i> Suppr.</button>
+                    </td>
                 </tr>
             `).join('');
         }
-        document.getElementById('userSearchInput')?.addEventListener('input', (e) => { userSearch = e.target.value; renderUsers(); });
-    }
-    
-    function addUser() {
-        let name = prompt("Nom complet:");
-        if(!name) return;
-        let email = prompt("Email:");
-        if(!email) return;
-        let phone = prompt("Numéro de téléphone (ex: +212 6XX XXX XXX):", "+212 ");
-        let pwd = prompt("Mot de passe (hash / mot de passe visible):", "user123");
-        let role = prompt("Rôle (Admin, Responsable maintenance, Technicienne):", "Technicienne");
-        let deptId = prompt("ID Département (1:SAP, 2:AF, 3:CAP, 4:ENGRAIS):", "1");
-        if (!pwd) pwd = "defaultPwd";
-        users.push({ 
-            id: nextUserId++, 
-            full_name: name, 
-            email, 
-            phone_number: phone || "Non renseigné",
-            password_hash: pwd,
-            role: role || "Technicienne", 
-            is_active: true, 
-            department_id: parseInt(deptId) || 1 
+        
+        document.getElementById('userSearchInput')?.addEventListener('input', (e) => {
+            userSearch = e.target.value;
+            renderUsers();
         });
-        renderUsers();
     }
     
-    function editUser(id) {
-        let u = users.find(u => u.id === id);
-        if(!u) return;
-        let newName = prompt("Modifier nom complet:", u.full_name);
-        if(newName) u.full_name = newName;
-        let newEmail = prompt("Email:", u.email);
-        if(newEmail) u.email = newEmail;
-        let newPhone = prompt("Numéro de téléphone:", u.phone_number || "");
-        if(newPhone !== null) u.phone_number = newPhone;
-        let newPwd = prompt("Nouveau mot de passe (laissez vide pour conserver actuel):", "");
-        if(newPwd && newPwd.trim() !== "") u.password_hash = newPwd;
-        let newRole = prompt("Rôle:", u.role);
-        if(newRole) u.role = newRole;
-        renderUsers();
-    }
-    
-    function deleteUser(id) { 
-        if(confirm("Supprimer définitivement cet utilisateur ?")) { 
-            users = users.filter(u => u.id !== id); 
-            renderUsers(); 
-        } 
-    }
-    
-    // ========== MACHINES MANAGEMENT ==========
     function renderMachines() {
         currentView = "machines";
-        document.getElementById('pageTitle').innerText = "Machines & composants critiques";
+        document.getElementById('pageTitle').innerText = "Machines & équipements";
         let filtered = filterData(machines, machineSearch, ['machine_name', 'machine_code', 'machine_type']);
+        
         const html = `
             <div class="section-card">
-                <div class="section-header"><h3><i class="fas fa-industry"></i> Parc machines</h3><button class="btn-primary" onclick="addMachine()"><i class="fas fa-plus"></i> Nouvelle machine</button></div>
-                <div class="table-search"><div class="search-box"><i class="fas fa-search search-icon"></i><input type="text" id="machineSearchInput" placeholder="Nom, code..." value="${escapeHtml(machineSearch)}"></div></div>
-                <div class="table-wrapper"><table><thead><tr><th>Machine</th><th>Code</th><th>Type</th><th>Département</th><th>Statut</th><th>Installation</th><th>Actions</th></tr></thead><tbody id="machinesTableBody"></tbody></table></div>
+                <div class="section-header">
+                    <h3><i class="fas fa-industry"></i> Parc machines</h3>
+                    <button class="btn-primary" onclick="openMachineModal()"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="table-search">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="machineSearchInput" placeholder="Nom, code..." value="${escapeHtml(machineSearch)}">
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Machine</th><th>Code</th><th>Type</th><th>Département</th><th>Statut</th><th>Installation</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="machinesTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         `;
         document.getElementById('dynamicContent').innerHTML = html;
+        
         const tbody = document.getElementById('machinesTableBody');
-        if(tbody) {
+        if (tbody) {
             tbody.innerHTML = filtered.map(m => {
                 let statusClass = m.status === 'Active' ? 'badge-active' : (m.status === 'Maintenance' ? 'badge-maintenance' : 'badge-warning');
-                return `<tr><td><strong>${escapeHtml(m.machine_name)}</strong></td><td>${escapeHtml(m.machine_code)}</td><td>${escapeHtml(m.machine_type)}</td><td>${getDepartmentName(m.department_id)}</td><td><span class="badge ${statusClass}">${escapeHtml(m.status)}</span></td><td>${m.installation_date || 'N/A'}</td><td><button class="btn-outline" onclick="editMachine(${m.id})"><i class="fas fa-edit"></i> Modifier</button> <button class="btn-danger" onclick="deleteMachine(${m.id})"><i class="fas fa-trash"></i></button></td></tr>`;
+                return `
+                    <tr>
+                        <td><strong>${escapeHtml(m.machine_name)}</strong></td>
+                        <td>${escapeHtml(m.machine_code)}</td>
+                        <td>${escapeHtml(m.machine_type || '—')}</td>
+                        <td>${getDepartmentName(m.department_id)}</td>
+                        <td><span class="badge ${statusClass}">${escapeHtml(m.status)}</span></td>
+                        <td>${m.installation_date ? new Date(m.installation_date).toLocaleDateString() : '—'}</td>
+                        <td>
+                            <button class="btn-outline" onclick="openMachineModal(${m.machine_id})"><i class="fas fa-edit"></i> Modifier</button>
+                            <button class="btn-danger" onclick="deleteMachineAPI(${m.machine_id})"><i class="fas fa-trash"></i> Suppr.</button>
+                        </td>
+                    </tr>
+                `;
             }).join('');
         }
-        document.getElementById('machineSearchInput')?.addEventListener('input', (e) => { machineSearch = e.target.value; renderMachines(); });
+        
+        document.getElementById('machineSearchInput')?.addEventListener('input', (e) => {
+            machineSearch = e.target.value;
+            renderMachines();
+        });
     }
     
-    function addMachine() {
-        let name = prompt("Nom machine:");
-        if(!name) return;
-        let code = prompt("Code unique:");
-        let deptId = prompt("Département ID (1:SAP,2:AF,3:CAP,4:ENGRAIS):","1");
-        let mtype = prompt("Type", "Centrifuge");
-        machines.push({ id: nextMachineId++, machine_name: name, machine_code: code || `MC${nextMachineId}`, machine_type: mtype, status: "Active", department_id: parseInt(deptId) || 1, installation_date: new Date().toISOString().slice(0,10) });
-        renderMachines();
-    }
-    function editMachine(id) {
-        let m = machines.find(m => m.id === id);
-        if(!m) return;
-        let newName = prompt("Nom machine:", m.machine_name); if(newName) m.machine_name = newName;
-        let newStatus = prompt("Statut (Active, Maintenance, Surveillance, Standby):", m.status); if(newStatus) m.status = newStatus;
-        renderMachines();
-    }
-    function deleteMachine(id) { if(confirm("Supprimer la machine ?")) { machines = machines.filter(m => m.id !== id); renderMachines(); } }
-    
-    // ========== DEPARTMENTS MANAGEMENT ==========
     function renderDepartments() {
         currentView = "departments";
-        document.getElementById('pageTitle').innerText = "Départements & structures";
+        document.getElementById('pageTitle').innerText = "Départements";
         let filtered = filterData(departments, deptSearch, ['department_name', 'department_code']);
+        
         const html = `
             <div class="section-card">
-                <div class="section-header"><h3><i class="fas fa-building"></i> Départements industriels</h3><button class="btn-primary" onclick="addDept()"><i class="fas fa-plus"></i> Ajouter département</button></div>
-                <div class="table-search"><div class="search-box"><i class="fas fa-search search-icon"></i><input type="text" id="deptSearchInput" placeholder="Nom ou code..." value="${escapeHtml(deptSearch)}"></div></div>
-                <div class="table-wrapper"><table><thead><tr><th>Nom département</th><th>Code</th><th>Description</th><th>Machines</th><th>Actions</th></tr></thead><tbody id="deptsTableBody"></tbody></table></div>
+                <div class="section-header">
+                    <h3><i class="fas fa-building"></i> Départements</h3>
+                    <button class="btn-primary" onclick="openDepartmentModal()"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="table-search">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="deptSearchInput" placeholder="Nom ou code..." value="${escapeHtml(deptSearch)}">
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Nom</th><th>Code</th><th>Description</th><th>Machines</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="deptsTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         `;
         document.getElementById('dynamicContent').innerHTML = html;
+        
         const tbody = document.getElementById('deptsTableBody');
-        if(tbody) {
-            tbody.innerHTML = filtered.map(d => `<tr><td><strong>${escapeHtml(d.department_name)}</strong></td><td>${escapeHtml(d.department_code)}</td><td>${escapeHtml(d.description || '')}</td><td>${getMachinesCountByDept(d.id)} machines</td><td><button class="btn-outline" onclick="editDept(${d.id})"><i class="fas fa-edit"></i></button> <button class="btn-danger" onclick="deleteDept(${d.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+        if (tbody) {
+            tbody.innerHTML = filtered.map(d => `
+                <tr>
+                    <td><strong>${escapeHtml(d.department_name)}</strong></td>
+                    <td>${escapeHtml(d.department_code)}</td>
+                    <td>${escapeHtml(d.description || '—')}</td>
+                    <td>${d.machine_count || 0}</td>
+                    <td>
+                        <button class="btn-outline" onclick="openDepartmentModal(${d.department_id})"><i class="fas fa-edit"></i> Modifier</button>
+                        <button class="btn-danger" onclick="deleteDepartmentAPI(${d.department_id})"><i class="fas fa-trash"></i> Suppr.</button>
+                    </td>
+                </tr>
+            `).join('');
         }
-        document.getElementById('deptSearchInput')?.addEventListener('input', (e) => { deptSearch = e.target.value; renderDepartments(); });
+        
+        document.getElementById('deptSearchInput')?.addEventListener('input', (e) => {
+            deptSearch = e.target.value;
+            renderDepartments();
+        });
     }
-    
-    function addDept() {
-        let name = prompt("Nom du département:");
-        if(!name) return;
-        let code = prompt("Code unique:", name.slice(0,3).toUpperCase());
-        departments.push({ id: nextDeptId++, department_name: name, department_code: code || name.slice(0,4), description: "Nouveau département" });
-        renderDepartments();
-    }
-    function editDept(id) {
-        let d = departments.find(d => d.id === id);
-        if(!d) return;
-        let newName = prompt("Nouveau nom:", d.department_name);
-        if(newName) d.department_name = newName;
-        renderDepartments();
-    }
-    function deleteDept(id) {
-        let used = machines.some(m => m.department_id === id);
-        if(used) { alert("Impossible: des machines sont associées à ce département."); return; }
-        if(confirm("Supprimer ce département ?")) { departments = departments.filter(d => d.id !== id); renderDepartments(); }
-    }
-    
-    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
     
     // Navigation
-    document.getElementById('navDashboard').addEventListener('click', () => { setActive('navDashboard'); renderDashboard(); });
-    document.getElementById('navUsers').addEventListener('click', () => { setActive('navUsers'); renderUsers(); });
-    document.getElementById('navMachines').addEventListener('click', () => { setActive('navMachines'); renderMachines(); });
-    document.getElementById('navDepartments').addEventListener('click', () => { setActive('navDepartments'); renderDepartments(); });
-    function setActive(activeId) { document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active')); document.getElementById(activeId).classList.add('active'); }
+    document.getElementById('navDashboard').addEventListener('click', () => {
+        setActive('navDashboard');
+        renderDashboard();
+    });
+    document.getElementById('navUsers').addEventListener('click', () => {
+        setActive('navUsers');
+        renderUsers();
+    });
+    document.getElementById('navMachines').addEventListener('click', () => {
+        setActive('navMachines');
+        renderMachines();
+    });
+    document.getElementById('navDepartments').addEventListener('click', () => {
+        setActive('navDepartments');
+        renderDepartments();
+    });
     
-    document.getElementById('logoutBtn')?.addEventListener('click', () => { alert("Déconnexion sécurisée."); });
+    function setActive(activeId) {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.getElementById(activeId).classList.add('active');
+    }
     
-    renderDashboard();
+    // LOGOUT BUTTON HANDLER - THIS IS THE KEY FIX
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            logout();
+        });
+    }
+    
+    // Initialize
+    loadAllData();
 </script>
 </body>
 </html>

@@ -383,7 +383,7 @@
         </div>
     </main>
 </div>
-
+<script src="js/session-check.js"></script>
 <script>
     // ========== SIDEBAR INTERACTIONS ==========
     const deptToggle = document.getElementById('departmentToggleBtn');
@@ -835,7 +835,50 @@ function updateProfile(newName, newEmail, newRole) {
     updateHeaderUI();
 }
 function escapeHtml(str) { return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+// session-check.js - Include this in both dashboard pages
+(function() {
+    const session = localStorage.getItem('ipredict_session');
+    const isLoggedIn = sessionStorage.getItem('ipredict_logged_in');
+    
+    if (!session || !isLoggedIn) {
+        // No session, redirect to login
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    try {
+        const userData = JSON.parse(session);
+        const currentPage = window.location.pathname;
+        
+        // Check if user has access to current page
+        if (currentPage.includes('admin_dashboard.html') && userData.role !== 'Admin') {
+            // Non-admin trying to access admin page
+            window.location.href = 'index.html';
+        }
+        
+        // Display user info in header (optional)
+        const userNameElement = document.getElementById('userName');
+        if (userNameElement) {
+            userNameElement.textContent = userData.fullName;
+        }
+        
+        const userRoleElement = document.getElementById('userRole');
+        if (userRoleElement) {
+            userRoleElement.textContent = userData.role;
+        }
+    } catch (e) {
+        console.error('Session error:', e);
+        window.location.href = 'login.html';
+    }
+})();
 
+// Logout function
+function logout() {
+    localStorage.removeItem('ipredict_session');
+    sessionStorage.removeItem('ipredict_logged_in');
+    sessionStorage.removeItem('user_role');
+    window.location.href = 'login.html';
+}
 // ========== PROFILE PAGE RENDERING (horizontal layout) ==========
 function renderProfilePage() {
     const profileHtml = `

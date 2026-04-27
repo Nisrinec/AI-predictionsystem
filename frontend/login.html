@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>iPredict | Connexion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #1b6e50 40%, #ffffff 80%, #ffffff 100%);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .login-card {
+            max-width: 460px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(2px);
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2.8rem 2.2rem;
+            transition: transform 0.2s;
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, #eafaf5, #d0f0e6);
+            width: 64px;
+            height: 64px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            box-shadow: 0 8px 16px -6px rgba(0,0,0,0.08);
+        }
+
+        .logo-icon i {
+            font-size: 30px;
+            color: #1a6b4a;
+        }
+
+        .logo h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #0a2f24;
+            letter-spacing: -0.3px;
+        }
+
+        .logo p {
+            font-size: 0.75rem;
+            color: #5d8576;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #0a2f24;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .sub {
+            color: #6e9284;
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 1.3rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2a5546;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+        .input-field i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9bc0b2;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 14px 16px 14px 46px;
+            border: 1.5px solid #e2efea;
+            border-radius: 32px;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            transition: all 0.2s ease;
+            color: #1a3a30;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: #2c9e6b;
+            box-shadow: 0 0 0 4px rgba(44,158,107,0.12);
+        }
+
+        .input-field input:focus + i {
+            color: #2c9e6b;
+        }
+
+        .toggle-pwd {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #9bc0b2;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .options {
+            display: flex;
+            justify-content: flex-end;
+            margin: 1.5rem 0 2rem;
+            font-size: 0.8rem;
+        }
+
+        .forgot {
+            color: #2c9e6b;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+            color: #1d6e4a;
+        }
+
+        .btn {
+            background: linear-gradient(95deg, #1a5e46, #248a5c);
+            color: white;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 14px rgba(26, 94, 70, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 22px rgba(26, 94, 70, 0.3);
+            background: linear-gradient(95deg, #226e52, #2c9e6b);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            background: #fff6f0;
+            border-left: 4px solid #e07c4c;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #b85a2a;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error.show {
+            display: flex;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.65rem;
+            color: #89aa9e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-top: 1px solid #eaf3ef;
+            padding-top: 1.3rem;
+        }
+
+        @media (max-width: 500px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+            h2 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="login-card">
+    <div class="logo">
+        <div class="logo-icon">
+            <i class="fas fa-gear"></i>
+        </div>
+        <h1>iPredict</h1>
+        <p>Prédictive basée sur l’IA</p>
+    </div>
+
+    <h2>Connexion</h2>
+    <div class="sub">Accédez à votre espace de supervision</div>
+
+    <div id="errorBox" class="error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorMsg">Identifiant ou mot de passe incorrect</span>
+    </div>
+
+    <form id="loginForm">
+        <div class="input-group">
+            <label>Email ou Téléphone</label>
+            <div class="input-field">
+                <i class="fas fa-envelope"></i>
+                <input type="text" id="identifier" placeholder="ex: prenom@ipredict.com ou +212 6XX XXX XXX" autocomplete="username">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Mot de passe</label>
+            <div class="input-field">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+                <button type="button" class="toggle-pwd" id="togglePwd" aria-label="Afficher">
+                    <i class="far fa-eye-slash"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="options">
+            <a href="#" id="forgotLink" class="forgot">Mot de passe oublié ?</a>
+        </div>
+
+        <button type="submit" class="btn" id="loginBtn">
+            <i class="fas fa-arrow-right-to-bracket"></i> Se connecter
+        </button>
+    </form>
+
+    <div class="footer">
+        <i class="fas fa-shield-alt"></i>
+        <span>Sécurisé · Chiffrement de bout en bout</span>
+    </div>
+</div>
+
+<script>
+    // API Configuration
+    const API_URL = 'http://localhost:3000/api';
+    
+    // DOM Elements
+    const form = document.getElementById('loginForm');
+    const identifierInput = document.getElementById('identifier');
+    const passwordInput = document.getElementById('password');
+    const errorDiv = document.getElementById('errorBox');
+    const errorMsgSpan = document.getElementById('errorMsg');
+    const toggleBtn = document.getElementById('togglePwd');
+    const forgotLink = document.getElementById('forgotLink');
+    const loginBtn = document.getElementById('loginBtn');
+
+    // Toggle password visibility
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            const icon = toggleBtn.querySelector('i');
+            icon.className = type === 'password' ? 'far fa-eye-slash' : 'far fa-eye';
+        });
+    }
+
+    // Forgot password handler
+    if (forgotLink) {
+        forgotLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert("Veuillez contacter votre administrateur pour réinitialiser votre mot de passe.\n\nSupport technique: support@ipredict.com");
+        });
+    }
+
+    // Show error message
+    function showError(msg) {
+        errorMsgSpan.innerText = msg;
+        errorDiv.classList.add('show');
+        setTimeout(() => errorDiv.classList.remove('show'), 5000);
+    }
+
+    function hideError() {
+        errorDiv.classList.remove('show');
+    }
+
+    // Set loading state
+    function setLoading(isLoading) {
+        if (isLoading) {
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connexion en cours...';
+        } else {
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Se connecter';
+        }
+    }
+
+    // Save session data
+    function saveSession(user) {
+        const sessionData = {
+            userId: user.user_id,
+            fullName: user.full_name,
+            email: user.email,
+            role: user.role,
+            departmentId: user.department_id,
+            loginTime: new Date().toISOString()
+        };
+        localStorage.setItem('ipredict_session', JSON.stringify(sessionData));
+        sessionStorage.setItem('ipredict_logged_in', 'true');
+        sessionStorage.setItem('user_role', user.role);
+    }
+
+    // Redirect based on role
+    function redirectBasedOnRole(role) {
+        const normalizedRole = role?.toLowerCase() || '';
+        
+        if (normalizedRole === 'admin') {
+            window.location.href = 'admin_dashboard.html';
+        } else {
+            window.location.href = 'index.html';
+        }
+    }
+
+    // Check if user is already logged in (for login page, redirect to appropriate dashboard)
+    function checkExistingSession() {
+        const session = localStorage.getItem('ipredict_session');
+        if (session) {
+            try {
+                const userData = JSON.parse(session);
+                if (userData && userData.role) {
+                    // User already logged in, redirect to appropriate page
+                    redirectBasedOnRole(userData.role);
+                }
+            } catch (e) {
+                console.error('Error parsing session:', e);
+            }
+        }
+    }
+
+    // Login function
+    async function login(identifier, password) {
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    identifier: identifier,
+                    password: password,
+                    rememberMe: false
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Save user session
+                saveSession(data.user);
+                
+                // Show success message
+                const roleMessage = data.user.role === 'Admin' ? 
+                    'Bienvenue Administrateur ! Redirection...' : 
+                    'Connexion réussie ! Redirection...';
+                showNotification(roleMessage, 'success');
+                
+                // Redirect based on role
+                setTimeout(() => {
+                    redirectBasedOnRole(data.user.role);
+                }, 1000);
+            } else {
+                showError(data.message || 'Email ou mot de passe incorrect');
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            showError('Erreur de connexion au serveur. Vérifiez que le serveur backend est démarré.');
+        }
+    }
+
+    // Show notification
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.85rem;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+            background: ${type === 'success' ? '#2c9e6b' : '#e74c3c'};
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        `;
+        notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.3s';
+            setTimeout(() => notification.remove(), 300);
+        }, 2000);
+    }
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideError();
+
+        const identifier = identifierInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!identifier || !password) {
+            showError("Veuillez remplir tous les champs.");
+            identifierInput.focus();
+            return;
+        }
+
+        if (identifier.length < 3) {
+            showError("Identifiant trop court (minimum 3 caractères).");
+            identifierInput.focus();
+            return;
+        }
+
+        if (password.length < 3) {
+            showError("Mot de passe trop court (minimum 3 caractères).");
+            passwordInput.focus();
+            return;
+        }
+
+        setLoading(true);
+        await login(identifier, password);
+        setLoading(false);
+    });
+
+    // Clear error on input
+    identifierInput.addEventListener('input', hideError);
+    passwordInput.addEventListener('input', hideError);
+
+    // Enter key support
+    passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            form.dispatchEvent(new Event('submit'));
+        }
+    });
+
+    // Check for existing session on page load
+    checkExistingSession();
+</script>
+</body>
+</html>
