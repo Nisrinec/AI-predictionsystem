@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.675, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=0.55, user-scalable=yes">
     <title>iPredict | Diagnostic Prédictif - Multi-Sites</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -365,16 +365,10 @@
                     <div style="display: flex; gap: 14px;"><i class="fas fa-building"></i><span>Départements</span></div>
                     <i class="fas fa-chevron-down chevron-icon"></i>
                 </div>
-                <div class="department-dropdown" id="deptDropdown">
-                    <div class="dept-item" data-dept="sap"><i class="fas fa-flask"></i> SAP <i class="fas fa-chevron-right dept-chevron"></i></div>
-                    <div class="pumps-sublist" id="pumps-sap"><div class="pump-item" data-pump="sap_p1"><i class="fas fa-oil-can"></i> Pompe Acide SAP-01</div><div class="pump-item" data-pump="sap_p2"><i class="fas fa-water"></i> Pompe Transfert SAP-02</div></div>
-                    <div class="dept-item" data-dept="af"><i class="fas fa-tint"></i> AF <i class="fas fa-chevron-right dept-chevron"></i></div>
-                    <div class="pumps-sublist" id="pumps-af"><div class="pump-item" data-pump="af_p1"><i class="fas fa-oil-can"></i> Pompe Alimentation AF-101</div><div class="pump-item" data-pump="af_p2"><i class="fas fa-water"></i> Pompe Recirculation AF-102</div></div>
-                    <div class="dept-item" data-dept="cap"><i class="fas fa-industry"></i> CAP <i class="fas fa-chevron-right dept-chevron"></i></div>
-                    <div class="pumps-sublist" id="pumps-cap"><div class="pump-item" data-pump="cap_p1"><i class="fas fa-oil-can"></i> Pompe Centrale CAP-200</div><div class="pump-item" data-pump="cap_p2"><i class="fas fa-water"></i> Pompe Secours CAP-201</div></div>
-                    <div class="dept-item" data-dept="engrais"><i class="fas fa-leaf"></i> ENGRAIS <i class="fas fa-chevron-right dept-chevron"></i></div>
-                    <div class="pumps-sublist" id="pumps-engrais"><div class="pump-item" data-pump="eng_p1"><i class="fas fa-oil-can"></i> Pompe Mélange EN-300</div><div class="pump-item" data-pump="eng_p2"><i class="fas fa-water"></i> Pompe Doseuse EN-301</div></div>
-                </div>
+               <div class="department-dropdown" id="deptDropdown">
+    <!-- This will be populated dynamically from database -->
+    <div class="loading-depts">Chargement des départements...</div>
+</div>
             </div>
             <!-- <div class="nav-item"><div class="nav-link"><i class="fas fa-chart-line"></i><span>Analytiques</span></div></div> -->
         </div>
@@ -407,6 +401,7 @@
 </div>
 <script src="js/session-check.js"></script>
 <script>
+    
     // ========== SIDEBAR INTERACTIONS ==========
     const API_URL = 'http://localhost:3000/api';
 
@@ -431,7 +426,217 @@ async function apiCall(endpoint, method, data = null) {
     }
     return await response.json();
 }
+// ========== DYNAMIC SIDEBAR FROM DATABASE ==========
+let departmentsFromDB = [];
+let machinesFromDB = [];
 
+// Fetch departments from database
+async function loadDepartmentsAndMachines() {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        
+        // Fetch departments
+        const deptResponse = await fetch(`${API_URL}/departments`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (deptResponse.ok) {
+            departmentsFromDB = await deptResponse.json();
+            console.log('Departments loaded:', departmentsFromDB);
+        }
+        
+        // Fetch machines
+        const machineResponse = await fetch(`${API_URL}/machines`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (machineResponse.ok) {
+            machinesFromDB = await machineResponse.json();
+            console.log('Machines loaded:', machinesFromDB);
+        }
+        
+        // Render the sidebar with database data
+        renderSidebarFromDatabase();
+        
+    } catch (error) {
+        console.error('Error loading departments/machines:', error);
+        // Fallback to static data
+        renderStaticSidebar();
+    }
+}
+
+// Render sidebar from database data
+function renderSidebarFromDatabase() {
+    const deptDropdown = document.getElementById('deptDropdown');
+    if (!deptDropdown) return;
+    
+    // Group machines by department
+    const machinesByDept = {};
+    machinesFromDB.forEach(machine => {
+        const deptId = machine.department_id;
+        if (!machinesByDept[deptId]) {
+            machinesByDept[deptId] = [];
+        }
+        machinesByDept[deptId].push(machine);
+    });
+    
+    // Build department items dynamically
+    let dropdownHtml = '';
+    
+    departmentsFromDB.forEach(dept => {
+        const deptId = dept.department_id;
+        const deptName = dept.department_name;
+        const deptCode = dept.department_code;
+        const deptKey = deptCode ? deptCode.toLowerCase() : `dept_${deptId}`;
+        const machines = machinesByDept[deptId] || [];
+        
+        dropdownHtml += `
+            <div class="dept-item" data-dept="${deptKey}" data-dept-id="${deptId}">
+                <i class="fas ${getDepartmentIcon(deptName)}"></i> ${deptName}
+                <i class="fas fa-chevron-right dept-chevron"></i>
+            </div>
+            <div class="pumps-sublist" id="pumps-${deptKey}">
+        `;
+        
+        machines.forEach(machine => {
+            dropdownHtml += `
+                <div class="pump-item" data-pump-id="${machine.machine_id}" data-pump-name="${machine.machine_name}">
+                    <i class="fas fa-oil-can"></i> ${machine.machine_name}
+                    <span class="pump-status">${machine.status || 'En ligne'}</span>
+                </div>
+            `;
+        });
+        
+        dropdownHtml += `</div>`;
+    });
+    
+    deptDropdown.innerHTML = dropdownHtml;
+    
+    // Re-attach event listeners for dynamically created elements
+    attachSidebarEvents();
+}
+
+// Helper function to get icon based on department name
+function getDepartmentIcon(deptName) {
+    const name = deptName.toLowerCase();
+    if (name.includes('sap')) return 'fa-flask';
+    if (name.includes('af') || name.includes('filtration')) return 'fa-tint';
+    if (name.includes('cap')) return 'fa-industry';
+    if (name.includes('engrais')) return 'fa-leaf';
+    return 'fa-building';
+}
+
+// Attach event listeners to sidebar elements
+function attachSidebarEvents() {
+    // Department toggle button
+    const deptToggle = document.getElementById('departmentToggleBtn');
+    const deptDropdown = document.getElementById('deptDropdown');
+    const chevron = document.querySelector('.chevron-icon');
+    
+    if (deptToggle && deptDropdown) {
+        // Remove old listener to avoid duplicates
+        const newDeptToggle = deptToggle.cloneNode(true);
+        deptToggle.parentNode.replaceChild(newDeptToggle, deptToggle);
+        
+        newDeptToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deptDropdown.classList.toggle('show');
+            const newChevron = newDeptToggle.querySelector('.chevron-icon');
+            if (newChevron) {
+                newChevron.style.transform = deptDropdown.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        });
+    }
+    
+    // Department items click - toggle pumps sublist
+    document.querySelectorAll('.dept-item').forEach(item => {
+        const newItem = item.cloneNode(true);
+        item.parentNode.replaceChild(newItem, item);
+        
+        newItem.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const deptKey = newItem.getAttribute('data-dept');
+            const pumpsList = document.getElementById(`pumps-${deptKey}`);
+            const chevronIcon = newItem.querySelector('.dept-chevron');
+            
+            if (pumpsList) {
+                pumpsList.classList.toggle('show');
+                if (chevronIcon) {
+                    chevronIcon.style.transform = pumpsList.classList.contains('show') ? 'rotate(90deg)' : 'rotate(0deg)';
+                }
+            }
+        });
+    });
+    
+    // Pump items click - render pump dashboard
+    // Pump items click - render pump dashboard
+document.querySelectorAll('.pump-item').forEach(pump => {
+    const newPump = pump.cloneNode(true);
+    pump.parentNode.replaceChild(newPump, pump);
+    
+    newPump.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const pumpId = newPump.getAttribute('data-pump-id');
+        const pumpName = newPump.getAttribute('data-pump-name');
+        console.log('Selected pump - ID:', pumpId, 'Name:', pumpName);
+        
+        if (pumpId) {
+            // Check if it's a static key (sap_p1, af_p2, etc.)
+            if (allPumpsData[pumpId]) {
+                renderPumpDashboard(pumpId);
+            } else {
+                // It's a database ID, load it dynamically
+                loadAndDisplayMachine(pumpId);
+            }
+        }
+        
+        // Update active state
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    });
+});
+    
+}
+
+// Load pump data from database
+async function loadPumpFromDatabase(pumpId) {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        const response = await fetch(`${API_URL}/machines/${pumpId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.ok) {
+            const machineData = await response.json();
+            console.log('Machine data:', machineData);
+            // Display pump dashboard with database data
+            displayPumpDashboardFromDB(machineData);
+        }
+    } catch (error) {
+        console.error('Error loading pump:', error);
+    }
+}
+
+// Render fallback static sidebar
+function renderStaticSidebar() {
+    // Keep your existing static HTML or show message
+    console.log('Using static sidebar data');
+}
+
+// Call this after loading user data
+async function initSidebar() {
+    await loadDepartmentsAndMachines();
+}
+
+// Call initSidebar after page loads
+// Add this to your initialization
+setTimeout(() => {
+    if (typeof loadDepartmentsAndMachines === 'function') {
+        loadDepartmentsAndMachines();
+    }
+}, 500);
 // Update profile in database
 async function updateProfileInDatabase(fullName, email, phone) {
     try {
@@ -759,7 +964,71 @@ setInterval(() => {
             options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } }, tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)} mm/s` } } }, scales: { y: { title: { display: true, text: 'Vibration (mm/s)' }, beginAtZero: true, max: 5 } } }
         });
     }
-    
+    // Function to get pump data from database and add to allPumpsData
+async function loadAndDisplayMachine(machineId) {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        const response = await fetch(`${API_URL}/machines/${machineId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!response.ok) throw new Error('Machine not found');
+        
+        const machine = await response.json();
+        
+        // Get department name
+        let departmentName = 'N/A';
+        if (machine.department_id) {
+            const deptResponse = await fetch(`${API_URL}/departments/${machine.department_id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (deptResponse.ok) {
+                const dept = await deptResponse.json();
+                departmentName = dept.department_name;
+            }
+        }
+        
+        // Create a dynamic key for this machine
+        const dynamicKey = `machine_${machine.machine_id}`;
+        
+        // Add to allPumpsData dynamically
+        allPumpsData[dynamicKey] = {
+            id: dynamicKey,
+            name: machine.machine_name,
+            dept: departmentName,
+            status: machine.status || 'En ligne',
+            metrics: {
+                motor: { 
+                    acc: 2.5, temp: 75, vib: 1.8, risk: "Moyen", 
+                    predVib: 2.2, rul: 350, futureRisk: "Moyen" 
+                },
+                coupling: { 
+                    acc: 3.2, temp: 70, vib: 2.2, align: 0.35, risk: "Moyen", 
+                    predVib: 2.8, rul: 200, futureRisk: "Moyen" 
+                },
+                pump: { 
+                    acc: 1.3, temp: 65, vib: 1.0, flow: 250, risk: "Faible", 
+                    predVib: 1.2, rul: 900, futureRisk: "Faible" 
+                }
+            }
+        };
+        
+        // Call the existing renderPumpDashboard function
+        renderPumpDashboard(dynamicKey);
+        
+    } catch (error) {
+        console.error('Error loading machine:', error);
+        document.getElementById('dashboardContent').innerHTML = `
+            <div class="machine-title">
+                <div class="machine-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="machine-info">
+                    <h1>Machine #${machineId}</h1>
+                    <p>Erreur de chargement: ${error.message}</p>
+                </div>
+            </div>
+        `;
+    }
+}
     function getProblemRisk(component, type, metrics) {
         if(type === 'vibrations') return metrics[component].vib > 2.2 ? 'Critique' : (metrics[component].vib > 1.6 ? 'Élevé' : 'Modéré');
         if(type === 'surchauffe') return metrics[component].temp > 80 ? 'Critique' : (metrics[component].temp > 75 ? 'Élevé' : (metrics[component].temp > 70 ? 'Modéré' : 'Faible'));
@@ -903,12 +1172,15 @@ if (notifyBtn) {
             <div class="solution-card"><div class="solution-icon"><i class="fas fa-thermometer-half"></i></div><div class="solution-title">Surveillance thermique</div><div class="solution-desc">Température moteur ${m.motor.temp}°C. Vérifier circuit de refroidissement.</div><div class="priority">Surveillance</div></div>
         `;
     }
-    
+    function getDepartmentName(deptId) {
+    const dept = departmentsFromDB.find(d => d.department_id === deptId);
+    return dept ? dept.department_name : 'N/A';
+}
     // ========== NAVIGATION ==========
     navDashboard.addEventListener('click', () => { navLinks.forEach(l => l.classList.remove('active')); navDashboard.classList.add('active'); renderOverallDashboard(); });
     navAlerts.addEventListener('click', () => { navLinks.forEach(l => l.classList.remove('active')); navAlerts.classList.add('active'); renderAlertsDashboard(); });
     
-    document.querySelectorAll('.pump-item').forEach(pump => { pump.addEventListener('click', (e) => { e.stopPropagation(); const pumpId = pump.getAttribute('data-pump'); if (pumpId && allPumpsData[pumpId]) { navLinks.forEach(l => l.classList.remove('active')); renderPumpDashboard(pumpId); } }); });
+    // document.querySelectorAll('.pump-item').forEach(pump => { pump.addEventListener('click', (e) => { e.stopPropagation(); const pumpId = pump.getAttribute('data-pump'); if (pumpId && allPumpsData[pumpId]) { navLinks.forEach(l => l.classList.remove('active')); renderPumpDashboard(pumpId); } }); });
     
     const searchInput = document.getElementById('globalSearch');
     searchInput?.addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); if (term.length > 0) { const match = Object.entries(allPumpsData).find(([id, p]) => p.name.toLowerCase().includes(term) || p.dept.toLowerCase().includes(term)); if (match) { navLinks.forEach(l => l.classList.remove('active')); renderPumpDashboard(match[0]); } else { renderOverallDashboard(); } } else { renderOverallDashboard(); } });
@@ -1650,6 +1922,8 @@ function saveUserToStorage() {
 
 // Initial load user data from localStorage
 loadUserFromStorage();
+// Load departments and machines from database
+loadDepartmentsAndMachines();
 </script>
 </body>
 </html>
