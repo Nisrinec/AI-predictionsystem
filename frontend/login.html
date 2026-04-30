@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>iPredict | Connexion</title>
+    <title>iPredict | Connexion Sécurisée</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -258,8 +258,8 @@
         <div class="logo-icon">
             <i class="fas fa-gear"></i>
         </div>
-        <h1>iPredict</h1>
-        <p>Prédictive basée sur l’IA</p>
+        <!-- <h1>iPredict</h1>
+        <p>Prédictive basée sur l’IA</p> -->
     </div>
 
     <h2>Connexion</h2>
@@ -272,10 +272,10 @@
 
     <form id="loginForm">
         <div class="input-group">
-            <label>Email ou Téléphone</label>
+            <label>Email</label>
             <div class="input-field">
                 <i class="fas fa-envelope"></i>
-                <input type="text" id="identifier" placeholder="ex: prenom@ipredict.com ou +212 6XX XXX XXX" autocomplete="username">
+                <input type="text" id="identifier" placeholder="email" autocomplete="username">
             </div>
         </div>
 
@@ -306,6 +306,10 @@
 </div>
 
 <script>
+    // ============================================================
+    // iPredict LOGIN PAGE - Corrected Version
+    // ============================================================
+    
     // API Configuration
     const API_URL = 'http://localhost:3000/api';
     
@@ -319,25 +323,7 @@
     const forgotLink = document.getElementById('forgotLink');
     const loginBtn = document.getElementById('loginBtn');
 
-    // Toggle password visibility
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-            const type = passwordInput.type === 'password' ? 'text' : 'password';
-            passwordInput.type = type;
-            const icon = toggleBtn.querySelector('i');
-            icon.className = type === 'password' ? 'far fa-eye-slash' : 'far fa-eye';
-        });
-    }
-
-    // Forgot password handler
-    if (forgotLink) {
-        forgotLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert("Veuillez contacter votre administrateur pour réinitialiser votre mot de passe.\n\nSupport technique: support@ipredict.com");
-        });
-    }
-
-    // Show error message
+    // ========== UI Helpers ==========
     function showError(msg) {
         errorMsgSpan.innerText = msg;
         errorDiv.classList.add('show');
@@ -348,7 +334,6 @@
         errorDiv.classList.remove('show');
     }
 
-    // Set loading state
     function setLoading(isLoading) {
         if (isLoading) {
             loginBtn.disabled = true;
@@ -359,91 +344,6 @@
         }
     }
 
-    // Save session data
-    function saveSession(user) {
-        const sessionData = {
-            userId: user.user_id,
-            fullName: user.full_name,
-            email: user.email,
-            role: user.role,
-            departmentId: user.department_id,
-            loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('ipredict_session', JSON.stringify(sessionData));
-        sessionStorage.setItem('ipredict_logged_in', 'true');
-        sessionStorage.setItem('user_role', user.role);
-    }
-
-    // Redirect based on role
-    function redirectBasedOnRole(role) {
-        const normalizedRole = role?.toLowerCase() || '';
-        
-        if (normalizedRole === 'admin') {
-            window.location.href = 'admin_dashboard.html';
-        } else {
-            window.location.href = 'index.html';
-        }
-    }
-
-    // Check if user is already logged in (for login page, redirect to appropriate dashboard)
-    function checkExistingSession() {
-        const session = localStorage.getItem('ipredict_session');
-        if (session) {
-            try {
-                const userData = JSON.parse(session);
-                if (userData && userData.role) {
-                    // User already logged in, redirect to appropriate page
-                    redirectBasedOnRole(userData.role);
-                }
-            } catch (e) {
-                console.error('Error parsing session:', e);
-            }
-        }
-    }
-
-    // Login function
-    async function login(identifier, password) {
-        try {
-            const response = await fetch(`${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    identifier: identifier,
-                    password: password,
-                    rememberMe: false
-                })
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                // Save user session
-                saveSession(data.user);
-                
-                // Show success message
-                const roleMessage = data.user.role === 'Admin' ? 
-                    'Bienvenue Administrateur ! Redirection...' : 
-                    'Connexion réussie ! Redirection...';
-                showNotification(roleMessage, 'success');
-                
-                // Redirect based on role
-                setTimeout(() => {
-                    redirectBasedOnRole(data.user.role);
-                }, 1000);
-            } else {
-                showError(data.message || 'Email ou mot de passe incorrect');
-                passwordInput.value = '';
-                passwordInput.focus();
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            showError('Erreur de connexion au serveur. Vérifiez que le serveur backend est démarré.');
-        }
-    }
-
-    // Show notification
     function showNotification(message, type = 'success') {
         const notification = document.createElement('div');
         notification.style.cssText = `
@@ -466,7 +366,125 @@
             notification.style.opacity = '0';
             notification.style.transition = 'opacity 0.3s';
             setTimeout(() => notification.remove(), 300);
-        }, 2000);
+        }, 3000);
+    }
+
+    // ========== Session Management ==========
+    function saveSession(user) {
+        const sessionData = {
+            userId: user.user_id,
+            fullName: user.full_name,
+            email: user.email,
+            role: user.role,
+            departmentId: user.department_id,
+            loginTime: new Date().toISOString()
+        };
+        localStorage.setItem('ipredict_session', JSON.stringify(sessionData));
+        sessionStorage.setItem('ipredict_logged_in', 'true');
+        sessionStorage.setItem('user_role', user.role);
+    }
+
+    function clearSession() {
+        localStorage.removeItem('ipredict_session');
+        sessionStorage.removeItem('ipredict_logged_in');
+        sessionStorage.removeItem('user_role');
+    }
+
+    function redirectBasedOnRole(role) {
+        const normalizedRole = role?.toLowerCase() || '';
+        
+        if (normalizedRole === 'admin') {
+            window.location.replace('admin_dashboard.html');
+        } else {
+            window.location.replace('index.html');
+        }
+    }
+
+    // Check if user is already logged in - redirect to appropriate dashboard
+    function checkExistingSession() {
+        const session = localStorage.getItem('ipredict_session');
+        const isLoggedIn = sessionStorage.getItem('ipredict_logged_in');
+        
+        if (session && isLoggedIn === 'true') {
+            try {
+                const userData = JSON.parse(session);
+                if (userData && userData.role) {
+                    console.log('User already logged in, redirecting to dashboard...');
+                    redirectBasedOnRole(userData.role);
+                }
+            } catch (e) {
+                console.error('Error parsing session:', e);
+                clearSession();
+            }
+        }
+    }
+
+    // ========== Authentication ==========
+    async function login(identifier, password) {
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    identifier: identifier,
+                    password: password,
+                    rememberMe: false
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // ✅ ADD THIS: Save the JWT token for API authentication
+                if (data.token) {
+                    localStorage.setItem('ipredict_token', data.token);
+                    sessionStorage.setItem('ipredict_token', data.token);
+                    console.log('✅ Token saved successfully');
+                } else {
+                    console.warn('⚠️ No token received from server');
+                }
+                
+                saveSession(data.user);
+                
+                const roleMessage = data.user.role === 'Admin' ? 
+                    'Bienvenue Administrateur ! Redirection...' : 
+                    'Connexion réussie ! Redirection...';
+                showNotification(roleMessage, 'success');
+                
+                setTimeout(() => {
+                    redirectBasedOnRole(data.user.role);
+                }, 1000);
+            } else {
+                showError(data.message || 'Email ou mot de passe incorrect');
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            showError('Erreur de connexion au serveur. Vérifiez que le serveur backend est démarré sur le port 3000.');
+        }
+    }
+
+    // ========== Event Listeners ==========
+    
+    // Toggle password visibility
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            const icon = toggleBtn.querySelector('i');
+            icon.className = type === 'password' ? 'far fa-eye-slash' : 'far fa-eye';
+        });
+    }
+
+    // Forgot password handler
+    if (forgotLink) {
+        forgotLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert("Veuillez contacter votre administrateur pour réinitialiser votre mot de passe.\n\nSupport technique: support@ipredict.com");
+        });
     }
 
     // Form submission

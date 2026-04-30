@@ -1,11 +1,12 @@
 const db = require('../config/database');
 
 class UserController {
+    // Get all users
     static async getAll(req, res) {
         try {
             const result = await db.query(`
                 SELECT u.user_id, u.full_name, u.email, u.phone_number, 
-                       u.role, u.department_id, u.is_active,
+                       u.role, u.department_id, u.is_active, u.created_at,
                        d.department_name
                 FROM users u
                 LEFT JOIN departments d ON u.department_id = d.department_id
@@ -18,6 +19,7 @@ class UserController {
         }
     }
 
+    // Get user by ID
     static async getById(req, res) {
         try {
             const { id } = req.params;
@@ -35,10 +37,12 @@ class UserController {
         }
     }
 
+    // Create new user
     static async create(req, res) {
         try {
             const { full_name, email, phone_number, password_hash, role, department_id } = req.body;
             
+            // Check if email exists
             const existing = await db.query('SELECT user_id FROM users WHERE email = $1', [email]);
             if (existing.rows.length > 0) {
                 return res.status(400).json({ error: 'Email already exists' });
@@ -57,6 +61,7 @@ class UserController {
         }
     }
 
+    // Update user
     static async update(req, res) {
         try {
             const { id } = req.params;
@@ -95,14 +100,11 @@ class UserController {
                 values.push(is_active);
             }
             
-            // Remove updated_at line if column doesn't exist
-            // updateFields.push(`updated_at = NOW()`);
-            
             values.push(id);
             
             const query = `
                 UPDATE users 
-                SET ${updateFields.join(', ')}
+                SET ${updateFields.join(', ')}, updated_at = NOW()
                 WHERE user_id = $${index}
                 RETURNING user_id, full_name, email, phone_number, role, department_id, is_active
             `;
@@ -120,6 +122,7 @@ class UserController {
         }
     }
 
+    // Delete user
     static async delete(req, res) {
         try {
             const { id } = req.params;
@@ -131,6 +134,94 @@ class UserController {
             
             res.json({ success: true, message: 'User deleted successfully' });
         } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    // ========== PROFILE METHODS (for current logged-in user) ==========
+
+    // Get current user's own profile
+    static async getMyProfile(req, res) {
+        try {
+            const userId = req.user.userId;
+            
+            const result = await db.query(
+                `SELECT user_id, full_name, email, phone_number, role, department_id, is_active, created_at
+                 FROM users WHERE user_id = $1`,
+                [userId]
+            );
+            
+            if (result.rows.length === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            
+            res.json(result.rows[0]);
+        } catch (error) {
+            console.error('Error getting profile:', error);
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    // Update current user's own profile
+    static async updateMyProfile(req, res) {
+        try {
+            const userId = req.user.userId;
+            const { full_name, email, phone_number } = req.body;
+            
+            const result = await db.query(
+                `UPDATE users 
+                 SET full_name = COALESCE($1, full_name),
+                     email = COALESCE($2, email),
+                     phone_number = COALESCE($3, phone_number),
+                     updated_at = NOW()
+                 WHERE user_id = $4
+                 RETURNING user_id, full_name, email, phone_number, role`,
+                [full_name, email, phone_number, userId]
+            );
+            
+            if (result.rows.length === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            
+            res.json({ success: true, user: result.rows[0] });
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    // Update current user's own password
+    static async updateMyPassword(req, res) {
+        try {
+            const userId = req.user.userId;
+            const { current_password, new_password } = req.body;
+            
+            // Get current user's password
+            const result = await db.query(
+                `SELECT password_hash FROM users WHERE user_id = $1`,
+                [userId]
+            );
+            
+            if (result.rows.length === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            
+            const user = result.rows[0];
+            
+            // Verify current password
+            if (user.password_hash !== current_password) {
+                return res.status(401).json({ error: 'Mot de passe actuel incorrect' });
+            }
+            
+            // Update password
+            await db.query(
+                `UPDATE users SET password_hash = $1, updated_at = NOW() WHERE user_id = $2`,
+                [new_password, userId]
+            );
+            
+            res.json({ success: true, message: 'Password updated successfully' });
+        } catch (error) {
+            console.error('Error updating password:', error);
             res.status(500).json({ error: error.message });
         }
     }

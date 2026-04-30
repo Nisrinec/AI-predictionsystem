@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../config/database');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 // Test endpoint - to check if auth routes are working
@@ -70,12 +71,27 @@ router.post('/login', async (req, res) => {
         
         console.log('Login successful!');
         
+        // ✅ ADD THIS: Generate JWT token
+        const token = jwt.sign(
+            { 
+                userId: user.user_id, 
+                email: user.email, 
+                role: user.role 
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+        
+        console.log('Token generated successfully');
+        
         // Remove password from response
         const { password_hash, ...userWithoutPassword } = user;
         
+        // ✅ ADD THIS: Return the token to the client
         res.json({
             success: true,
             message: 'Login successful',
+            token: token,  // <-- THIS IS CRITICAL
             user: userWithoutPassword
         });
         

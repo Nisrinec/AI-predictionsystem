@@ -277,7 +277,7 @@
         .severity-low { background: #e0f3ea; color: #1d734c; }
 /* ---------- Profile Page Styles (add to your <style>) ---------- */
 .profile-container { max-width: 1000px; margin: 0 auto; }
-.profile-horizontal-card { background: white; border-radius: 32px; border: 1px solid #eef2f6; overflow: hidden; }
+.profile-horizontal-card { background: white; margin-top: 100px; border: 1px solid #eef2f6; overflow: hidden; }
 .profile-cover { background: linear-gradient(135deg, #2c9e6b10, #eaf6f0); padding: 30px 40px; display: flex; align-items: center; gap: 30px; flex-wrap: wrap; border-bottom: 1px solid #e2edf2; }
 .profile-avatar-large { width: 90px; height: 90px; background: #2c9e6b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-transform: uppercase; }
 .profile-titles h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
@@ -336,6 +336,16 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     filter: brightness(0.96);
 }
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
     </style>
 </head>
 <body>
@@ -373,12 +383,24 @@
 
     <main class="main-content">
         <div class="dashboard">
-            <div class="dashboard-header">
-                <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher..." id="globalSearch"></div>
-                <div class="user-profile" id="userProfileBtn"><div class="profile-trigger"><div class="avatar"><i class="fas fa-user-circle"></i></div><div><div class="user-name">Sara alaoui</div><div class="user-role">Responsable maintenance</div></div><i class="fas fa-chevron-down"></i></div>
-                <div class="dropdown-menu" id="userDropdown"><div class="dropdown-item"><i class="fas fa-user"></i> Profil</div><div class="dropdown-item logout-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</div></div></div>
+          <div class="dashboard-header">
+    <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher..." id="globalSearch"></div>
+    <div class="user-profile" id="userProfileBtn">
+        <div class="profile-trigger">
+            <div class="avatar" id="headerAvatar">SA</div>
+            <div>
+                <div class="user-name" id="headerUserName">Sara alaoui</div>
+                <div class="user-role" id="headerUserRole">Responsable maintenance</div>
             </div>
-            <div id="dashboardContent"></div>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="dropdown-menu" id="userDropdown">
+            <div class="dropdown-item" id="profileMenuItem"><i class="fas fa-user"></i> Profil</div>
+            <div class="dropdown-item logout-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</div>
+        </div>
+    </div>
+</div>
+<div id="dashboardContent"></div>
             <footer><i class="fas fa-robot"></i> IA Avancée: RUL | Détection d'anomalies | Multi-sites</footer>
         </div>
     </main>
@@ -386,6 +408,94 @@
 <script src="js/session-check.js"></script>
 <script>
     // ========== SIDEBAR INTERACTIONS ==========
+    const API_URL = 'http://localhost:3000/api';
+
+async function getAuthToken() {
+    return localStorage.getItem('ipredict_token');
+}
+
+async function apiCall(endpoint, method, data = null) {
+    const token = await getAuthToken();
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    const response = await fetch(`${API_URL}${endpoint}`, {
+        method,
+        headers,
+        body: data ? JSON.stringify(data) : null
+    });
+    
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'API call failed');
+    }
+    return await response.json();
+}
+
+// Update profile in database
+async function updateProfileInDatabase(fullName, email, phone) {
+    try {
+        const result = await apiCall('/users/profile/me', 'PUT', {
+            full_name: fullName,
+            email: email,
+            phone_number: phone
+        });
+        
+        if (result.success) {
+            // Update local storage
+            currentUser.fullName = result.user.full_name;
+            currentUser.email = result.user.email;
+            currentUser.phone = result.user.phone_number;
+            currentUser.role = result.user.role;
+            saveUserToStorage();
+            updateHeaderUI();
+            
+            showNotification('Profil mis à jour avec succès', 'success');
+            return true;
+        }
+        return false;
+    } catch (error) {
+        showNotification(error.message, 'error');
+        return false;
+    }
+}
+
+// Update password in database
+async function updatePasswordInDatabase(currentPassword, newPassword) {
+    try {
+        const result = await apiCall('/users/profile/me/password', 'PUT', {
+            current_password: currentPassword,
+            new_password: newPassword
+        });
+        
+        if (result.success) {
+            showNotification('Mot de passe mis à jour avec succès', 'success');
+            return true;
+        }
+        return false;
+    } catch (error) {
+        showNotification(error.message, 'error');
+        return false;
+    }
+}
+
+// Load user profile from database
+async function loadUserProfile() {
+    try {
+        const userData = await apiCall('/users/profile/me', 'GET');
+        currentUser.fullName = userData.full_name;
+        currentUser.email = userData.email;
+        currentUser.phone = userData.phone_number || '';
+        currentUser.role = userData.role;
+        currentUser.userId = userData.user_id;
+        saveUserToStorage();
+        updateHeaderUI();
+        return true;
+    } catch (error) {
+        console.error('Failed to load profile:', error);
+        return false;
+    }
+}
     const deptToggle = document.getElementById('departmentToggleBtn');
     const deptDropdown = document.getElementById('deptDropdown');
     const chevron = document.querySelector('.chevron-icon');
@@ -394,7 +504,7 @@
     const profileBtn = document.getElementById('userProfileBtn'); const userDropdown = document.getElementById('userDropdown');
     profileBtn?.addEventListener('click', (e) => { e.stopPropagation(); userDropdown.classList.toggle('show'); });
     document.addEventListener('click', () => userDropdown?.classList.remove('show'));
-    document.getElementById('logoutBtn')?.addEventListener('click', () => alert("Déconnexion simulée."));
+    // document.getElementById('logoutBtn')?.addEventListener('click', () => alert("Déconnexion simulée."));
     
     const navDashboard = document.getElementById('navDashboard');
     const navAlerts = document.getElementById('navAlerts');
@@ -475,6 +585,11 @@ setInterval(() => {
     
     // ========== ALERTS DASHBOARD ==========
     function renderAlertsDashboard() {
+          // Show the dashboard header again
+    const dashboardHeader = document.querySelector('.dashboard-header');
+    if (dashboardHeader) {
+        dashboardHeader.style.display = 'flex';
+    }
         const alerts = getAllAlerts();
         const criticalCount = alerts.filter(a => a.severity === 'critical').length;
         const highCount = alerts.filter(a => a.severity === 'high').length;
@@ -547,6 +662,10 @@ setInterval(() => {
     }
     
     function renderOverallDashboard() {
+          const dashboardHeader = document.querySelector('.dashboard-header');
+    if (dashboardHeader) {
+        dashboardHeader.style.display = 'flex';
+    }
         const depts = getDeptSummary();
         const totalMachines = Object.keys(allPumpsData).length;
         const criticalMachines = Object.values(depts).reduce((a,b) => a + b.critical, 0);
@@ -668,6 +787,10 @@ setInterval(() => {
     }
     
     function renderPumpDashboard(pumpId) {
+          const dashboardHeader = document.querySelector('.dashboard-header');
+    if (dashboardHeader) {
+        dashboardHeader.style.display = 'flex';
+    }
         const pump = allPumpsData[pumpId];
         if (!pump) return;
         const m = pump.metrics;
@@ -796,17 +919,44 @@ let currentUser = {
     fullName: "Sara alaoui",
     role: "Responsable maintenance",
     email: "sara.alaoui@ipredict.com",
-    passwordHash: btoa("secure123")
+    phone: "+212 6 12 34 56 78",
+    userId: null,
+    passwordHash: btoa("sara@2024")
 };
 
 function loadUserFromStorage() {
+    // First try to get from session (from login)
+    const session = localStorage.getItem('ipredict_session');
+    if (session) {
+        try {
+            const sessionData = JSON.parse(session);
+            currentUser.fullName = sessionData.fullName || currentUser.fullName;
+            currentUser.email = sessionData.email || currentUser.email;
+            currentUser.role = sessionData.role || currentUser.role;
+            currentUser.userId = sessionData.userId;
+            console.log('Loaded user from session:', currentUser.fullName, currentUser.role);
+        } catch(e) {
+            console.error('Error parsing session:', e);
+        }
+    }
+    
+    // Then override with stored user data if exists (from profile edits)
     const stored = localStorage.getItem("ipredict_user");
     if(stored) {
         try {
             const parsed = JSON.parse(stored);
             currentUser = { ...currentUser, ...parsed };
+            console.log('Loaded user from storage:', currentUser.fullName);
+            console.log('Stored password hash:', currentUser.passwordHash);
         } catch(e) {}
     }
+    
+    // If password hash is still the default and not base64 encoded, encode it
+    if (currentUser.passwordHash && currentUser.passwordHash.length < 10 && currentUser.passwordHash !== btoa(currentUser.passwordHash)) {
+        // This seems to be plain text, but don't auto-encode to avoid breaking
+        console.log('Password appears to be plain text:', currentUser.passwordHash);
+    }
+    
     updateHeaderUI();
 }
 function saveUserToStorage() {
@@ -814,24 +964,81 @@ function saveUserToStorage() {
         fullName: currentUser.fullName, 
         role: currentUser.role, 
         email: currentUser.email, 
+        phone: currentUser.phone,
+        userId: currentUser.userId,
         passwordHash: currentUser.passwordHash 
     }));
+    console.log('User saved to storage:', currentUser.fullName);
 }
 function updateHeaderUI() {
     const nameSpan = document.getElementById("headerUserName");
     const roleSpan = document.getElementById("headerUserRole");
     const avatarDiv = document.getElementById("headerAvatar");
-    if(nameSpan) nameSpan.innerText = currentUser.fullName;
-    if(roleSpan) roleSpan.innerText = currentUser.role;
-    if(avatarDiv) avatarDiv.innerText = currentUser.fullName.charAt(0).toUpperCase();
+    
+    if(nameSpan) {
+        nameSpan.innerText = currentUser.fullName;
+        console.log('Updated header name to:', currentUser.fullName);
+    }
+    if(roleSpan) {
+        roleSpan.innerText = currentUser.role;
+        console.log('Updated header role to:', currentUser.role);
+    }
+    if(avatarDiv) {
+        // Get initials from full name
+        const nameParts = currentUser.fullName.split(' ');
+        let initials = nameParts[0].charAt(0).toUpperCase();
+        if (nameParts.length > 1) {
+            initials += nameParts[1].charAt(0).toUpperCase();
+        }
+        avatarDiv.innerText = initials;
+        console.log('Updated avatar to:', initials);
+    }
 }
-function verifyPassword(plain) { return btoa(plain) === currentUser.passwordHash; }
-function updatePassword(plain) { currentUser.passwordHash = btoa(plain); saveUserToStorage(); }
-function updateProfile(newName, newEmail, newRole) {
+function verifyPassword(plain) {
+    // The stored password might be either plain text or base64 encoded
+    const enteredHash = btoa(plain);
+    
+    console.log('Entered plain password:', plain);
+    console.log('Entered base64 hash:', enteredHash);
+    console.log('Stored password value:', currentUser.passwordHash);
+    
+    // Check if stored password is base64 encoded or plain text
+    let storedHash = currentUser.passwordHash;
+    
+    // If stored password is not base64 (doesn't look like base64 or is shorter), encode it
+    if (storedHash && storedHash.length < 10 && !storedHash.match(/^[A-Za-z0-9+/=]+$/)) {
+        // Stored is plain text, encode it for comparison
+        storedHash = btoa(storedHash);
+        console.log('Converted stored plain to base64:', storedHash);
+    }
+    
+    const isValid = enteredHash === storedHash;
+    console.log('Passwords match:', isValid);
+    return isValid;
+}
+
+function updatePassword(plain) {
+    const newHash = btoa(plain);
+    currentUser.passwordHash = newHash;
+    saveUserToStorage();
+    console.log('Password updated successfully. New hash:', newHash);
+}
+function updateProfile(newName, newEmail, newPhone) {
     currentUser.fullName = newName;
     currentUser.email = newEmail;
-    currentUser.role = newRole;
+    currentUser.phone = newPhone;
     saveUserToStorage();
+    
+    // Also update the session storage so header updates persist
+    const session = localStorage.getItem('ipredict_session');
+    if(session) {
+        try {
+            const sessionData = JSON.parse(session);
+            sessionData.fullName = newName;
+            sessionData.email = newEmail;
+            localStorage.setItem('ipredict_session', JSON.stringify(sessionData));
+        } catch(e) {}
+    }
     updateHeaderUI();
 }
 function escapeHtml(str) { return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
@@ -873,14 +1080,64 @@ function escapeHtml(str) { return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==
 })();
 
 // Logout function
+// ========== LOGOUT FUNCTION ==========
 function logout() {
+    // Clear all session data
     localStorage.removeItem('ipredict_session');
+    localStorage.removeItem('ipredict_user');
     sessionStorage.removeItem('ipredict_logged_in');
     sessionStorage.removeItem('user_role');
-    window.location.href = 'login.html';
+    
+    // Optional: Call backend logout API if you have one
+    fetch('http://localhost:3000/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    }).catch(err => console.log('Logout API error:', err));
+    
+    // Show logout message
+    showNotification('Déconnexion réussie', 'success');
+    
+    // Redirect to login page
+    setTimeout(() => {
+        window.location.href = 'login.html';
+    }, 500);
+}
+
+// Add this helper function for notifications
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 12px;
+        color: white;
+        font-size: 0.85rem;
+        z-index: 2000;
+        animation: slideIn 0.3s ease;
+        background: ${type === 'success' ? '#2c9e6b' : '#e74c3c'};
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 // ========== PROFILE PAGE RENDERING (horizontal layout) ==========
+// ========== PROFILE PAGE ==========
+// ========== PROFILE PAGE ==========
 function renderProfilePage() {
+    // Hide the dashboard header
+    const dashboardHeader = document.querySelector('.dashboard-header');
+    if (dashboardHeader) {
+        dashboardHeader.style.display = 'none';
+    }
+    
     const profileHtml = `
         <div class="profile-container">
             <div class="profile-horizontal-card">
@@ -894,8 +1151,8 @@ function renderProfilePage() {
                 <div class="profile-fields">
                     <div class="field-group"><label>Nom complet</label><input type="text" id="editFullName" value="${escapeHtml(currentUser.fullName)}"></div>
                     <div class="field-group"><label>Email</label><input type="email" id="editEmail" value="${escapeHtml(currentUser.email)}"></div>
-                    <div class="field-group"><label>Rôle</label><input type="text" id="editRole" value="${escapeHtml(currentUser.role)}"></div>
-                    <div class="field-group"><label>numéro</label><div class="field-value">06889899</div></div>
+                    <div class="field-group"><label>Rôle</label><input type="text" id="editRole" value="${escapeHtml(currentUser.role)}" readonly disabled style="background:#f8fafc"></div>
+                    <div class="field-group"><label>Téléphone</label><input type="text" id="editPhone" value="${escapeHtml(currentUser.phone || '+212 6 12 34 56 78')}"></div>
                 </div>
                 <div class="password-section">
                     <h3><i class="fas fa-lock"></i> Modifier le mot de passe</h3>
@@ -906,7 +1163,7 @@ function renderProfilePage() {
                     </div>
                 </div>
                 <div class="profile-actions">
-                    <button class="btn-primary" id="saveProfileBtn">Enregistrer</button>
+                    <button class="btn-primary" id="saveProfileBtn">Enregistrer les modifications</button>
                     <button class="btn-secondary" id="cancelProfileBtn">Annuler</button>
                 </div>
                 <div id="profileFormMessage" style="padding:0 40px 40px 40px;"></div>
@@ -914,58 +1171,486 @@ function renderProfilePage() {
         </div>
     `;
     document.getElementById('dashboardContent').innerHTML = profileHtml;
-
-    document.getElementById('saveProfileBtn').addEventListener('click', () => {
-        const newName = document.getElementById('editFullName').value.trim();
-        const newEmail = document.getElementById('editEmail').value.trim();
-        const newRole = document.getElementById('editRole').value.trim();
-        if (!newName || !newEmail) { showProfileMsg("Veuillez remplir tous les champs", "error"); return; }
-        updateProfile(newName, newEmail, newRole);
-        const oldPwd = document.getElementById('oldPassword').value;
-        const newPwd = document.getElementById('newPassword').value;
-        const confirmPwd = document.getElementById('confirmPassword').value;
-        if (oldPwd || newPwd || confirmPwd) {
-            if (!verifyPassword(oldPwd)) { showProfileMsg("Mot de passe actuel incorrect", "error"); return; }
-            if (newPwd !== confirmPwd) { showProfileMsg("Les nouveaux mots de passe ne correspondent pas", "error"); return; }
-            if (newPwd.length < 4) { showProfileMsg("Le mot de passe doit contenir au moins 4 caractères", "error"); return; }
-            updatePassword(newPwd);
-            showProfileMsg("Profil et mot de passe mis à jour avec succès", "success");
-            document.getElementById('oldPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
-        } else {
-            showProfileMsg("Profil mis à jour (mot de passe inchangé)", "success");
-        }
-        updateHeaderUI();
-        const avatarLarge = document.getElementById('profileAvatarLarge');
-        if(avatarLarge) avatarLarge.innerText = currentUser.fullName.charAt(0).toUpperCase();
-    });
-    document.getElementById('cancelProfileBtn').addEventListener('click', () => {
-        // Return to overall dashboard – assumes renderOverallDashboard exists
-        if(typeof renderOverallDashboard === 'function') renderOverallDashboard();
-        else location.reload();
-    });
+    
+    // Save button handler
+    const saveBtn = document.getElementById('saveProfileBtn');
+    if (saveBtn) {
+        const newSaveBtn = saveBtn.cloneNode(true);
+        saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+        
+        newSaveBtn.addEventListener('click', async () => {
+            const newName = document.getElementById('editFullName')?.value.trim();
+            const newEmail = document.getElementById('editEmail')?.value.trim();
+            const newPhone = document.getElementById('editPhone')?.value.trim();
+            const oldPwd = document.getElementById('oldPassword')?.value;
+            const newPwd = document.getElementById('newPassword')?.value;
+            const confirmPwd = document.getElementById('confirmPassword')?.value;
+            
+            if (!newName || !newEmail) { 
+                showProfileMsg("Veuillez remplir tous les champs", "error"); 
+                return; 
+            }
+            
+            newSaveBtn.disabled = true;
+            newSaveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+            
+            try {
+                // 1. Update profile in database
+                await updateMyProfileInDatabase(newName, newEmail, newPhone);
+                
+                // 2. Update password if provided
+                if (oldPwd && newPwd && confirmPwd) {
+                    if (newPwd !== confirmPwd) {
+                        showProfileMsg("Les nouveaux mots de passe ne correspondent pas", "error");
+                        return;
+                    }
+                    if (newPwd.length < 4) {
+                        showProfileMsg("Le mot de passe doit contenir au moins 4 caractères", "error");
+                        return;
+                    }
+                    await updateMyPasswordInDatabase(oldPwd, newPwd);
+                    
+                    // Clear password fields
+                    document.getElementById('oldPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                }
+                
+                showProfileMsg("✅ Profil mis à jour avec succès dans la base de données!", "success");
+                
+                // Update avatar
+                const avatarLarge = document.getElementById('profileAvatarLarge');
+                if (avatarLarge) {
+                    avatarLarge.innerText = newName.charAt(0).toUpperCase();
+                }
+                
+                // Reload user data from database
+                await loadUserProfileFromDatabase();
+                
+            } catch (error) {
+                showProfileMsg("❌ " + error.message, "error");
+            } finally {
+                newSaveBtn.disabled = false;
+                newSaveBtn.innerHTML = 'Enregistrer les modifications';
+            }
+        });
+    }
+    
+    // Cancel button handler
+    const cancelBtn = document.getElementById('cancelProfileBtn');
+    if (cancelBtn) {
+        const newCancelBtn = cancelBtn.cloneNode(true);
+        cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+        
+        newCancelBtn.addEventListener('click', () => {
+            const dashboardHeader = document.querySelector('.dashboard-header');
+            if (dashboardHeader) {
+                dashboardHeader.style.display = 'flex';
+            }
+            if (typeof renderOverallDashboard === 'function') {
+                renderOverallDashboard();
+            } else {
+                location.reload();
+            }
+        });
+    }
 }
 function showProfileMsg(msg, type) {
     const container = document.getElementById('profileFormMessage');
     if(container) {
         container.innerHTML = `<div class="form-message ${type === 'success' ? 'success-message' : 'error-message'}">${msg}</div>`;
-        setTimeout(() => { if(container) container.innerHTML = ''; }, 3000);
+        setTimeout(() => { 
+            if(container) container.innerHTML = ''; 
+        }, 3000);
     }
 }
 
 // ========== ATTACH PROFILE MENU EVENT (add this after your existing dropdown code) ==========
 // Make sure you have a reference to the profile menu item (already in your HTML)
-const profileMenuItem = document.querySelector('#userDropdown .dropdown-item:first-child');
+// ========== PROFILE MENU & LOGOUT ==========
+const profileMenuItem = document.getElementById('profileMenuItem');
 if(profileMenuItem) {
     profileMenuItem.addEventListener('click', (e) => {
         e.stopPropagation();
-        document.getElementById('userDropdown')?.classList.remove('show');
+        userDropdown?.classList.remove('show');
         renderProfilePage();
     });
 }
+
+const logoutBtn = document.getElementById('logoutBtn');
+if(logoutBtn) {
+    // Remove any existing listeners by cloning and replacing
+    const newLogoutBtn = logoutBtn.cloneNode(true);
+    logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
+    
+    newLogoutBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        logout();
+    });
+}
+
+async function getMyProfile() {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        const response = await fetch(`${API_URL}/users/profile/me`, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Error fetching profile');
+        }
+        const userData = await response.json();
+        
+        // Update current user object
+        currentUser.fullName = userData.full_name;
+        currentUser.email = userData.email;
+        currentUser.phone = userData.phone_number || '';
+        currentUser.role = userData.role;
+        currentUser.userId = userData.user_id;
+        
+        saveUserToStorage();
+        updateHeaderUI();
+        
+        return userData;
+    } catch (error) {
+        console.error('Error loading profile:', error);
+        showNotification(error.message, 'error');
+    }
+}
+
+// Update current user profile (similar to your updateUser)
+// Simple function like your createUser/updateUser
+async function updateMyProfile(userData) {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        const response = await fetch(`${API_URL}/users/profile/me`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(userData)
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Error updating profile');
+        }
+        
+        const result = await response.json();
+        showNotification('Profil mis à jour avec succès', 'success');
+        
+        // Refresh user data in localStorage
+        await loadUserProfile();
+        
+        return result;
+    } catch (error) {
+        showNotification(error.message, 'error');
+        throw error;
+    }
+}
+
+// Load user profile from database
+async function loadUserProfile() {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        const response = await fetch(`${API_URL}/users/profile/me`, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Error loading profile');
+        }
+        
+        const userData = await response.json();
+        currentUser.fullName = userData.full_name;
+        currentUser.email = userData.email;
+        currentUser.phone = userData.phone_number || '';
+        currentUser.role = userData.role;
+        currentUser.userId = userData.user_id;
+        
+        saveUserToStorage();
+        updateHeaderUI();
+        
+        return userData;
+    } catch (error) {
+        console.error('Error loading profile:', error);
+        // Fallback to localStorage
+        loadUserFromStorage();
+    }
+}
+
+// Update current user password
+async function updateMyPassword(passwordData) {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        const response = await fetch(`${API_URL}/users/profile/me/password`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(passwordData)
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Error updating password');
+        }
+        const result = await response.json();
+        
+        // Update local password hash
+        if (passwordData.new_password) {
+            currentUser.passwordHash = btoa(passwordData.new_password);
+            saveUserToStorage();
+        }
+        
+        showNotification('Mot de passe mis à jour avec succès', 'success');
+        return result;
+    } catch (error) {
+        showNotification(error.message, 'error');
+        throw error;
+    }
+}
+// ========== DATABASE FUNCTIONS (NOT localStorage) ==========
+
+// SAVE TO DATABASE - NOT localStorage!
+async function saveUserToDatabase(userData) {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        const response = await fetch(`${API_URL}/users/profile/me`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                full_name: userData.fullName,
+                email: userData.email,
+                phone_number: userData.phone
+            })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Error saving to database');
+        }
+        
+        const result = await response.json();
+        console.log('✅ User saved to DATABASE:', result.user);
+        
+        // Also update localStorage as backup
+        saveUserToStorage();
+        
+        return result;
+    } catch (error) {
+        console.error('❌ Database save error:', error);
+        showNotification('Erreur base de données: ' + error.message, 'error');
+        throw error;
+    }
+}
+
+// LOAD FROM DATABASE (not localStorage)
+async function loadUserFromDatabase() {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        if (!token) {
+            console.log('No token found, using localStorage');
+            loadUserFromStorage();
+            return;
+        }
+        
+        const response = await fetch(`${API_URL}/users/profile/me`, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Error loading from database');
+        }
+        
+        const userData = await response.json();
+        
+        // Update currentUser from DATABASE
+        currentUser.fullName = userData.full_name;
+        currentUser.email = userData.email;
+        currentUser.phone = userData.phone_number || '';
+        currentUser.role = userData.role;
+        currentUser.userId = userData.user_id;
+        
+        // Also save to localStorage as backup
+        saveUserToStorage();
+        updateHeaderUI();
+        
+        console.log('✅ User loaded from DATABASE:', currentUser.fullName);
+        return userData;
+    } catch (error) {
+        console.error('❌ Database load error:', error);
+        // Fallback to localStorage
+        loadUserFromStorage();
+    }
+}
+
+// UPDATE PROFILE IN DATABASE - Like your updateUser function!
+// ========== DATABASE OPERATIONS ==========
+
+// Update profile in database
+async function updateMyProfileInDatabase(fullName, email, phone) {
+    try {
+        const token = localStorage.getItem('ipredict_token') || sessionStorage.getItem('ipredict_token');
+        
+        const response = await fetch(`${API_URL}/users/profile/me`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                full_name: fullName,
+                email: email,
+                phone_number: phone
+            })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Erreur lors de la mise à jour du profil');
+        }
+        
+        const result = await response.json();
+        
+        // Update currentUser with new data
+        if (result.user) {
+            currentUser.fullName = result.user.full_name;
+            currentUser.email = result.user.email;
+            currentUser.phone = result.user.phone_number || '';
+            currentUser.role = result.user.role;
+        } else if (result.full_name) {
+            currentUser.fullName = result.full_name;
+            currentUser.email = result.email;
+            currentUser.phone = result.phone_number || '';
+            currentUser.role = result.role;
+        }
+        
+        // Update localStorage backup
+        saveUserToStorage();
+        updateHeaderUI();
+        
+        console.log('✅ Profile saved to database');
+        return result;
+    } catch (error) {
+        console.error('Database error:', error);
+        throw error;
+    }
+}
+
+// Update password in database
+async function updateMyPasswordInDatabase(currentPassword, newPassword) {
+    try {
+        const token = localStorage.getItem('ipredict_token') || sessionStorage.getItem('ipredict_token');
+        
+        const response = await fetch(`${API_URL}/users/profile/me/password`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                current_password: currentPassword,
+                new_password: newPassword
+            })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Mot de passe actuel incorrect');
+        }
+        
+        const result = await response.json();
+        
+        // Update local password hash
+        currentUser.passwordHash = btoa(newPassword);
+        saveUserToStorage();
+        
+        console.log('✅ Password updated in database');
+        return result;
+    } catch (error) {
+        console.error('Password error:', error);
+        throw error;
+    }
+}
+
+// Load user profile from database
+async function loadUserProfileFromDatabase() {
+    try {
+        const token = localStorage.getItem('ipredict_token') || sessionStorage.getItem('ipredict_token');
+        
+        if (!token) {
+            console.log('No token found, using localStorage');
+            loadUserFromStorage();
+            return;
+        }
+        
+        const response = await fetch(`${API_URL}/users/profile/me`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Error loading profile from database');
+        }
+        
+        const userData = await response.json();
+        
+        // Update currentUser
+        currentUser.fullName = userData.full_name;
+        currentUser.email = userData.email;
+        currentUser.phone = userData.phone_number || '';
+        currentUser.role = userData.role;
+        currentUser.userId = userData.user_id;
+        
+        // Save to localStorage as backup
+        saveUserToStorage();
+        updateHeaderUI();
+        
+        console.log('✅ Profile loaded from database');
+        return userData;
+    } catch (error) {
+        console.error('Database load error:', error);
+        // Fallback to localStorage
+        loadUserFromStorage();
+    }
+}
+
+// This function now only does localStorage backup (not the main save)
+function saveUserToStorage() {
+    localStorage.setItem("ipredict_user", JSON.stringify({ 
+        fullName: currentUser.fullName, 
+        role: currentUser.role, 
+        email: currentUser.email, 
+        phone: currentUser.phone,
+        userId: currentUser.userId,
+        passwordHash: currentUser.passwordHash 
+    }));
+    console.log('📱 User saved to localStorage (backup):', currentUser.fullName);
+}
+
 // Initial load user data from localStorage
 loadUserFromStorage();
 </script>
 </body>
+</html>
 </html>
