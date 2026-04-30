@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const emailRoutes = require('./routes/emailRoutes');
 
 const userRoutes = require('./routes/userRoutes');
 const machineRoutes = require('./routes/machineRoutes');
@@ -19,6 +20,7 @@ app.use('/api/auth', authRoutes);     // THIS LINE MUST EXIST
 app.use('/api/users', userRoutes);
 app.use('/api/machines', machineRoutes);
 app.use('/api/departments', departmentRoutes);
+app.use('/api/email', emailRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -45,5 +47,6 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: 'Something went wrong!' });
 });
+app.use('/api/email', emailRoutes);
 
 module.exports = app;

@@ -399,6 +399,7 @@
         </div>
     </main>
 </div>
+<script src="js/email-service.js"></script>
 <script src="js/session-check.js"></script>
 <script>
     
@@ -1147,17 +1148,42 @@ async function loadAndDisplayMachine(machineId) {
                 updateMainChart(m);
             });
         });
-        const notifyBtn = document.getElementById('notifyBellBtn');
+     const notifyBtn = document.getElementById('notifyBellBtn');
 if (notifyBtn) {
-    notifyBtn.addEventListener('click', () => {
+    notifyBtn.addEventListener('click', async () => {
+        const machineName = pump.name;
+        const machineId = pump.id;
+        
+        // Get user info
+        const session = localStorage.getItem('ipredict_session');
+        const user = JSON.parse(session || '{}');
+        
+        if (!user.email) {
+            showNotification('❌ Email utilisateur non trouvé', 'error');
+            return;
+        }
+        
+        // Confirm before sending
+        const confirmSend = confirm(`📧 Envoyer une alerte à ${user.email} concernant "${machineName}" ?\n\nLa machine risque de tomber en panne dans les 12 heures.`);
+        
+        if (!confirmSend) return;
+        
+        // Show loading
+        const originalIcon = notifyBtn.innerHTML;
+        notifyBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+        notifyBtn.disabled = true;
+        
+        // Send email
+        await sendPredictionEmail(machineName, machineId);
+        
+        // Update subscription
         const nowSubscribed = toggleSubscription(pumpId);
         notifyBtn.style.background = nowSubscribed ? '#2c9e6b' : '#f1f5f9';
         notifyBtn.style.color = nowSubscribed ? 'white' : '#334155';
-        // If machine is already in failure and subscribed now, send immediate alert
-        if (nowSubscribed && (m.coupling.risk === 'Critique' || m.motor.risk === 'Critique')) {
-            simulateEmail(pumpId, pump.name);
-            localStorage.setItem(`notified_${pumpId}`, 'true');
-        }
+        
+        // Restore button
+        notifyBtn.innerHTML = originalIcon;
+        notifyBtn.disabled = false;
     });
 }
         document.getElementById('alertsContainer').innerHTML = `
@@ -1175,6 +1201,49 @@ if (notifyBtn) {
     function getDepartmentName(deptId) {
     const dept = departmentsFromDB.find(d => d.department_id === deptId);
     return dept ? dept.department_name : 'N/A';
+}
+
+// Send email to the current user
+async function sendPredictionEmail(machineName, machineId) {
+    try {
+        const token = localStorage.getItem('ipredict_token');
+        
+        if (!token) {
+            showNotification('❌ Veuillez vous reconnecter', 'error');
+            return false;
+        }
+        
+        const response = await fetch(`${API_URL}/email/send-prediction-alert`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                machineName: machineName,
+                machineId: machineId,
+                hoursToFailure: 12
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            if (result.mock) {
+                showNotification(`📧 [TEST] Email envoyé à votre adresse`, 'info');
+            } else {
+                showNotification(`✅ Alerte envoyée par email!`, 'success');
+            }
+            return true;
+        } else {
+            showNotification(`❌ Erreur: ${result.error}`, 'error');
+            return false;
+        }
+    } catch (error) {
+        console.error('Send email error:', error);
+        showNotification('❌ Erreur de connexion', 'error');
+        return false;
+    }
 }
     // ========== NAVIGATION ==========
     navDashboard.addEventListener('click', () => { navLinks.forEach(l => l.classList.remove('active')); navDashboard.classList.add('active'); renderOverallDashboard(); });
