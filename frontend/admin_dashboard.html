@@ -164,6 +164,61 @@
             border-color: #d97777;
         }
 
+        /* Welcome Banner Styles */
+        .welcome-banner {
+            background: linear-gradient(135deg, #2c9e6b 0%, #1a6b4a 100%);
+            border-radius: 24px;
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .welcome-text h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .welcome-text p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .welcome-date {
+            text-align: right;
+            background: rgba(255,255,255,0.15);
+            padding: 12px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+        }
+
+        .welcome-date i {
+            margin-right: 8px;
+        }
+
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -547,6 +602,19 @@
                 transform: translateX(0);
             }
         }
+
+        @media (max-width: 768px) {
+            .welcome-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .welcome-date {
+                text-align: center;
+            }
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
@@ -620,6 +688,9 @@
     let machineSearch = "";
     let deptSearch = "";
     
+    // Current logged in user
+    let currentLoggedInUser = null;
+    
     // Modal state
     let currentModalType = null;
     let currentEditId = null;
@@ -666,17 +737,34 @@
         });
     }
     
+    // Get current date
+    function updateCurrentDate() {
+        const dateElement = document.getElementById('currentDate');
+        if (dateElement) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('fr-FR', options);
+            dateElement.textContent = today.charAt(0).toUpperCase() + today.slice(1);
+        }
+    }
+    
+    // Load current logged in user from session
+    function loadCurrentUser() {
+        const session = localStorage.getItem('ipredict_session');
+        if (session) {
+            try {
+                currentLoggedInUser = JSON.parse(session);
+            } catch(e) {
+                console.error('Error parsing session:', e);
+            }
+        }
+    }
+    
     // ============ LOGOUT FUNCTION ============
     function logout() {
-        // Clear all session data
         localStorage.removeItem('ipredict_session');
         sessionStorage.removeItem('ipredict_logged_in');
         sessionStorage.removeItem('user_role');
-        
-        // Show logout message
         showNotification('Déconnexion réussie', 'success');
-        
-        // Redirect to login page after short delay
         setTimeout(() => {
             window.location.href = 'login.html';
         }, 500);
@@ -733,10 +821,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
             });
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Error creating user');
-            }
+            if (!response.ok) throw new Error('Error creating user');
             await fetchUsers();
             showNotification('Utilisateur créé avec succès', 'success');
             closeModal();
@@ -752,10 +837,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
             });
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Error updating user');
-            }
+            if (!response.ok) throw new Error('Error updating user');
             await fetchUsers();
             showNotification('Utilisateur modifié avec succès', 'success');
             closeModal();
@@ -784,10 +866,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(machineData)
             });
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Error creating machine');
-            }
+            if (!response.ok) throw new Error('Error creating machine');
             await fetchMachines();
             showNotification('Machine créée avec succès', 'success');
             closeModal();
@@ -803,10 +882,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(machineData)
             });
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Error updating machine');
-            }
+            if (!response.ok) throw new Error('Error updating machine');
             await fetchMachines();
             showNotification('Machine modifiée avec succès', 'success');
             closeModal();
@@ -835,10 +911,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(deptData)
             });
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Error creating department');
-            }
+            if (!response.ok) throw new Error('Error creating department');
             await fetchDepartments();
             showNotification('Département créé avec succès', 'success');
             closeModal();
@@ -854,10 +927,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(deptData)
             });
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Error updating department');
-            }
+            if (!response.ok) throw new Error('Error updating department');
             await fetchDepartments();
             showNotification('Département modifié avec succès', 'success');
             closeModal();
@@ -870,10 +940,7 @@
         if (!confirm('Êtes-vous sûr de vouloir supprimer ce département ?')) return;
         try {
             const response = await fetch(`${API_URL}/departments/${id}`, { method: 'DELETE' });
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Cannot delete department with associated machines/users');
-            }
+            if (!response.ok) throw new Error('Cannot delete department with associated machines/users');
             await fetchDepartments();
             showNotification('Département supprimé avec succès', 'success');
         } catch (error) {
@@ -902,7 +969,6 @@
     function openUserModal(editId = null) {
         currentModalType = 'user';
         currentEditId = editId;
-        
         const user = editId ? users.find(u => u.user_id === editId) : null;
         const isEdit = !!user;
         
@@ -912,48 +978,12 @@
         
         document.getElementById('modalBody').innerHTML = `
             <form id="modalForm">
-                <div class="form-group">
-                    <label>Nom complet *</label>
-                    <input type="text" id="userFullName" value="${escapeHtml(user?.full_name || '')}" required>
-                </div>
-                <div class="form-group">
-                    <label>Email *</label>
-                    <input type="email" id="userEmail" value="${escapeHtml(user?.email || '')}" required>
-                </div>
-                <div class="form-group">
-                    <label>Téléphone</label>
-                    <input type="text" id="userPhone" value="${escapeHtml(user?.phone_number || '')}" placeholder="+212 XXXXXXXXX">
-                </div>
-                <div class="form-group">
-                    <label>Mot de passe ${isEdit ? '(laisser vide pour conserver)' : '*'}</label>
-                    <input type="password" id="userPassword" ${!isEdit ? 'required' : ''} placeholder="••••••••">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Rôle *</label>
-                        <select id="userRole">
-                            <option value="Admin" ${user?.role === 'Admin' ? 'selected' : ''}>Admin</option>
-                            <option value="Responsable maintenance" ${user?.role === 'Responsable maintenance' ? 'selected' : ''}>Responsable maintenance</option>
-                            <option value="Technicienne" ${user?.role === 'Technicienne' ? 'selected' : ''}>Technicienne</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Département</label>
-                        <select id="userDepartment">
-                            <option value="">Aucun</option>
-                            ${deptOptions}
-                        </select>
-                    </div>
-                </div>
-                ${isEdit ? `
-                <div class="form-group">
-                    <label>Statut</label>
-                    <select id="userStatus">
-                        <option value="true" ${user.is_active ? 'selected' : ''}>Actif</option>
-                        <option value="false" ${!user.is_active ? 'selected' : ''}>Inactif</option>
-                    </select>
-                </div>
-                ` : ''}
+                <div class="form-group"><label>Nom complet *</label><input type="text" id="userFullName" value="${escapeHtml(user?.full_name || '')}" required></div>
+                <div class="form-group"><label>Email *</label><input type="email" id="userEmail" value="${escapeHtml(user?.email || '')}" required></div>
+                <div class="form-group"><label>Téléphone</label><input type="text" id="userPhone" value="${escapeHtml(user?.phone_number || '')}" placeholder="+212 XXXXXXXXX"></div>
+                <div class="form-group"><label>Mot de passe ${isEdit ? '(laisser vide pour conserver)' : '*'}</label><input type="password" id="userPassword" ${!isEdit ? 'required' : ''} placeholder="••••••••"></div>
+                <div class="form-row"><div class="form-group"><label>Rôle *</label><select id="userRole"><option value="Admin" ${user?.role === 'Admin' ? 'selected' : ''}>Admin</option><option value="Responsable maintenance" ${user?.role === 'Responsable maintenance' ? 'selected' : ''}>Responsable maintenance</option><option value="Technicienne" ${user?.role === 'Technicienne' ? 'selected' : ''}>Technicienne</option></select></div><div class="form-group"><label>Département</label><select id="userDepartment"><option value="">Aucun</option>${deptOptions}</select></div></div>
+                ${isEdit ? `<div class="form-group"><label>Statut</label><select id="userStatus"><option value="true" ${user.is_active ? 'selected' : ''}>Actif</option><option value="false" ${!user.is_active ? 'selected' : ''}>Inactif</option></select></div>` : ''}
             </form>
         `;
         openModal();
@@ -967,18 +997,9 @@
         const role = document.getElementById('userRole')?.value;
         const department_id = document.getElementById('userDepartment')?.value;
         
-        if (!full_name || !email) {
-            showNotification('Veuillez remplir tous les champs obligatoires', 'error');
-            return;
-        }
+        if (!full_name || !email) { showNotification('Veuillez remplir tous les champs obligatoires', 'error'); return; }
         
-        const userData = {
-            full_name,
-            email,
-            phone_number: phone_number || null,
-            role,
-            department_id: department_id ? parseInt(department_id) : null
-        };
+        const userData = { full_name, email, phone_number: phone_number || null, role, department_id: department_id ? parseInt(department_id) : null };
         
         if (currentEditId) {
             if (password && password.trim()) userData.password_hash = password;
@@ -986,10 +1007,7 @@
             if (status) userData.is_active = status === 'true';
             updateUser(currentEditId, userData);
         } else {
-            if (!password) {
-                showNotification('Veuillez entrer un mot de passe', 'error');
-                return;
-            }
+            if (!password) { showNotification('Veuillez entrer un mot de passe', 'error'); return; }
             userData.password_hash = password;
             createUser(userData);
         }
@@ -999,7 +1017,6 @@
     function openMachineModal(editId = null) {
         currentModalType = 'machine';
         currentEditId = editId;
-        
         const machine = editId ? machines.find(m => m.machine_id === editId) : null;
         const isEdit = !!machine;
         
@@ -1009,42 +1026,10 @@
         
         document.getElementById('modalBody').innerHTML = `
             <form id="modalForm">
-                <div class="form-group">
-                    <label>Nom de la machine *</label>
-                    <input type="text" id="machineName" value="${escapeHtml(machine?.machine_name || '')}" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Code machine *</label>
-                        <input type="text" id="machineCode" value="${escapeHtml(machine?.machine_code || '')}" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Type</label>
-                        <input type="text" id="machineType" value="${escapeHtml(machine?.machine_type || '')}" placeholder="Centrifuge, Turbo...">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Statut</label>
-                        <select id="machineStatus">
-                            <option value="Active" ${machine?.status === 'Active' ? 'selected' : ''}>Active</option>
-                            <option value="Maintenance" ${machine?.status === 'Maintenance' ? 'selected' : ''}>Maintenance</option>
-                            <option value="Surveillance" ${machine?.status === 'Surveillance' ? 'selected' : ''}>Surveillance</option>
-                            <option value="Standby" ${machine?.status === 'Standby' ? 'selected' : ''}>Standby</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Département</label>
-                        <select id="machineDepartment">
-                            <option value="">Aucun</option>
-                            ${deptOptions}
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Date d'installation</label>
-                    <input type="date" id="machineDate" value="${machine?.installation_date ? new Date(machine.installation_date).toISOString().split('T')[0] : ''}">
-                </div>
+                <div class="form-group"><label>Nom de la machine *</label><input type="text" id="machineName" value="${escapeHtml(machine?.machine_name || '')}" required></div>
+                <div class="form-row"><div class="form-group"><label>Code machine *</label><input type="text" id="machineCode" value="${escapeHtml(machine?.machine_code || '')}" required></div><div class="form-group"><label>Type</label><input type="text" id="machineType" value="${escapeHtml(machine?.machine_type || '')}" placeholder="Centrifuge, Turbo..."></div></div>
+                <div class="form-row"><div class="form-group"><label>Statut</label><select id="machineStatus"><option value="Active" ${machine?.status === 'Active' ? 'selected' : ''}>Active</option><option value="Maintenance" ${machine?.status === 'Maintenance' ? 'selected' : ''}>Maintenance</option><option value="Surveillance" ${machine?.status === 'Surveillance' ? 'selected' : ''}>Surveillance</option><option value="Standby" ${machine?.status === 'Standby' ? 'selected' : ''}>Standby</option></select></div><div class="form-group"><label>Département</label><select id="machineDepartment"><option value="">Aucun</option>${deptOptions}</select></div></div>
+                <div class="form-group"><label>Date d'installation</label><input type="date" id="machineDate" value="${machine?.installation_date ? new Date(machine.installation_date).toISOString().split('T')[0] : ''}"></div>
             </form>
         `;
         openModal();
@@ -1058,51 +1043,27 @@
         const department_id = document.getElementById('machineDepartment')?.value;
         const installation_date = document.getElementById('machineDate')?.value;
         
-        if (!machine_name || !machine_code) {
-            showNotification('Veuillez remplir tous les champs obligatoires', 'error');
-            return;
-        }
+        if (!machine_name || !machine_code) { showNotification('Veuillez remplir tous les champs obligatoires', 'error'); return; }
         
-        const machineData = {
-            machine_name,
-            machine_code,
-            machine_type: machine_type || null,
-            status: status || 'Active',
-            department_id: department_id ? parseInt(department_id) : null,
-            installation_date: installation_date || null
-        };
+        const machineData = { machine_name, machine_code, machine_type: machine_type || null, status: status || 'Active', department_id: department_id ? parseInt(department_id) : null, installation_date: installation_date || null };
         
-        if (currentEditId) {
-            updateMachine(currentEditId, machineData);
-        } else {
-            createMachine(machineData);
-        }
+        if (currentEditId) updateMachine(currentEditId, machineData);
+        else createMachine(machineData);
     }
     
     // Department Modal
     function openDepartmentModal(editId = null) {
         currentModalType = 'department';
         currentEditId = editId;
-        
         const dept = editId ? departments.find(d => d.department_id === editId) : null;
-        const isEdit = !!dept;
         
-        document.getElementById('modalTitle').innerText = isEdit ? 'Modifier le département' : 'Ajouter un département';
+        document.getElementById('modalTitle').innerText = editId ? 'Modifier le département' : 'Ajouter un département';
         
         document.getElementById('modalBody').innerHTML = `
             <form id="modalForm">
-                <div class="form-group">
-                    <label>Nom du département *</label>
-                    <input type="text" id="deptName" value="${escapeHtml(dept?.department_name || '')}" required>
-                </div>
-                <div class="form-group">
-                    <label>Code département *</label>
-                    <input type="text" id="deptCode" value="${escapeHtml(dept?.department_code || '')}" required>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="deptDescription" rows="3" placeholder="Description du département...">${escapeHtml(dept?.description || '')}</textarea>
-                </div>
+                <div class="form-group"><label>Nom du département *</label><input type="text" id="deptName" value="${escapeHtml(dept?.department_name || '')}" required></div>
+                <div class="form-group"><label>Code département *</label><input type="text" id="deptCode" value="${escapeHtml(dept?.department_code || '')}" required></div>
+                <div class="form-group"><label>Description</label><textarea id="deptDescription" rows="3" placeholder="Description du département...">${escapeHtml(dept?.description || '')}</textarea></div>
             </form>
         `;
         openModal();
@@ -1113,22 +1074,12 @@
         const department_code = document.getElementById('deptCode')?.value;
         const description = document.getElementById('deptDescription')?.value;
         
-        if (!department_name || !department_code) {
-            showNotification('Veuillez remplir tous les champs obligatoires', 'error');
-            return;
-        }
+        if (!department_name || !department_code) { showNotification('Veuillez remplir tous les champs obligatoires', 'error'); return; }
         
-        const deptData = {
-            department_name,
-            department_code,
-            description: description || null
-        };
+        const deptData = { department_name, department_code, description: description || null };
         
-        if (currentEditId) {
-            updateDepartment(currentEditId, deptData);
-        } else {
-            createDepartment(deptData);
-        }
+        if (currentEditId) updateDepartment(currentEditId, deptData);
+        else createDepartment(deptData);
     }
     
     // ============ RENDER FUNCTIONS ============
@@ -1139,16 +1090,23 @@
         const totalMachines = machines.length;
         const totalDepartments = departments.length;
         const totalUsers = users.length;
-        
         const activeMachines = machines.filter(m => m.status === 'Active').length;
         const maintenanceMachines = machines.filter(m => m.status === 'Maintenance').length;
         
         const roleCount = {};
-        users.forEach(u => {
-            roleCount[u.role] = (roleCount[u.role] || 0) + 1;
-        });
+        users.forEach(u => { roleCount[u.role] = (roleCount[u.role] || 0) + 1; });
+        
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const today = new Date().toLocaleDateString('fr-FR', options);
         
         const html = `
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h2><i class="fas fa-user-circle"></i> Bonjour, <span id="adminName">${currentLoggedInUser ? escapeHtml(currentLoggedInUser.fullName) : 'Administrateur'}</span> !</h2>
+                    <p><i class="fas fa-chart-line"></i> Bienvenue sur votre tableau de bord iPredict. Voici un récapitulatif de votre infrastructure.</p>
+                </div>
+                <div class="welcome-date"><i class="fas fa-calendar-alt"></i> ${today.charAt(0).toUpperCase() + today.slice(1)}</div>
+            </div>
             <div class="kpi-grid">
                 <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-building"></i></div><div class="kpi-value">${totalDepartments}</div><div class="kpi-label">Départements</div></div>
                 <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-microchip"></i></div><div class="kpi-value">${totalMachines}</div><div class="kpi-label">Machines</div></div>
@@ -1158,20 +1116,9 @@
             <div class="section-card">
                 <div class="section-header"><h3><i class="fas fa-chart-simple"></i> Analyse & indicateurs</h3></div>
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-title">MACHINES PAR STATUT</div>
-                        <div class="stat-row"><span>Actives</span><strong>${activeMachines}</strong></div>
-                        <div class="stat-row"><span>En maintenance</span><strong>${maintenanceMachines}</strong></div>
-                        <div class="stat-row"><span>Autres</span><strong>${totalMachines - activeMachines - maintenanceMachines}</strong></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-title">UTILISATEURS PAR RÔLE</div>
-                        ${Object.entries(roleCount).map(([role, count]) => `<div class="stat-row"><span>${role}</span><strong>${count}</strong></div>`).join('')}
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-title">DÉPARTEMENTS</div>
-                        ${departments.slice(0, 4).map(d => `<div class="stat-row"><span>${d.department_name}</span><strong>${d.machine_count || 0} machines</strong></div>`).join('')}
-                    </div>
+                    <div class="stat-card"><div class="stat-title">MACHINES PAR STATUT</div><div class="stat-row"><span>Actives</span><strong>${activeMachines}</strong></div><div class="stat-row"><span>En maintenance</span><strong>${maintenanceMachines}</strong></div><div class="stat-row"><span>Autres</span><strong>${totalMachines - activeMachines - maintenanceMachines}</strong></div></div>
+                    <div class="stat-card"><div class="stat-title">UTILISATEURS PAR RÔLE</div>${Object.entries(roleCount).map(([r,c]) => `<div class="stat-row"><span>${r}</span><strong>${c}</strong></div>`).join('')}</div>
+                    <div class="stat-card"><div class="stat-title">DÉPARTEMENTS</div>${departments.slice(0,4).map(d => `<div class="stat-row"><span>${d.department_name}</span><strong>${d.machine_count || 0}</strong></div>`).join('')}</div>
                 </div>
             </div>
         `;
@@ -1185,50 +1132,19 @@
         
         const html = `
             <div class="section-card">
-                <div class="section-header">
-                    <h3><i class="fas fa-user-shield"></i> Utilisateurs</h3>
-                    <button class="btn-primary" onclick="openUserModal()"><i class="fas fa-plus"></i> Ajouter</button>
-                </div>
-                <div class="table-search">
-                    <div class="search-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="userSearchInput" placeholder="Nom, email, téléphone..." value="${escapeHtml(userSearch)}">
-                    </div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Rôle</th><th>Département</th><th>Statut</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody id="usersTableBody"></tbody>
-                    </table>
-                </div>
+                <div class="section-header"><h3><i class="fas fa-user-shield"></i> Utilisateurs</h3><button class="btn-primary" onclick="openUserModal()"><i class="fas fa-plus"></i> Ajouter</button></div>
+                <div class="table-search"><div class="search-box"><i class="fas fa-search search-icon"></i><input type="text" id="userSearchInput" placeholder="Nom, email, téléphone..." value="${escapeHtml(userSearch)}"></div></div>
+                <div class="table-wrapper"><table><thead><tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Rôle</th><th>Département</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="usersTableBody"></tbody></table></div>
             </div>
         `;
         document.getElementById('dynamicContent').innerHTML = html;
         
         const tbody = document.getElementById('usersTableBody');
         if (tbody) {
-            tbody.innerHTML = filtered.map(u => `
-                <tr>
-                    <td><strong>${escapeHtml(u.full_name)}</strong></td>
-                    <td>${escapeHtml(u.email)}</td>
-                    <td>${escapeHtml(u.phone_number || '—')}</td>
-                    <td><span class="badge badge-active">${escapeHtml(u.role)}</span></td>
-                    <td>${getDepartmentName(u.department_id)}</td>
-                    <td>${u.is_active ? 'Actif' : 'Inactif'}</td>
-                    <td>
-                        <button class="btn-outline" onclick="openUserModal(${u.user_id})"><i class="fas fa-edit"></i> Modifier</button>
-                        <button class="btn-danger" onclick="deleteUserAPI(${u.user_id})"><i class="fas fa-trash"></i> Suppr.</button>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = filtered.map(u => `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.email)}</td><td>${escapeHtml(u.phone_number || '—')}</td><td><span class="badge badge-active">${escapeHtml(u.role)}</span></td><td>${getDepartmentName(u.department_id)}</td><td><span class="badge ${u.is_active ? 'badge-active' : 'badge-inactive'}">${u.is_active ? 'Actif' : 'Inactif'}</span></td><td><button class="btn-outline" onclick="openUserModal(${u.user_id})"><i class="fas fa-edit"></i> Modifier</button> <button class="btn-danger" onclick="deleteUserAPI(${u.user_id})"><i class="fas fa-trash"></i> Suppr.</button></td></tr>`).join('');
+            if (filtered.length === 0) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Aucun utilisateur trouvé</td></tr>';
         }
-        
-        document.getElementById('userSearchInput')?.addEventListener('input', (e) => {
-            userSearch = e.target.value;
-            renderUsers();
-        });
+        document.getElementById('userSearchInput')?.addEventListener('input', (e) => { userSearch = e.target.value; renderUsers(); });
     }
     
     function renderMachines() {
@@ -1238,24 +1154,9 @@
         
         const html = `
             <div class="section-card">
-                <div class="section-header">
-                    <h3><i class="fas fa-industry"></i> Parc machines</h3>
-                    <button class="btn-primary" onclick="openMachineModal()"><i class="fas fa-plus"></i> Ajouter</button>
-                </div>
-                <div class="table-search">
-                    <div class="search-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="machineSearchInput" placeholder="Nom, code..." value="${escapeHtml(machineSearch)}">
-                    </div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>Machine</th><th>Code</th><th>Type</th><th>Département</th><th>Statut</th><th>Installation</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody id="machinesTableBody"></tbody>
-                    </table>
-                </div>
+                <div class="section-header"><h3><i class="fas fa-industry"></i> Parc machines</h3><button class="btn-primary" onclick="openMachineModal()"><i class="fas fa-plus"></i> Ajouter</button></div>
+                <div class="table-search"><div class="search-box"><i class="fas fa-search search-icon"></i><input type="text" id="machineSearchInput" placeholder="Nom, code..." value="${escapeHtml(machineSearch)}"></div></div>
+                <div class="table-wrapper"><table><thead><tr><th>Machine</th><th>Code</th><th>Type</th><th>Département</th><th>Statut</th><th>Installation</th><th>Actions</th></tr></thead><tbody id="machinesTableBody"></tbody></table></div>
             </div>
         `;
         document.getElementById('dynamicContent').innerHTML = html;
@@ -1264,27 +1165,11 @@
         if (tbody) {
             tbody.innerHTML = filtered.map(m => {
                 let statusClass = m.status === 'Active' ? 'badge-active' : (m.status === 'Maintenance' ? 'badge-maintenance' : 'badge-warning');
-                return `
-                    <tr>
-                        <td><strong>${escapeHtml(m.machine_name)}</strong></td>
-                        <td>${escapeHtml(m.machine_code)}</td>
-                        <td>${escapeHtml(m.machine_type || '—')}</td>
-                        <td>${getDepartmentName(m.department_id)}</td>
-                        <td><span class="badge ${statusClass}">${escapeHtml(m.status)}</span></td>
-                        <td>${m.installation_date ? new Date(m.installation_date).toLocaleDateString() : '—'}</td>
-                        <td>
-                            <button class="btn-outline" onclick="openMachineModal(${m.machine_id})"><i class="fas fa-edit"></i> Modifier</button>
-                            <button class="btn-danger" onclick="deleteMachineAPI(${m.machine_id})"><i class="fas fa-trash"></i> Suppr.</button>
-                        </td>
-                    </tr>
-                `;
+                return `<tr><td><strong>${escapeHtml(m.machine_name)}</strong></td><td>${escapeHtml(m.machine_code)}</td><td>${escapeHtml(m.machine_type || '—')}</td><td>${getDepartmentName(m.department_id)}</td><td><span class="badge ${statusClass}">${escapeHtml(m.status)}</span></td><td>${m.installation_date ? new Date(m.installation_date).toLocaleDateString() : '—'}</td><td><button class="btn-outline" onclick="openMachineModal(${m.machine_id})"><i class="fas fa-edit"></i> Modifier</button> <button class="btn-danger" onclick="deleteMachineAPI(${m.machine_id})"><i class="fas fa-trash"></i> Suppr.</button></td></tr>`;
             }).join('');
+            if (filtered.length === 0) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Aucune machine trouvée</td></tr>';
         }
-        
-        document.getElementById('machineSearchInput')?.addEventListener('input', (e) => {
-            machineSearch = e.target.value;
-            renderMachines();
-        });
+        document.getElementById('machineSearchInput')?.addEventListener('input', (e) => { machineSearch = e.target.value; renderMachines(); });
     }
     
     function renderDepartments() {
@@ -1294,83 +1179,37 @@
         
         const html = `
             <div class="section-card">
-                <div class="section-header">
-                    <h3><i class="fas fa-building"></i> Départements</h3>
-                    <button class="btn-primary" onclick="openDepartmentModal()"><i class="fas fa-plus"></i> Ajouter</button>
-                </div>
-                <div class="table-search">
-                    <div class="search-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="deptSearchInput" placeholder="Nom ou code..." value="${escapeHtml(deptSearch)}">
-                    </div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>Nom</th><th>Code</th><th>Description</th><th>Machines</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody id="deptsTableBody"></tbody>
-                    </table>
-                </div>
+                <div class="section-header"><h3><i class="fas fa-building"></i> Départements</h3><button class="btn-primary" onclick="openDepartmentModal()"><i class="fas fa-plus"></i> Ajouter</button></div>
+                <div class="table-search"><div class="search-box"><i class="fas fa-search search-icon"></i><input type="text" id="deptSearchInput" placeholder="Nom ou code..." value="${escapeHtml(deptSearch)}"></div></div>
+                <div class="table-wrapper"><table><thead><tr><th>Nom</th><th>Code</th><th>Description</th><th>Machines</th><th>Actions</th></tr></thead><tbody id="deptsTableBody"></tbody></table></div>
             </div>
         `;
         document.getElementById('dynamicContent').innerHTML = html;
         
         const tbody = document.getElementById('deptsTableBody');
         if (tbody) {
-            tbody.innerHTML = filtered.map(d => `
-                <tr>
-                    <td><strong>${escapeHtml(d.department_name)}</strong></td>
-                    <td>${escapeHtml(d.department_code)}</td>
-                    <td>${escapeHtml(d.description || '—')}</td>
-                    <td>${d.machine_count || 0}</td>
-                    <td>
-                        <button class="btn-outline" onclick="openDepartmentModal(${d.department_id})"><i class="fas fa-edit"></i> Modifier</button>
-                        <button class="btn-danger" onclick="deleteDepartmentAPI(${d.department_id})"><i class="fas fa-trash"></i> Suppr.</button>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = filtered.map(d => `<tr><td><strong>${escapeHtml(d.department_name)}</strong></td><td>${escapeHtml(d.department_code)}</td><td>${escapeHtml(d.description || '—')}</td><td>${d.machine_count || 0}</td><td><button class="btn-outline" onclick="openDepartmentModal(${d.department_id})"><i class="fas fa-edit"></i> Modifier</button> <button class="btn-danger" onclick="deleteDepartmentAPI(${d.department_id})"><i class="fas fa-trash"></i> Suppr.</button></td></tr>`).join('');
+            if (filtered.length === 0) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;">Aucun département trouvé</td></tr>';
         }
-        
-        document.getElementById('deptSearchInput')?.addEventListener('input', (e) => {
-            deptSearch = e.target.value;
-            renderDepartments();
-        });
+        document.getElementById('deptSearchInput')?.addEventListener('input', (e) => { deptSearch = e.target.value; renderDepartments(); });
     }
     
     // Navigation
-    document.getElementById('navDashboard').addEventListener('click', () => {
-        setActive('navDashboard');
-        renderDashboard();
-    });
-    document.getElementById('navUsers').addEventListener('click', () => {
-        setActive('navUsers');
-        renderUsers();
-    });
-    document.getElementById('navMachines').addEventListener('click', () => {
-        setActive('navMachines');
-        renderMachines();
-    });
-    document.getElementById('navDepartments').addEventListener('click', () => {
-        setActive('navDepartments');
-        renderDepartments();
-    });
+    document.getElementById('navDashboard').addEventListener('click', () => { setActive('navDashboard'); renderDashboard(); });
+    document.getElementById('navUsers').addEventListener('click', () => { setActive('navUsers'); renderUsers(); });
+    document.getElementById('navMachines').addEventListener('click', () => { setActive('navMachines'); renderMachines(); });
+    document.getElementById('navDepartments').addEventListener('click', () => { setActive('navDepartments'); renderDepartments(); });
     
     function setActive(activeId) {
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         document.getElementById(activeId).classList.add('active');
     }
     
-    // LOGOUT BUTTON HANDLER - THIS IS THE KEY FIX
     const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            logout();
-        });
-    }
+    if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.preventDefault(); logout(); });
     
     // Initialize
+    loadCurrentUser();
     loadAllData();
 </script>
 </body>

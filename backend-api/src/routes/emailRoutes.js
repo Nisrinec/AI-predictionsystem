@@ -49,32 +49,4 @@ router.post('/send-prediction-alert', authMiddleware, async (req, res) => {
     }
 });
 
-// Test email endpoint
-router.post('/test', authMiddleware, async (req, res) => {
-    const userId = req.user.userId;
-    
-    try {
-        const userResult = await db.query(
-            'SELECT email, full_name FROM users WHERE user_id = $1',
-            [userId]
-        );
-        
-        if (userResult.rows.length === 0) {
-            return res.status(404).json({ success: false, error: 'User not found' });
-        }
-        
-        const result = await emailService.sendPredictionAlert(
-            userResult.rows[0].email,
-            userResult.rows[0].full_name,
-            'Machine de test',
-            'TEST001',
-            12
-        );
-        
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
 module.exports = router;

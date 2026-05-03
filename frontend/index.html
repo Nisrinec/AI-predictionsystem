@@ -28,7 +28,7 @@
 
         /* SIDEBAR - fixed, never scrolls */
         .sidebar {
-            width: 310px;
+            width: 320px;
             background: #ffffff;
             border-right: 1px solid #e2edf2;
             display: flex;
@@ -1148,42 +1148,46 @@ async function loadAndDisplayMachine(machineId) {
                 updateMainChart(m);
             });
         });
-     const notifyBtn = document.getElementById('notifyBellBtn');
+    const notifyBtn = document.getElementById('notifyBellBtn');
 if (notifyBtn) {
-    notifyBtn.addEventListener('click', async () => {
+    // Remove any existing listeners
+    const newNotifyBtn = notifyBtn.cloneNode(true);
+    notifyBtn.parentNode.replaceChild(newNotifyBtn, notifyBtn);
+    
+    newNotifyBtn.addEventListener('click', async () => {
         const machineName = pump.name;
         const machineId = pump.id;
         
-        // Get user info
+        // Get user info from session
         const session = localStorage.getItem('ipredict_session');
         const user = JSON.parse(session || '{}');
         
         if (!user.email) {
-            showNotification('❌ Email utilisateur non trouvé', 'error');
+            showNotification('❌ Email utilisateur non trouvé. Veuillez vous reconnecter.', 'error');
             return;
         }
         
-        // Confirm before sending
-        const confirmSend = confirm(`📧 Envoyer une alerte à ${user.email} concernant "${machineName}" ?\n\nLa machine risque de tomber en panne dans les 12 heures.`);
+        // Ask for confirmation
+        // const confirmSend = confirm(`📧 Envoyer une alerte à ${user.email} concernant "${machineName}" ?\n\n⚠️ La machine risque de tomber en panne dans les 12 heures.`);
         
-        if (!confirmSend) return;
+        // if (!confirmSend) return;
         
-        // Show loading
-        const originalIcon = notifyBtn.innerHTML;
-        notifyBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-        notifyBtn.disabled = true;
+        // Show loading state
+        const originalIcon = newNotifyBtn.innerHTML;
+        newNotifyBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+        newNotifyBtn.disabled = true;
         
-        // Send email
+        // Send the email
         await sendPredictionEmail(machineName, machineId);
         
-        // Update subscription
+        // Update subscription (optional)
         const nowSubscribed = toggleSubscription(pumpId);
-        notifyBtn.style.background = nowSubscribed ? '#2c9e6b' : '#f1f5f9';
-        notifyBtn.style.color = nowSubscribed ? 'white' : '#334155';
+        newNotifyBtn.style.background = nowSubscribed ? '#2c9e6b' : '#f1f5f9';
+        newNotifyBtn.style.color = nowSubscribed ? 'white' : '#334155';
         
         // Restore button
-        notifyBtn.innerHTML = originalIcon;
-        notifyBtn.disabled = false;
+        newNotifyBtn.innerHTML = originalIcon;
+        newNotifyBtn.disabled = false;
     });
 }
         document.getElementById('alertsContainer').innerHTML = `
@@ -1203,6 +1207,7 @@ if (notifyBtn) {
     return dept ? dept.department_name : 'N/A';
 }
 
+// Send email to the current user
 // Send email to the current user
 async function sendPredictionEmail(machineName, machineId) {
     try {
@@ -1230,7 +1235,7 @@ async function sendPredictionEmail(machineName, machineId) {
         
         if (result.success) {
             if (result.mock) {
-                showNotification(`📧 [TEST] Email envoyé à votre adresse`, 'info');
+                showNotification(`📧 [TEST] Email simulé - Vérifiez la console`, 'info');
             } else {
                 showNotification(`✅ Alerte envoyée par email!`, 'success');
             }
