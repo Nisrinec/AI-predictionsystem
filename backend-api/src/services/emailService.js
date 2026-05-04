@@ -95,12 +95,11 @@ class EmailService {
             
             <p>Bonjour <strong>${data.userName}</strong>,</p>
             
-            <p>Nous avons détecté que <strong>${data.machineName}</strong> - <strong>${data.machinePart}</strong> montre des signes de dysfonctionnement et risque de tomber en panne dans <strong>${data.hoursToFailure} heures</strong>.</p>
+            <p>Nous avons détecté que <strong>${data.machineName}</strong> - <strong>${data.machinePart}</strong> risque de tomber en panne dans <strong>${data.hoursToFailure} heures</strong>.</p>
             
             <div style="background: #f5f5f5; padding: 15px; margin: 20px 0; border-radius: 6px;">
                 <p style="margin: 5px 0;"><strong>Machine :</strong> ${data.machineName}</p>
                 <p style="margin: 5px 0;"><strong>Composant :</strong> ${data.machinePart}</p>
-                <p style="margin: 5px 0;"><strong>ID Machine :</strong> ${data.machineId}</p>
                 <p style="margin: 5px 0;"><strong>Délai avant panne :</strong> ${data.hoursToFailure} heures</p>
                 <p style="margin: 5px 0;"><strong>Détecté le :</strong> ${data.timestamp}</p>
             </div>
@@ -134,7 +133,7 @@ ALERTE MAINTENANCE
 
 Bonjour ${data.userName},
 
-Nous avons détecté que ${data.machineName} - ${data.machinePart} montre des signes de dysfonctionnement et risque de tomber en panne dans ${data.hoursToFailure} heures.
+Nous avons détecté que ${data.machineName} - ${data.machinePart} risque de tomber en panne dans ${data.hoursToFailure} heures.
 
 Machine : ${data.machineName}
 Composant : ${data.machinePart}
