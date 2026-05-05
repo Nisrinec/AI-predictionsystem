@@ -1,134 +1,171 @@
+// ========== API MODULE ==========
+console.log('api.js loading...');
+
 const API_URL = 'http://localhost:3000/api';
 
+// Global variables
+window.departmentsFromDB = [];
+window.machinesFromDB = [];
+window.allPumpsData = window.allPumpsData || {};
+
+// Get auth token
 async function getAuthToken() {
     return localStorage.getItem('ipredict_token');
 }
 
+// Generic API call function
 async function apiCall(endpoint, method, data = null) {
-    const token = await getAuthToken();
-    const headers = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-    
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        method,
-        headers,
-        body: data ? JSON.stringify(data) : null
-    });
-    
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'API call failed');
-    }
-    return await response.json();
-}
-// ========== DYNAMIC SIDEBAR FROM DATABASE ==========
-let departmentsFromDB = [];
-let machinesFromDB = [];
-
-// Fetch departments from database
-async function loadDepartmentsAndMachines() {
     try {
-        const token = localStorage.getItem('ipredict_token');
+        const token = await getAuthToken();
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
         
-        // Fetch departments
-        const deptResponse = await fetch(`${API_URL}/departments`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        if (deptResponse.ok) {
-            departmentsFromDB = await deptResponse.json();
-            console.log('Departments loaded:', departmentsFromDB);
-        }
-        
-        // Fetch machines
-        const machineResponse = await fetch(`${API_URL}/machines`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        if (machineResponse.ok) {
-            machinesFromDB = await machineResponse.json();
-            console.log('Machines loaded:', machinesFromDB);
-        }
-        
-        // Render the sidebar with database data
-        renderSidebarFromDatabase();
-        
-    } catch (error) {
-        console.error('Error loading departments/machines:', error);
-        // Fallback to static data
-        renderStaticSidebar();
-    }
-}
-async function updateMyProfileInDatabase(fullName, email, phone) {
-    try {
-        const token = localStorage.getItem('ipredict_token') || sessionStorage.getItem('ipredict_token');
-        
-        const response = await fetch(`${API_URL}/users/profile/me`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                full_name: fullName,
-                email: email,
-                phone_number: phone
-            })
+        const response = await fetch(`${API_URL}${endpoint}`, {
+            method,
+            headers,
+            body: data ? JSON.stringify(data) : null
         });
         
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.error || 'Erreur lors de la mise à jour du profil');
+            throw new Error(error.error || 'API call failed');
         }
-        
-        const result = await response.json();
-        
-        // Update currentUser with new data
-        if (result.user) {
-            currentUser.fullName = result.user.full_name;
-            currentUser.email = result.user.email;
-            currentUser.phone = result.user.phone_number || '';
-            currentUser.role = result.user.role;
-        } else if (result.full_name) {
-            currentUser.fullName = result.full_name;
-            currentUser.email = result.email;
-            currentUser.phone = result.phone_number || '';
-            currentUser.role = result.role;
-        }
-        
-        // Update localStorage backup
-        saveUserToStorage();
-        updateHeaderUI();
-        
-        console.log('✅ Profile saved to database');
-        return result;
+        return await response.json();
     } catch (error) {
-        console.error('Database error:', error);
+        console.error('API call error:', error);
         throw error;
     }
 }
-async function loadPumpFromDatabase(pumpId) {
+
+// Fetch departments from database
+async function loadDepartmentsAndMachines() {
+    console.log('Loading departments and machines...');
+    
     try {
         const token = localStorage.getItem('ipredict_token');
-        const response = await fetch(`${API_URL}/machines/${pumpId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        if (response.ok) {
-            const machineData = await response.json();
-            console.log('Machine data:', machineData);
-            // Display pump dashboard with database data
-            displayPumpDashboardFromDB(machineData);
+        
+        if (!token) {
+            console.warn('No token found, using fallback data');
+            createFallbackData();
+            renderStaticSidebar();
+            return;
         }
+        
+        // Fetch departments
+        const deptResponse = await fetch(`${API_URL}/departments`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (deptResponse.ok) {
+            window.departmentsFromDB = await deptResponse.json();
+            console.log('Departments loaded:', window.departmentsFromDB.length);
+        }
+        
+        // Fetch machines
+        const machineResponse = await fetch(`${API_URL}/machines`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (machineResponse.ok) {
+            window.machinesFromDB = await machineResponse.json();
+            console.log('Machines loaded:', window.machinesFromDB.length);
+            
+            // Populate allPumpsData from machines
+            window.machinesFromDB.forEach(machine => {
+                const dept = window.departmentsFromDB.find(d => d.department_id === machine.department_id);
+                const dynamicKey = `machine_${machine.machine_id}`;
+                
+                if (!window.allPumpsData[dynamicKey]) {
+                    window.allPumpsData[dynamicKey] = {
+                        id: dynamicKey,
+                        actualId: machine.machine_id,
+                        name: machine.machine_name,
+                        dept: dept ? dept.department_name : 'N/A',
+                        status: machine.status || 'En ligne',
+                        metrics: {
+                            motor: { 
+                                acc: 2.5, temp: 75, vib: 1.8, risk: "Moyen", 
+                                predVib: 2.2, rul: 350, futureRisk: "Moyen", align: 0
+                            },
+                            coupling: { 
+                                acc: 3.2, temp: 70, vib: 2.2, align: 0.35, risk: "Moyen", 
+                                predVib: 2.8, rul: 200, futureRisk: "Moyen" 
+                            },
+                            pump: { 
+                                acc: 1.3, temp: 65, vib: 1.0, flow: 250, risk: "Faible", 
+                                predVib: 1.2, rul: 900, futureRisk: "Faible", align: 0
+                            }
+                        }
+                    };
+                }
+            });
+        }
+        
+        // If no machines were loaded, create fallback data
+        if (Object.keys(window.allPumpsData).length === 0) {
+            console.log('No machines from API, creating fallback data');
+            createFallbackData();
+        }
+        
+        // Render the sidebar
+        if (typeof renderSidebarFromDatabase === 'function') {
+            renderSidebarFromDatabase();
+        } else if (typeof renderStaticSidebar === 'function') {
+            renderStaticSidebar();
+        }
+        
     } catch (error) {
-        console.error('Error loading pump:', error);
+        console.error('Error loading departments/machines:', error);
+        createFallbackData();
+        if (typeof renderStaticSidebar === 'function') {
+            renderStaticSidebar();
+        }
     }
 }
+
+// Create fallback data for testing
+function createFallbackData() {
+    console.log('Creating fallback pump data');
+    window.allPumpsData = {
+        'sap_p1': {
+            id: 'sap_p1',
+            name: 'Pompe SAP-01',
+            dept: 'SAP',
+            status: 'En ligne',
+            actualId: 1,
+            metrics: {
+                motor: { acc: 2.85, temp: 78, vib: 1.85, risk: "Moyen", predVib: 2.35, rul: 328, futureRisk: "Moyen", align: 0 },
+                coupling: { acc: 4.20, temp: 72, vib: 2.45, align: 0.42, risk: "Élevé", predVib: 3.65, rul: 94, futureRisk: "Critique" },
+                pump: { acc: 1.20, temp: 64, vib: 0.95, flow: 278, risk: "Faible", predVib: 1.08, rul: 1250, futureRisk: "Faible", align: 0 }
+            }
+        },
+        'af_p1': {
+            id: 'af_p1',
+            name: 'Pompe AF-101',
+            dept: 'AF',
+            status: 'En ligne',
+            actualId: 2,
+            metrics: {
+                motor: { acc: 2.45, temp: 76, vib: 1.65, risk: "Moyen", predVib: 2.15, rul: 410, futureRisk: "Moyen", align: 0 },
+                coupling: { acc: 3.20, temp: 70, vib: 2.15, align: 0.35, risk: "Moyen", predVib: 2.95, rul: 220, futureRisk: "Moyen" },
+                pump: { acc: 1.35, temp: 65, vib: 1.05, flow: 260, risk: "Faible", predVib: 1.25, rul: 890, futureRisk: "Faible", align: 0 }
+            }
+        }
+    };
+}
+
+// Load and display a specific machine
 async function loadAndDisplayMachine(machineId) {
+    console.log('loadAndDisplayMachine called for:', machineId);
+    
     try {
+        // Check if we already have this machine in allPumpsData
+        const existingKey = `machine_${machineId}`;
+        if (window.allPumpsData[existingKey]) {
+            renderPumpDashboard(existingKey);
+            return;
+        }
+        
         const token = localStorage.getItem('ipredict_token');
         const response = await fetch(`${API_URL}/machines/${machineId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -150,33 +187,27 @@ async function loadAndDisplayMachine(machineId) {
             }
         }
         
-        // Create a dynamic key for this machine
+        // Create dynamic key and add to allPumpsData
         const dynamicKey = `machine_${machine.machine_id}`;
-        
-        // Add to allPumpsData dynamically
-        allPumpsData[dynamicKey] = {
+        window.allPumpsData[dynamicKey] = {
             id: dynamicKey,
+            actualId: machine.machine_id,
             name: machine.machine_name,
             dept: departmentName,
             status: machine.status || 'En ligne',
             metrics: {
-                motor: { 
-                    acc: 2.5, temp: 75, vib: 1.8, risk: "Moyen", 
-                    predVib: 2.2, rul: 350, futureRisk: "Moyen" 
-                },
-                coupling: { 
-                    acc: 3.2, temp: 70, vib: 2.2, align: 0.35, risk: "Moyen", 
-                    predVib: 2.8, rul: 200, futureRisk: "Moyen" 
-                },
-                pump: { 
-                    acc: 1.3, temp: 65, vib: 1.0, flow: 250, risk: "Faible", 
-                    predVib: 1.2, rul: 900, futureRisk: "Faible" 
-                }
+                motor: { acc: 2.5, temp: 75, vib: 1.8, risk: "Moyen", predVib: 2.2, rul: 350, futureRisk: "Moyen", align: 0 },
+                coupling: { acc: 3.2, temp: 70, vib: 2.2, align: 0.35, risk: "Moyen", predVib: 2.8, rul: 200, futureRisk: "Moyen" },
+                pump: { acc: 1.3, temp: 65, vib: 1.0, flow: 250, risk: "Faible", predVib: 1.2, rul: 900, futureRisk: "Faible", align: 0 }
             }
         };
         
-        // Call the existing renderPumpDashboard function
-        renderPumpDashboard(dynamicKey);
+        // Render the pump dashboard
+        if (typeof renderPumpDashboard === 'function') {
+            renderPumpDashboard(dynamicKey);
+        } else {
+            console.error('renderPumpDashboard is not defined');
+        }
         
     } catch (error) {
         console.error('Error loading machine:', error);
@@ -191,12 +222,113 @@ async function loadAndDisplayMachine(machineId) {
         `;
     }
 }
+// ========== MACHINE PARTS API FUNCTIONS ==========
+
+// Fetch machine parts from database
+async function fetchMachineParts(machineId) {
+    console.log('Fetching parts for machine:', machineId);
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`${API_URL}/machine-parts/machine/${machineId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            console.warn('Failed to fetch machine parts, status:', response.status);
+            return [];
+        }
+        
+        const parts = await response.json();
+        console.log('Parts loaded:', parts.length);
+        return parts;
+    } catch (error) {
+        console.error('Error fetching machine parts:', error);
+        return [];
+    }
+}
+
+// Create a new machine part
+async function createMachinePart(machineId, partData) {
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`${API_URL}/machine-parts`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                machine_id: machineId,
+                part_name: partData.part_name,
+                point_column: partData.point_column,
+                is_primary: partData.is_primary || false
+            })
+        });
+        
+        if (!response.ok) throw new Error('Failed to create machine part');
+        return await response.json();
+    } catch (error) {
+        console.error('Error creating machine part:', error);
+        throw error;
+    }
+}
+
+// Update machine part
+async function updateMachinePart(partId, partData) {
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`${API_URL}/machine-parts/${partId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(partData)
+        });
+        
+        if (!response.ok) throw new Error('Failed to update machine part');
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating machine part:', error);
+        throw error;
+    }
+}
+
+// Delete machine part
+async function deleteMachinePart(partId) {
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`${API_URL}/machine-parts/${partId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to delete machine part');
+        return await response.json();
+    } catch (error) {
+        console.error('Error deleting machine part:', error);
+        throw error;
+    }
+}
+
+// Make functions globally available
+window.fetchMachineParts = fetchMachineParts;
+window.createMachinePart = createMachinePart;
+window.updateMachinePart = updateMachinePart;
+window.deleteMachinePart = deleteMachinePart;
+// Send prediction email
 async function sendPredictionEmail(machineName, machineId) {
     try {
         const token = localStorage.getItem('ipredict_token');
         
         if (!token) {
-            showNotification('❌ Veuillez vous reconnecter', 'error');
+            if (typeof showNotification === 'function') {
+                showNotification('❌ Veuillez vous reconnecter', 'error');
+            }
             return false;
         }
         
@@ -216,301 +348,41 @@ async function sendPredictionEmail(machineName, machineId) {
         const result = await response.json();
         
         if (result.success) {
-            if (result.mock) {
-                showNotification(`📧 [TEST] Email simulé - Vérifiez la console`, 'info');
-            } else {
-                showNotification(`✅ Alerte envoyée par email!`, 'success');
+            if (typeof showNotification === 'function') {
+                if (result.mock) {
+                    showNotification(`📧 [TEST] Email simulé pour ${machineName}`, 'info');
+                } else {
+                    showNotification(`✅ Alerte envoyée par email!`, 'success');
+                }
             }
             return true;
         } else {
-            showNotification(`❌ Erreur: ${result.error}`, 'error');
+            if (typeof showNotification === 'function') {
+                showNotification(`❌ Erreur: ${result.error}`, 'error');
+            }
             return false;
         }
     } catch (error) {
         console.error('Send email error:', error);
-        showNotification('❌ Erreur de connexion', 'error');
-        return false;
-    }
-}
-async function updateProfileInDatabase(fullName, email, phone) {
-    try {
-        const result = await apiCall('/users/profile/me', 'PUT', {
-            full_name: fullName,
-            email: email,
-            phone_number: phone
-        });
-        
-        if (result.success) {
-            // Update local storage
-            currentUser.fullName = result.user.full_name;
-            currentUser.email = result.user.email;
-            currentUser.phone = result.user.phone_number;
-            currentUser.role = result.user.role;
-            saveUserToStorage();
-            updateHeaderUI();
-            
-            showNotification('Profil mis à jour avec succès', 'success');
-            return true;
+        if (typeof showNotification === 'function') {
+            showNotification('❌ Erreur de connexion', 'error');
         }
-        return false;
-    } catch (error) {
-        showNotification(error.message, 'error');
         return false;
     }
 }
 
-// Update password in database
-async function updatePasswordInDatabase(currentPassword, newPassword) {
-    try {
-        const result = await apiCall('/users/profile/me/password', 'PUT', {
-            current_password: currentPassword,
-            new_password: newPassword
-        });
-        
-        if (result.success) {
-            showNotification('Mot de passe mis à jour avec succès', 'success');
-            return true;
-        }
-        return false;
-    } catch (error) {
-        showNotification(error.message, 'error');
-        return false;
-    }
+// Add a simple test function
+function testApi() {
+    console.log('API test - allPumpsData:', Object.keys(window.allPumpsData).length);
+    return window.allPumpsData;
 }
 
-// Load user profile from database
-async function loadUserProfile() {
-    try {
-        const userData = await apiCall('/users/profile/me', 'GET');
-        currentUser.fullName = userData.full_name;
-        currentUser.email = userData.email;
-        currentUser.phone = userData.phone_number || '';
-        currentUser.role = userData.role;
-        currentUser.userId = userData.user_id;
-        saveUserToStorage();
-        updateHeaderUI();
-        return true;
-    } catch (error) {
-        console.error('Failed to load profile:', error);
-        return false;
-    }
-}
-async function loadUserProfile() {
-    try {
-        const token = localStorage.getItem('ipredict_token');
-        const response = await fetch(`${API_URL}/users/profile/me`, {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error('Error loading profile');
-        }
-        
-        const userData = await response.json();
-        currentUser.fullName = userData.full_name;
-        currentUser.email = userData.email;
-        currentUser.phone = userData.phone_number || '';
-        currentUser.role = userData.role;
-        currentUser.userId = userData.user_id;
-        
-        saveUserToStorage();
-        updateHeaderUI();
-        
-        return userData;
-    } catch (error) {
-        console.error('Error loading profile:', error);
-        // Fallback to localStorage
-        loadUserFromStorage();
-    }
-}
-async function updateMyPassword(passwordData) {
-    try {
-        const token = localStorage.getItem('ipredict_token');
-        const response = await fetch(`${API_URL}/users/profile/me/password`, {
-            method: 'PUT',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(passwordData)
-        });
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Error updating password');
-        }
-        const result = await response.json();
-        
-        // Update local password hash
-        if (passwordData.new_password) {
-            currentUser.passwordHash = btoa(passwordData.new_password);
-            saveUserToStorage();
-        }
-        
-        showNotification('Mot de passe mis à jour avec succès', 'success');
-        return result;
-    } catch (error) {
-        showNotification(error.message, 'error');
-        throw error;
-    }
-}
-async function updateMyPasswordInDatabase(currentPassword, newPassword) {
-    try {
-        const token = localStorage.getItem('ipredict_token') || sessionStorage.getItem('ipredict_token');
-        
-        const response = await fetch(`${API_URL}/users/profile/me/password`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                current_password: currentPassword,
-                new_password: newPassword
-            })
-        });
-        
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Mot de passe actuel incorrect');
-        }
-        
-        const result = await response.json();
-        
-        // Update local password hash
-        currentUser.passwordHash = btoa(newPassword);
-        saveUserToStorage();
-        
-        console.log('✅ Password updated in database');
-        return result;
-    } catch (error) {
-        console.error('Password error:', error);
-        throw error;
-    }
-}
+// Make functions globally available
+window.loadDepartmentsAndMachines = loadDepartmentsAndMachines;
+window.loadAndDisplayMachine = loadAndDisplayMachine;
+window.sendPredictionEmail = sendPredictionEmail;
+window.testApi = testApi;
+window.createFallbackData = createFallbackData;
 
-// Load user profile from database
-async function loadUserProfileFromDatabase() {
-    try {
-        const token = localStorage.getItem('ipredict_token') || sessionStorage.getItem('ipredict_token');
-        
-        if (!token) {
-            console.log('No token found, using localStorage');
-            loadUserFromStorage();
-            return;
-        }
-        
-        const response = await fetch(`${API_URL}/users/profile/me`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error('Error loading profile from database');
-        }
-        
-        const userData = await response.json();
-        
-        // Update currentUser
-        currentUser.fullName = userData.full_name;
-        currentUser.email = userData.email;
-        currentUser.phone = userData.phone_number || '';
-        currentUser.role = userData.role;
-        currentUser.userId = userData.user_id;
-        
-        // Save to localStorage as backup
-        saveUserToStorage();
-        updateHeaderUI();
-        
-        console.log('✅ Profile loaded from database');
-        return userData;
-    } catch (error) {
-        console.error('Database load error:', error);
-        // Fallback to localStorage
-        loadUserFromStorage();
-    }
-}
-async function saveUserToDatabase(userData) {
-    try {
-        const token = localStorage.getItem('ipredict_token');
-        const response = await fetch(`${API_URL}/users/profile/me`, {
-            method: 'PUT',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                full_name: userData.fullName,
-                email: userData.email,
-                phone_number: userData.phone
-            })
-        });
-        
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Error saving to database');
-        }
-        
-        const result = await response.json();
-        console.log('✅ User saved to DATABASE:', result.user);
-        
-        // Also update localStorage as backup
-        saveUserToStorage();
-        
-        return result;
-    } catch (error) {
-        console.error('❌ Database save error:', error);
-        showNotification('Erreur base de données: ' + error.message, 'error');
-        throw error;
-    }
-}
-
-// LOAD FROM DATABASE (not localStorage)
-async function loadUserFromDatabase() {
-    try {
-        const token = localStorage.getItem('ipredict_token');
-        if (!token) {
-            console.log('No token found, using localStorage');
-            loadUserFromStorage();
-            return;
-        }
-        
-        const response = await fetch(`${API_URL}/users/profile/me`, {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error('Error loading from database');
-        }
-        
-        const userData = await response.json();
-        
-        // Update currentUser from DATABASE
-        currentUser.fullName = userData.full_name;
-        currentUser.email = userData.email;
-        currentUser.phone = userData.phone_number || '';
-        currentUser.role = userData.role;
-        currentUser.userId = userData.user_id;
-        
-        // Also save to localStorage as backup
-        saveUserToStorage();
-        updateHeaderUI();
-        
-        console.log('✅ User loaded from DATABASE:', currentUser.fullName);
-        return userData;
-    } catch (error) {
-        console.error('❌ Database load error:', error);
-        // Fallback to localStorage
-        loadUserFromStorage();
-    }
-}
+console.log('api.js loaded successfully');
+console.log('loadDepartmentsAndMachines type:', typeof loadDepartmentsAndMachines);

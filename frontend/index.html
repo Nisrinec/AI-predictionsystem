@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.55, user-scalable=yes">
-    <title>iPredict | Diagnostic Prédictif - Multi-Sites</title>
+    <title>iPredict App</title>
+   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232e7d32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41'/%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -349,6 +350,7 @@
     </style>
 </head>
 <body>
+    
 <div class="app-layout">
     <aside class="sidebar">
         <div class="brand-area">
@@ -399,24 +401,51 @@
         </div>
     </main>
 </div>
-<script src="js/api.js"></script>
 <script src="js/utils.js"></script>
-<script src="js/email-service.js"></script>
-<script src="js/session-check.js"></script>
-<script src="js/pumpData.js"></script>
+<script src="js/api.js"></script>
 <script src="js/sidebar.js"></script>
+<script src="js/pump.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/alerts.js"></script>
-<script src="js/pump.js"></script>
 <script src="js/profile.js"></script>
 <script src="js/main.js"></script>
-<script src="js/email-service.js"></script>
+<!-- <script src="js/email-service.js"></script> -->
 <script src="js/session-check.js"></script>
+<script src="js/pumpData.js"></script>
 <script>
-function simulateEmail(pumpId, pumpName) {
+ window.emailSubscriptions = JSON.parse(localStorage.getItem('emailSubscriptions') || '{}');
+    
+    function isSubscribed(pumpId) {
+        return window.emailSubscriptions[pumpId] === true;
+    }
+    
+    function toggleSubscription(pumpId) {
+        window.emailSubscriptions[pumpId] = !window.emailSubscriptions[pumpId];
+        localStorage.setItem('emailSubscriptions', JSON.stringify(window.emailSubscriptions));
+        return window.emailSubscriptions[pumpId];
+    }
+    
+    console.log('Fallback functions defined');
+
+    function simulateEmail(pumpId, pumpName) {
     alert(`📧 SIMULATION: Email envoyé à responsable@ipredict.com\nObjet: ALERTE - ${pumpName} est EN PANNE !\n\nMachine: ${pumpName}\nStatut: Critique (RUL < 100h)\nIntervention requise immédiatement.`);
     console.log(`[EMAIL] To: responsable@ipredict.com - ${pumpName} en panne`);
 }
+    // Verify all required functions are loaded
+    window.addEventListener('load', function() {
+        console.log('=== Final Verification ===');
+        console.log('loadDepartmentsAndMachines:', typeof loadDepartmentsAndMachines);
+        console.log('renderOverallDashboard:', typeof renderOverallDashboard);
+        console.log('renderPumpDashboard:', typeof renderPumpDashboard);
+        console.log('allPumpsData keys:', Object.keys(window.allPumpsData || {}).length);
+        
+        if (typeof loadDepartmentsAndMachines === 'function') {
+            console.log('✓ API module loaded correctly');
+        } else {
+            console.error('✗ API module failed to load');
+        }
+    });
+</script>
 </script>
 </body>
 </html>
