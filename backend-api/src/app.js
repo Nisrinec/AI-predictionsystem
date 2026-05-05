@@ -6,7 +6,8 @@ const emailRoutes = require('./routes/emailRoutes');
 const userRoutes = require('./routes/userRoutes');
 const machineRoutes = require('./routes/machineRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
-const authRoutes = require('./routes/authRoutes');  // THIS LINE MUST EXIST
+const authRoutes = require('./routes/authRoutes'); 
+const machinePartRoutes = require('./routes/machinePartRoutes'); // THIS LINE MUST EXIST
 
 const app = express();
 
@@ -21,7 +22,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/machines', machineRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/email', emailRoutes);
-
+app.use('/api/machine-parts', machinePartRoutes);
 // Health check
 app.get('/health', (req, res) => {
     res.json({ 

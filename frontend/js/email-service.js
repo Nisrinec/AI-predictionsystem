@@ -78,3 +78,30 @@ const EmailService = {
         showNotification(`🔔 Simulation: Alerte pour ${machineName} envoyée à ${email}`, 'info');
     }
 };
+function simulateEmail(pumpId, pumpName) {
+    alert(`📧 SIMULATION: Email envoyé à responsable@ipredict.com\nObjet: ALERTE - ${pumpName} est EN PANNE !\n\nMachine: ${pumpName}\nStatut: Critique (RUL < 100h)\nIntervention requise immédiatement.`);
+    console.log(`[EMAIL] To: responsable@ipredict.com - ${pumpName} en panne`);
+}
+
+
+
+function isSubscribed(pumpId) {
+    return emailSubscriptions[pumpId] === true;
+}
+
+// Periodically check subscribed machines for failure (every 30 seconds)
+setInterval(() => {
+    for (let [pumpId, subscribed] of Object.entries(emailSubscriptions)) {
+        if (!subscribed) continue;
+        const pump = allPumpsData[pumpId];
+        if (!pump) continue;
+        const isPanne = pump.metrics.coupling.risk === 'Critique' || pump.metrics.motor.risk === 'Critique';
+        const alreadyNotified = localStorage.getItem(`notified_${pumpId}`) === 'true';
+        if (isPanne && !alreadyNotified) {
+            simulateEmail(pumpId, pump.name);
+            localStorage.setItem(`notified_${pumpId}`, 'true');
+        } else if (!isPanne) {
+            localStorage.removeItem(`notified_${pumpId}`);
+        }
+    }
+}, 30000);
