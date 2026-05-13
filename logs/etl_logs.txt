@@ -1,6 +1,0 @@
-2026-04-09 13:48:20.330021 - ETL started.
-2026-04-09 13:48:20.524093 - CSV files loaded successfully.
-2026-04-09 13:48:20.527103 - ETL failed: 'timestamp'
-2026-04-09 13:51:05.411113 - ETL started.
-2026-04-09 13:51:05.453111 - CSV files loaded successfully.
-2026-04-09 13:51:05.638109 - ETL completed. Processed dataset saved at data/processed/final_dataset.csv.
