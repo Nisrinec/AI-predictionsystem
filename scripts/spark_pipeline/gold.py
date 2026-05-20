@@ -1,10 +1,11 @@
-# spark_pipeline/gold.py
 """
 GOLD LAYER: AI Predictions
+Updated with current risk and 12h risk
 """
 
 from pyspark.sql.functions import *
-from spark_pipeline.config import GOLD_PATH, generate_part_name
+from pyspark.sql.window import Window
+from spark_pipeline.config import GOLD_PATH, generate_part_name, POSTGRESQL_CONFIG
 import builtins
 
 class GoldLayer:
@@ -12,8 +13,21 @@ class GoldLayer:
         self.spark = spark
         self.gold_path = GOLD_PATH
     
+    def save_to_postgresql(self, df, table_name):
+        """Save predictions to PostgreSQL"""
+        df.write \
+            .format("jdbc") \
+            .option("url", POSTGRESQL_CONFIG["url"]) \
+            .option("dbtable", table_name) \
+            .option("user", POSTGRESQL_CONFIG["user"]) \
+            .option("password", POSTGRESQL_CONFIG["password"]) \
+            .option("driver", POSTGRESQL_CONFIG["driver"]) \
+            .mode("overwrite") \
+            .save()
+        print(f"   ✅ Saved to PostgreSQL table: {table_name}")
+    
     def process_department(self, silver_df, department):
-        """Calculate predictions for all parts"""
+        """Calculate predictions for all parts with current and 12h risk"""
         
         print(f"\n📁 Predicting for {department}...")
         
@@ -55,28 +69,56 @@ class GoldLayer:
             
             print(f"         Current vibration: {current_vibration}")
             
-            # Calculate RUL based on vibration level
+            # Calculate RUL and risks based on vibration level
+            predicted_vibration_12h = current_vibration * 1.02
+            
+            # Determine current risk and 12h risk
             if current_vibration > 3.5:
                 rul_hours = 0
+                current_risk = "Critique"
+                if predicted_vibration_12h > 3.5:
+                    risk_12h = "Critique"
+                elif predicted_vibration_12h > 2.5:
+                    risk_12h = "Élevé"
+                elif predicted_vibration_12h > 1.8:
+                    risk_12h = "Moyen"
+                else:
+                    risk_12h = "Faible"
+                    
             elif current_vibration > 2.5:
-                rul_hours = 720  # 30 days
+                rul_hours = 720
+                current_risk = "Élevé"
+                if predicted_vibration_12h > 3.5:
+                    risk_12h = "Critique"
+                elif predicted_vibration_12h > 2.5:
+                    risk_12h = "Élevé"
+                elif predicted_vibration_12h > 1.8:
+                    risk_12h = "Moyen"
+                else:
+                    risk_12h = "Faible"
+                    
             elif current_vibration > 1.8:
-                rul_hours = 2160  # 90 days
+                rul_hours = 2160
+                current_risk = "Moyen"
+                if predicted_vibration_12h > 3.5:
+                    risk_12h = "Critique"
+                elif predicted_vibration_12h > 2.5:
+                    risk_12h = "Élevé"
+                elif predicted_vibration_12h > 1.8:
+                    risk_12h = "Moyen"
+                else:
+                    risk_12h = "Faible"
             else:
-                rul_hours = 8760  # 1 year
-            
-            # Calculate risk level
-            if rul_hours < 168:
-                risk_level = "Critique"
-            elif rul_hours < 720:
-                risk_level = "Élevé"
-            elif rul_hours < 2160:
-                risk_level = "Moyen"
-            else:
-                risk_level = "Faible"
-            
-            # Predicted 12h - use builtins.round to avoid Spark's round
-            predicted_12h = builtins.round(current_vibration * 1.02, 2)
+                rul_hours = 8760
+                current_risk = "Faible"
+                if predicted_vibration_12h > 3.5:
+                    risk_12h = "Critique"
+                elif predicted_vibration_12h > 2.5:
+                    risk_12h = "Élevé"
+                elif predicted_vibration_12h > 1.8:
+                    risk_12h = "Moyen"
+                else:
+                    risk_12h = "Faible"
             
             # Simple anomaly score based on vibration level
             if current_vibration > 3.0:
@@ -98,14 +140,15 @@ class GoldLayer:
                 "current_vibration": builtins.round(current_vibration, 2),
                 "current_temperature": builtins.round(current_temperature, 2),
                 "current_acceleration": builtins.round(current_acceleration, 2),
-                "predicted_12h": predicted_12h,
+                "predicted_12h": builtins.round(predicted_vibration_12h, 2),
+                "current_risk": current_risk,
+                "risk_12h": risk_12h,
                 "rul_hours": rul_hours,
-                "risk_level": risk_level,
                 "anomaly_score": anomaly_score
             }
             
             all_predictions.append(prediction)
-            print(f"         ✅ Current Vib: {current_vibration} | Predicted: {predicted_12h} | RUL: {rul_hours}h | Risk: {risk_level}")
+            print(f"         ✅ Current: {current_vibration} | Risk: {current_risk} → 12h: {predicted_vibration_12h:.2f} | Risk: {risk_12h}")
         
         if not all_predictions:
             print(f"   ⚠️ No predictions generated")
@@ -117,11 +160,18 @@ class GoldLayer:
         # Add prediction timestamp
         result = result.withColumn("prediction_time", current_timestamp())
         
-        # Save to Gold layer
+        # Save to Gold layer (Parquet)
         output_path = str(self.gold_path / f"predictions_{department}")
         result.write.mode("overwrite").parquet(output_path)
+        print(f"\n   ✅ Gold saved (Parquet): {output_path}")
         
-        print(f"\n   ✅ Gold saved: {output_path}")
+        # Save to PostgreSQL database
+        try:
+            self.save_to_postgresql(result, f"predictions_{department}")
+        except Exception as e:
+            print(f"   ⚠️ Could not save to PostgreSQL: {e}")
+            print("   (PostgreSQL may not be running)")
+        
         print(f"      Predictions: {result.count()}")
         result.show(truncate=False)
         

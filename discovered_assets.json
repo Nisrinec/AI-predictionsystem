@@ -1,0 +1,49 @@
+[
+  {
+    "asset_id": 153,
+    "part_codes": [],
+    "num_parts": 0
+  },
+  {
+    "asset_id": 156,
+    "part_codes": [
+      "1RV",
+      "2RV",
+      "3RV"
+    ],
+    "num_parts": 3
+  },
+  {
+    "asset_id": 159,
+    "part_codes": [
+      "1RV",
+      "2RV",
+      "3RV"
+    ],
+    "num_parts": 3
+  },
+  {
+    "asset_id": 205,
+    "part_codes": [
+      "9RV",
+      "2RH",
+      "10RV",
+      "11RV"
+    ],
+    "num_parts": 4
+  },
+  {
+    "asset_id": 209,
+    "part_codes": [
+      "9RV",
+      "10RV",
+      "11RV",
+      "1RV",
+      "2RH",
+      "5RV",
+      "10RH",
+      "11RH"
+    ],
+    "num_parts": 8
+  }
+]

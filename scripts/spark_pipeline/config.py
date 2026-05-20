@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 
 # Paths
-BASE_PATH = Path(__file__).parent.parent
+BASE_PATH = Path("C:/Users/sally/Desktop/AI-predictionsystem")
 DATA_PATH = BASE_PATH / "data"
 RAW_DATA_PATH = DATA_PATH / "raw"
 BRONZE_PATH = DATA_PATH / "bronze"
