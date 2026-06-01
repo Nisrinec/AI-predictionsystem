@@ -4,10 +4,16 @@
 Main Pipeline Orchestrator
 Bronze -> Silver -> Gold
 """
+
 import os
 import sys
 from pathlib import Path
 from datetime import datetime
+
+PYTHON_PATH = "/usr/local/bin/python3.8"
+
+os.environ["PYSPARK_PYTHON"] = PYTHON_PATH
+os.environ["PYSPARK_DRIVER_PYTHON"] = PYTHON_PATH
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -23,26 +29,30 @@ def create_spark_session():
         SparkSession.builder
         .appName("Industrial_Predictive_Maintenance")
         .master("local[*]")
-
-        .config("spark.pyspark.python", sys.executable)
-        .config("spark.pyspark.driver.python", sys.executable)
-
+        .config("spark.pyspark.python", PYTHON_PATH)
+        .config("spark.pyspark.driver.python", PYTHON_PATH)
+        .config("spark.executorEnv.PYSPARK_PYTHON", PYTHON_PATH)
+        .config("spark.executorEnv.PYSPARK_DRIVER_PYTHON", PYTHON_PATH)
         .config("spark.jars.packages", "org.postgresql:postgresql:42.7.3")
         .config("spark.sql.legacy.timeParserPolicy", "LEGACY")
         .config("spark.sql.adaptive.enabled", "true")
         .config("spark.driver.memory", "4g")
         .config("spark.executor.memory", "4g")
         .config("spark.sql.shuffle.partitions", "8")
-
         .getOrCreate()
     )
+
+    spark.sparkContext.setLogLevel("WARN")
+
+    print("=" * 60)
+    print("SPARK SESSION CREATED")
+    print(f"Python used by Spark: {PYTHON_PATH}")
+    print("=" * 60)
 
     return spark
 
 
 def run_full_pipeline():
-    """Run complete pipeline"""
-
     start_time = datetime.now()
 
     print("\n" + "🔧" * 35)
@@ -57,45 +67,30 @@ def run_full_pipeline():
         silver = SilverLayer(spark)
         gold = GoldLayer(spark)
 
-        # ==========================
-        # BRONZE
-        # ==========================
         print("\n🥉 BRONZE LAYER")
         print("-" * 40)
 
         bronze_data = {}
-
         for dept in DEPARTMENTS:
             df = bronze.process_department(dept)
-
             if df is not None:
                 bronze_data[dept] = df
 
         if not bronze_data:
-            print("❌ No data ingested")
-            return
+            raise RuntimeError("No data ingested in Bronze layer")
 
-        # ==========================
-        # SILVER
-        # ==========================
         print("\n🥈 SILVER LAYER")
         print("-" * 40)
 
         silver_data = {}
-
         for dept, df in bronze_data.items():
             cleaned_df = silver.process_department(df, dept)
-
             if cleaned_df is not None:
                 silver_data[dept] = cleaned_df
 
         if not silver_data:
-            print("❌ No silver data produced")
-            return
+            raise RuntimeError("No data produced in Silver layer")
 
-        # ==========================
-        # GOLD
-        # ==========================
         print("\n🥇 GOLD LAYER")
         print("-" * 40)
 
@@ -114,6 +109,8 @@ def run_full_pipeline():
 
         import traceback
         traceback.print_exc()
+
+        raise
 
     finally:
         spark.stop()

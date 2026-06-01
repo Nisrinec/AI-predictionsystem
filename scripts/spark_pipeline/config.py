@@ -50,7 +50,7 @@ SPARK_CONFIG = {
 
 # PostgreSQL
 POSTGRESQL_CONFIG = {
-     "url": "jdbc:postgresql://postgres:5432/airflow",
+    "url": "jdbc:postgresql://host.docker.internal:5432/predictionsystem_db",
     "user": "postgres",
     "password": "ensiensi",
     "driver": "org.postgresql.Driver"
