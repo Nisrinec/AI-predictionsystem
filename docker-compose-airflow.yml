@@ -1,0 +1,80 @@
+﻿version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres:13
+    container_name: airflow_postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  airflow-init:
+    build: .
+    container_name: airflow_init
+    entrypoint: /bin/bash
+    command: >
+      -c "
+      airflow db migrate &&
+      airflow users create
+      --username admin
+      --password admin123
+      --firstname Admin
+      --lastname User
+      --role Admin
+      --email admin@example.com
+      "
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./scripts:/opt/airflow/scripts
+      - ./spark_pipeline:/opt/airflow/spark_pipeline
+      - ./data:/opt/airflow/data
+    depends_on:
+      - postgres
+    restart: "no"
+
+  airflow-webserver:
+    build: .
+    container_name: airflow_webserver
+    command: webserver
+    ports:
+      - "8081:8080"
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./scripts:/opt/airflow/scripts
+      - ./spark_pipeline:/opt/airflow/spark_pipeline
+      - ./data:/opt/airflow/data
+    depends_on:
+      - postgres
+
+  airflow-scheduler:
+    build: .
+    container_name: airflow_scheduler
+    command: scheduler
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./scripts:/opt/airflow/scripts
+      - ./spark_pipeline:/opt/airflow/spark_pipeline
+      - ./data:/opt/airflow/data
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

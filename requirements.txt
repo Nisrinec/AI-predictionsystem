@@ -1,0 +1,5 @@
+pyspark
+pandas
+pyarrow
+psycopg2-binary
+requests

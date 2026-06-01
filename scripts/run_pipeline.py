@@ -9,10 +9,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from spark_pipeline.main_pipeline import run_full_pipeline
 
 if __name__ == "__main__":
-    print("\n This will process all CSV files and generate predictions")
-    response = input("Continue? (yes/no): ")
-    
-    if response.lower() == 'yes':
-        run_full_pipeline()
-    else:
-        print("Cancelled.")
+    print("🚀 Starting Spark pipeline automatically...")
+    run_full_pipeline()
+    print("✅ Pipeline finished")

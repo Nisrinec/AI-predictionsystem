@@ -1,0 +1,7 @@
+[2026-05-24T16:48:21.915+0000] {taskinstance.py:1957} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: i_sense_spark_pipeline.fetch_isense_data scheduled__2026-05-24T15:00:00+00:00 [queued]>
+[2026-05-24T16:48:22.072+0000] {taskinstance.py:1957} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: i_sense_spark_pipeline.fetch_isense_data scheduled__2026-05-24T15:00:00+00:00 [queued]>
+[2026-05-24T16:48:22.083+0000] {taskinstance.py:2171} INFO - Starting attempt 1 of 3
+[2026-05-24T16:48:22.423+0000] {taskinstance.py:2192} INFO - Executing <Task(BashOperator): fetch_isense_data> on 2026-05-24 15:00:00+00:00
+[2026-05-24T16:48:22.522+0000] {standard_task_runner.py:60} INFO - Started process 608 to run task
+[2026-05-24T16:48:22.775+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'i_sense_spark_pipeline', 'fetch_isense_data', 'scheduled__2026-05-24T15:00:00+00:00', '--job-id', '7', '--raw', '--subdir', 'DAGS_FOLDER/i_sense_pipeline.py', '--cfg-path', '/tmp/tmppemxwfr6']
+[2026-05-24T16:48:23.228+0000] {standard_task_runner.py:88} INFO - Job 7: Subtask fetch_isense_data

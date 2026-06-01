@@ -1,0 +1,124 @@
+[2026-05-30T22:33:53.464+0000] {taskinstance.py:1957} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: i_sense_pipeline.fetch_isense_data scheduled__2026-05-30T21:00:00+00:00 [queued]>
+[2026-05-30T22:33:53.483+0000] {taskinstance.py:1957} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: i_sense_pipeline.fetch_isense_data scheduled__2026-05-30T21:00:00+00:00 [queued]>
+[2026-05-30T22:33:53.484+0000] {taskinstance.py:2171} INFO - Starting attempt 1 of 2
+[2026-05-30T22:33:53.532+0000] {taskinstance.py:2192} INFO - Executing <Task(BashOperator): fetch_isense_data> on 2026-05-30 21:00:00+00:00
+[2026-05-30T22:33:53.540+0000] {standard_task_runner.py:60} INFO - Started process 174 to run task
+[2026-05-30T22:33:53.547+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'i_sense_pipeline', 'fetch_isense_data', 'scheduled__2026-05-30T21:00:00+00:00', '--job-id', '2', '--raw', '--subdir', 'DAGS_FOLDER/i_sense_pipeline.py', '--cfg-path', '/tmp/tmp1gqmrvit']
+[2026-05-30T22:33:53.554+0000] {standard_task_runner.py:88} INFO - Job 2: Subtask fetch_isense_data
+[2026-05-30T22:33:53.650+0000] {task_command.py:423} INFO - Running <TaskInstance: i_sense_pipeline.fetch_isense_data scheduled__2026-05-30T21:00:00+00:00 [running]> on host af189d74c7bc
+[2026-05-30T22:33:53.749+0000] {taskinstance.py:2481} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='i_sense_pipeline' AIRFLOW_CTX_TASK_ID='fetch_isense_data' AIRFLOW_CTX_EXECUTION_DATE='2026-05-30T21:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-05-30T21:00:00+00:00'
+[2026-05-30T22:33:53.751+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-05-30T22:33:53.758+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/scripts/fetch_isense.py']
+[2026-05-30T22:33:53.777+0000] {subprocess.py:86} INFO - Output:
+[2026-05-30T22:34:54.075+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.076+0000] {subprocess.py:93} INFO - ================================================================================
+[2026-05-30T22:34:54.077+0000] {subprocess.py:93} INFO - 🏭 i-SENSE COMPLETE DATA FETCHER
+[2026-05-30T22:34:54.077+0000] {subprocess.py:93} INFO -    SAP | AF | CAP | ENGRAIS
+[2026-05-30T22:34:54.078+0000] {subprocess.py:93} INFO - ================================================================================
+[2026-05-30T22:34:54.079+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.079+0000] {subprocess.py:93} INFO - ================================================================================
+[2026-05-30T22:34:54.080+0000] {subprocess.py:93} INFO - 🚀 FETCHING DATA FOR ALL DEPARTMENTS
+[2026-05-30T22:34:54.080+0000] {subprocess.py:93} INFO -    Total machines: 17
+[2026-05-30T22:34:54.081+0000] {subprocess.py:93} INFO - ================================================================================
+[2026-05-30T22:34:54.081+0000] {subprocess.py:93} INFO - ✅ Logged in successfully
+[2026-05-30T22:34:54.082+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.082+0000] {subprocess.py:93} INFO - 📡 Asset 153 → SAP/Pompe_HRS_601ABP04
+[2026-05-30T22:34:54.083+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 3 parts)
+[2026-05-30T22:34:54.084+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 3 parts)
+[2026-05-30T22:34:54.084+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 3 parts)
+[2026-05-30T22:34:54.085+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.085+0000] {subprocess.py:93} INFO - 📡 Asset 156 → SAP/Pompe_circulation_bac_commun_601AAP01
+[2026-05-30T22:34:54.086+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 2 parts)
+[2026-05-30T22:34:54.086+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 2 parts)
+[2026-05-30T22:34:54.087+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 2 parts)
+[2026-05-30T22:34:54.087+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.088+0000] {subprocess.py:93} INFO - 📡 Asset 159 → SAP/Pompe_circulation_bac_commun_601AAP02
+[2026-05-30T22:34:54.088+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (457 rows, 3 parts)
+[2026-05-30T22:34:54.089+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (457 rows, 3 parts)
+[2026-05-30T22:34:54.090+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (457 rows, 3 parts)
+[2026-05-30T22:34:54.090+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.091+0000] {subprocess.py:93} INFO - 📡 Asset 168 → AF/POMPE_A_VIDE_603AAC01
+[2026-05-30T22:34:54.091+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 1 parts)
+[2026-05-30T22:34:54.092+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 1 parts)
+[2026-05-30T22:34:54.092+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 1 parts)
+[2026-05-30T22:34:54.093+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.093+0000] {subprocess.py:93} INFO - 📡 Asset 171 → AF/POMPE_A_VIDE_603AAC06
+[2026-05-30T22:34:54.094+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 4 parts)
+[2026-05-30T22:34:54.094+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 4 parts)
+[2026-05-30T22:34:54.095+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 4 parts)
+[2026-05-30T22:34:54.095+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.096+0000] {subprocess.py:93} INFO - 📡 Asset 174 → AF/POMPE_A_VIDE_603ABC06
+[2026-05-30T22:34:54.096+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 4 parts)
+[2026-05-30T22:34:54.097+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 4 parts)
+[2026-05-30T22:34:54.097+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 4 parts)
+[2026-05-30T22:34:54.098+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.098+0000] {subprocess.py:93} INFO - 📡 Asset 193 → AF/POMPE_B_FLASH_COOLER_603ABP01
+[2026-05-30T22:34:54.099+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (563 rows, 4 parts)
+[2026-05-30T22:34:54.099+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (563 rows, 4 parts)
+[2026-05-30T22:34:54.100+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (563 rows, 4 parts)
+[2026-05-30T22:34:54.100+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.101+0000] {subprocess.py:93} INFO - 📡 Asset 177 → CAP/POMPE_DE_CIRCULATION_J_604JAP04
+[2026-05-30T22:34:54.102+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (524 rows, 6 parts)
+[2026-05-30T22:34:54.102+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (524 rows, 6 parts)
+[2026-05-30T22:34:54.103+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (524 rows, 6 parts)
+[2026-05-30T22:34:54.103+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.104+0000] {subprocess.py:93} INFO - 📡 Asset 181 → CAP/POMPE_DE_CIRCULATION_K_604KAP04
+[2026-05-30T22:34:54.105+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (400 rows, 5 parts)
+[2026-05-30T22:34:54.105+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (400 rows, 5 parts)
+[2026-05-30T22:34:54.106+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (400 rows, 5 parts)
+[2026-05-30T22:34:54.107+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.107+0000] {subprocess.py:93} INFO - 📡 Asset 185 → CAP/POMPE_DE_CIRCULATION_L_604LAP04
+[2026-05-30T22:34:54.108+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (682 rows, 7 parts)
+[2026-05-30T22:34:54.108+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (682 rows, 7 parts)
+[2026-05-30T22:34:54.109+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (682 rows, 7 parts)
+[2026-05-30T22:34:54.109+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.110+0000] {subprocess.py:93} INFO - 📡 Asset 197 → ENGRAIS/Elevateur_607AAT01
+[2026-05-30T22:34:54.111+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.111+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.112+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.113+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.113+0000] {subprocess.py:93} INFO - 📡 Asset 201 → ENGRAIS/Elevateur_607AAT04
+[2026-05-30T22:34:54.114+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.114+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.115+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.116+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.116+0000] {subprocess.py:93} INFO - 📡 Asset 205 → ENGRAIS/Elevateur_607AAT05
+[2026-05-30T22:34:54.117+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 4 parts)
+[2026-05-30T22:34:54.118+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 4 parts)
+[2026-05-30T22:34:54.118+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 4 parts)
+[2026-05-30T22:34:54.119+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.119+0000] {subprocess.py:93} INFO - 📡 Asset 209 → ENGRAIS/Elevateur_607AAT06
+[2026-05-30T22:34:54.120+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.120+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.121+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.121+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.122+0000] {subprocess.py:93} INFO - 📡 Asset 213 → ENGRAIS/Enrobeur_607AAM04
+[2026-05-30T22:34:54.123+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (725 rows, 8 parts)
+[2026-05-30T22:34:54.123+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (725 rows, 8 parts)
+[2026-05-30T22:34:54.124+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (725 rows, 8 parts)
+[2026-05-30T22:34:54.124+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.125+0000] {subprocess.py:93} INFO - 📡 Asset 217 → ENGRAIS/Granulateur_607AAM03
+[2026-05-30T22:34:54.125+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.125+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.126+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.126+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.127+0000] {subprocess.py:93} INFO - 📡 Asset 221 → ENGRAIS/Tube_secheur_607AAF02
+[2026-05-30T22:34:54.127+0000] {subprocess.py:93} INFO -       💾 Saved: AccelerationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.128+0000] {subprocess.py:93} INFO -       💾 Saved: VibrationData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.128+0000] {subprocess.py:93} INFO -       💾 Saved: TemperatureData.csv (721 rows, 8 parts)
+[2026-05-30T22:34:54.129+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.130+0000] {subprocess.py:93} INFO - ================================================================================
+[2026-05-30T22:34:54.130+0000] {subprocess.py:93} INFO - 📊 FETCH SUMMARY - ALL DEPARTMENTS
+[2026-05-30T22:34:54.130+0000] {subprocess.py:93} INFO - ================================================================================
+[2026-05-30T22:34:54.131+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.131+0000] {subprocess.py:93} INFO - ✅ SAP: 3/3 machines
+[2026-05-30T22:34:54.132+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.132+0000] {subprocess.py:93} INFO - ✅ AF: 4/4 machines
+[2026-05-30T22:34:54.133+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.134+0000] {subprocess.py:93} INFO - ✅ CAP: 3/3 machines
+[2026-05-30T22:34:54.134+0000] {subprocess.py:93} INFO - 
+[2026-05-30T22:34:54.135+0000] {subprocess.py:93} INFO - ✅ ENGRAIS: 7/7 machines
+[2026-05-30T22:34:54.265+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-05-30T22:34:54.312+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=i_sense_pipeline, task_id=fetch_isense_data, execution_date=20260530T210000, start_date=20260530T223353, end_date=20260530T223454
+[2026-05-30T22:34:54.365+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2026-05-30T22:34:54.413+0000] {taskinstance.py:3281} INFO - 1 downstream tasks scheduled from follow-on schedule check

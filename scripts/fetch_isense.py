@@ -52,7 +52,7 @@ SENSOR_POINTS = {
 class AllDepartmentsFetcher:
     def __init__(self):
         self.token = None
-        self.project_root = Path("C:/Users/sally/Desktop/AI-predictionsystem")
+        self.project_root = Path("/opt/airflow")
         self.raw_path = self.project_root / "data" / "raw"
         
     def login(self):
