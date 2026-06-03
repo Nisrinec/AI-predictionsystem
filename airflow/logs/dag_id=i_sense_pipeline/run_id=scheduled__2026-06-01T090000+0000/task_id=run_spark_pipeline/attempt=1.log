@@ -1,0 +1,59 @@
+[2026-06-01T10:02:05.306+0000] {taskinstance.py:1957} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: i_sense_pipeline.run_spark_pipeline scheduled__2026-06-01T09:00:00+00:00 [queued]>
+[2026-06-01T10:02:05.322+0000] {taskinstance.py:1957} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: i_sense_pipeline.run_spark_pipeline scheduled__2026-06-01T09:00:00+00:00 [queued]>
+[2026-06-01T10:02:05.322+0000] {taskinstance.py:2171} INFO - Starting attempt 1 of 2
+[2026-06-01T10:02:05.342+0000] {taskinstance.py:2192} INFO - Executing <Task(BashOperator): run_spark_pipeline> on 2026-06-01 09:00:00+00:00
+[2026-06-01T10:02:05.347+0000] {standard_task_runner.py:60} INFO - Started process 9773 to run task
+[2026-06-01T10:02:05.352+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'i_sense_pipeline', 'run_spark_pipeline', 'scheduled__2026-06-01T09:00:00+00:00', '--job-id', '21', '--raw', '--subdir', 'DAGS_FOLDER/i_sense_pipeline.py', '--cfg-path', '/tmp/tmp8z1b8_95']
+[2026-06-01T10:02:05.356+0000] {standard_task_runner.py:88} INFO - Job 21: Subtask run_spark_pipeline
+[2026-06-01T10:02:05.437+0000] {task_command.py:423} INFO - Running <TaskInstance: i_sense_pipeline.run_spark_pipeline scheduled__2026-06-01T09:00:00+00:00 [running]> on host 584c6a772482
+[2026-06-01T10:02:05.588+0000] {taskinstance.py:2481} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='i_sense_pipeline' AIRFLOW_CTX_TASK_ID='run_spark_pipeline' AIRFLOW_CTX_EXECUTION_DATE='2026-06-01T09:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-06-01T09:00:00+00:00'
+[2026-06-01T10:02:05.590+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-06-01T10:02:05.592+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/scripts/run_pipeline.py']
+[2026-06-01T10:02:05.609+0000] {subprocess.py:86} INFO - Output:
+[2026-06-01T10:02:12.510+0000] {subprocess.py:93} INFO - :: loading settings :: url = jar:file:/home/***/.local/lib/python3.8/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[2026-06-01T10:02:12.755+0000] {subprocess.py:93} INFO - Ivy Default Cache set to: /home/***/.ivy2/cache
+[2026-06-01T10:02:12.756+0000] {subprocess.py:93} INFO - The jars for the packages stored in: /home/***/.ivy2/jars
+[2026-06-01T10:02:12.770+0000] {subprocess.py:93} INFO - org.postgresql#postgresql added as a dependency
+[2026-06-01T10:02:12.774+0000] {subprocess.py:93} INFO - :: resolving dependencies :: org.apache.spark#spark-submit-parent-06067cb7-cada-4e67-b7c1-e75bcb710000;1.0
+[2026-06-01T10:02:12.775+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2026-06-01T10:02:13.137+0000] {subprocess.py:93} INFO - 	found org.postgresql#postgresql;42.7.3 in central
+[2026-06-01T10:02:13.236+0000] {subprocess.py:93} INFO - 	found org.checkerframework#checker-qual;3.42.0 in central
+[2026-06-01T10:02:13.488+0000] {subprocess.py:93} INFO - :: resolution report :: resolve 642ms :: artifacts dl 71ms
+[2026-06-01T10:02:13.522+0000] {subprocess.py:93} INFO - 	:: modules in use:
+[2026-06-01T10:02:13.549+0000] {subprocess.py:93} INFO - 	org.checkerframework#checker-qual;3.42.0 from central in [default]
+[2026-06-01T10:02:13.596+0000] {subprocess.py:93} INFO - 	org.postgresql#postgresql;42.7.3 from central in [default]
+[2026-06-01T10:02:13.627+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2026-06-01T10:02:13.643+0000] {subprocess.py:93} INFO - 	|                  |            modules            ||   artifacts   |
+[2026-06-01T10:02:13.661+0000] {subprocess.py:93} INFO - 	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+[2026-06-01T10:02:13.674+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2026-06-01T10:02:13.678+0000] {subprocess.py:93} INFO - 	|      default     |   2   |   0   |   0   |   0   ||   2   |   0   |
+[2026-06-01T10:02:13.687+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2026-06-01T10:02:13.689+0000] {subprocess.py:93} INFO - :: retrieving :: org.apache.spark#spark-submit-parent-06067cb7-cada-4e67-b7c1-e75bcb710000
+[2026-06-01T10:02:13.690+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2026-06-01T10:02:13.693+0000] {subprocess.py:93} INFO - 	0 artifacts copied, 2 already retrieved (0kB/79ms)
+[2026-06-01T10:02:15.677+0000] {subprocess.py:93} INFO - 26/06/01 10:02:15 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2026-06-01T10:02:16.367+0000] {subprocess.py:93} INFO - Setting default log level to "WARN".
+[2026-06-01T10:02:16.368+0000] {subprocess.py:93} INFO - To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+[2026-06-01T10:02:33.962+0000] {local_task_job_runner.py:121} ERROR - Received SIGTERM. Terminating subprocesses
+[2026-06-01T10:02:34.201+0000] {process_utils.py:131} INFO - Sending 15 to group 9773. PIDs of all processes in the group: [9774, 9779, 9773]
+[2026-06-01T10:02:34.232+0000] {process_utils.py:86} INFO - Sending the signal 15 to group 9773
+[2026-06-01T10:02:34.266+0000] {taskinstance.py:2451} ERROR - Received SIGTERM. Terminating subprocesses.
+[2026-06-01T10:02:34.286+0000] {subprocess.py:104} INFO - Sending SIGTERM signal to process group
+[2026-06-01T10:02:34.382+0000] {taskinstance.py:2699} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 433, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 203, in execute
+    result = self.subprocess_hook.run_command(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/hooks/subprocess.py", line 91, in run_command
+    for raw_line in iter(self.sub_process.stdout.readline, b""):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 2453, in signal_handler
+    raise AirflowException("Task received SIGTERM signal")
+airflow.exceptions.AirflowException: Task received SIGTERM signal
+[2026-06-01T10:02:34.518+0000] {taskinstance.py:1138} INFO - Marking task as UP_FOR_RETRY. dag_id=i_sense_pipeline, task_id=run_spark_pipeline, execution_date=20260601T090000, start_date=20260601T100205, end_date=20260601T100234
+[2026-06-01T10:02:34.646+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 21 for task run_spark_pipeline (Task received SIGTERM signal; 9773)
+[2026-06-01T10:02:35.045+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=9773, status='terminated', exitcode=1, started='10:02:04') (9773) terminated with exit code 1
+[2026-06-01T10:02:35.075+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=9774, status='terminated', started='10:02:05') (9774) terminated with exit code None
+[2026-06-01T10:02:35.860+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=9779, status='terminated', started='10:02:06') (9779) terminated with exit code None
+[2026-06-01T10:02:35.862+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 143
+[2026-06-01T10:02:35.907+0000] {taskinstance.py:3281} INFO - 0 downstream tasks scheduled from follow-on schedule check

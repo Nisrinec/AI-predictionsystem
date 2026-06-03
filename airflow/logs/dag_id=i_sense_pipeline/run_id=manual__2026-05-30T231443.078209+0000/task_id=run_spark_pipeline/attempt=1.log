@@ -1,0 +1,1107 @@
+[2026-05-30T23:15:57.042+0000] {taskinstance.py:1957} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: i_sense_pipeline.run_spark_pipeline manual__2026-05-30T23:14:43.078209+00:00 [queued]>
+[2026-05-30T23:15:57.084+0000] {taskinstance.py:1957} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: i_sense_pipeline.run_spark_pipeline manual__2026-05-30T23:14:43.078209+00:00 [queued]>
+[2026-05-30T23:15:57.087+0000] {taskinstance.py:2171} INFO - Starting attempt 1 of 2
+[2026-05-30T23:15:57.180+0000] {taskinstance.py:2192} INFO - Executing <Task(BashOperator): run_spark_pipeline> on 2026-05-30 23:14:43.078209+00:00
+[2026-05-30T23:15:57.209+0000] {standard_task_runner.py:60} INFO - Started process 196 to run task
+[2026-05-30T23:15:57.227+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'i_sense_pipeline', 'run_spark_pipeline', 'manual__2026-05-30T23:14:43.078209+00:00', '--job-id', '8', '--raw', '--subdir', 'DAGS_FOLDER/i_sense_pipeline.py', '--cfg-path', '/tmp/tmpl1ouhd9k']
+[2026-05-30T23:15:57.245+0000] {standard_task_runner.py:88} INFO - Job 8: Subtask run_spark_pipeline
+[2026-05-30T23:15:57.436+0000] {task_command.py:423} INFO - Running <TaskInstance: i_sense_pipeline.run_spark_pipeline manual__2026-05-30T23:14:43.078209+00:00 [running]> on host 584c6a772482
+[2026-05-30T23:15:57.728+0000] {taskinstance.py:2481} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='i_sense_pipeline' AIRFLOW_CTX_TASK_ID='run_spark_pipeline' AIRFLOW_CTX_EXECUTION_DATE='2026-05-30T23:14:43.078209+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-05-30T23:14:43.078209+00:00'
+[2026-05-30T23:15:57.732+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-05-30T23:15:57.734+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/scripts/run_pipeline.py']
+[2026-05-30T23:15:57.770+0000] {subprocess.py:86} INFO - Output:
+[2026-05-30T23:16:09.451+0000] {subprocess.py:93} INFO - :: loading settings :: url = jar:file:/home/***/.local/lib/python3.8/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[2026-05-30T23:16:09.604+0000] {subprocess.py:93} INFO - Ivy Default Cache set to: /home/***/.ivy2/cache
+[2026-05-30T23:16:09.606+0000] {subprocess.py:93} INFO - The jars for the packages stored in: /home/***/.ivy2/jars
+[2026-05-30T23:16:09.624+0000] {subprocess.py:93} INFO - org.postgresql#postgresql added as a dependency
+[2026-05-30T23:16:09.626+0000] {subprocess.py:93} INFO - :: resolving dependencies :: org.apache.spark#spark-submit-parent-51ec348e-98fd-46c7-9e71-b39f9ae372f8;1.0
+[2026-05-30T23:16:09.627+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2026-05-30T23:16:11.822+0000] {subprocess.py:93} INFO - 	found org.postgresql#postgresql;42.7.3 in central
+[2026-05-30T23:16:12.182+0000] {subprocess.py:93} INFO - 	found org.checkerframework#checker-qual;3.42.0 in central
+[2026-05-30T23:16:12.329+0000] {subprocess.py:93} INFO - downloading https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar ...
+[2026-05-30T23:16:12.893+0000] {subprocess.py:93} INFO - 	[SUCCESSFUL ] org.postgresql#postgresql;42.7.3!postgresql.jar (648ms)
+[2026-05-30T23:16:12.967+0000] {subprocess.py:93} INFO - downloading https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar ...
+[2026-05-30T23:16:13.116+0000] {subprocess.py:93} INFO - 	[SUCCESSFUL ] org.checkerframework#checker-qual;3.42.0!checker-qual.jar (215ms)
+[2026-05-30T23:16:13.118+0000] {subprocess.py:93} INFO - :: resolution report :: resolve 2617ms :: artifacts dl 880ms
+[2026-05-30T23:16:13.122+0000] {subprocess.py:93} INFO - 	:: modules in use:
+[2026-05-30T23:16:13.126+0000] {subprocess.py:93} INFO - 	org.checkerframework#checker-qual;3.42.0 from central in [default]
+[2026-05-30T23:16:13.132+0000] {subprocess.py:93} INFO - 	org.postgresql#postgresql;42.7.3 from central in [default]
+[2026-05-30T23:16:13.142+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2026-05-30T23:16:13.143+0000] {subprocess.py:93} INFO - 	|                  |            modules            ||   artifacts   |
+[2026-05-30T23:16:13.144+0000] {subprocess.py:93} INFO - 	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+[2026-05-30T23:16:13.145+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2026-05-30T23:16:13.155+0000] {subprocess.py:93} INFO - 	|      default     |   2   |   2   |   2   |   0   ||   2   |   2   |
+[2026-05-30T23:16:13.159+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2026-05-30T23:16:13.160+0000] {subprocess.py:93} INFO - :: retrieving :: org.apache.spark#spark-submit-parent-51ec348e-98fd-46c7-9e71-b39f9ae372f8
+[2026-05-30T23:16:13.161+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2026-05-30T23:16:13.197+0000] {subprocess.py:93} INFO - 	2 artifacts copied, 0 already retrieved (1289kB/50ms)
+[2026-05-30T23:16:14.035+0000] {subprocess.py:93} INFO - 26/05/30 23:16:14 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2026-05-30T23:16:14.784+0000] {subprocess.py:93} INFO - Setting default log level to "WARN".
+[2026-05-30T23:16:14.787+0000] {subprocess.py:93} INFO - To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+[2026-05-30T23:20:09.612+0000] {subprocess.py:93} INFO - [Stage 0:>                                                          (0 + 0) / 1][Stage 0:>                                                          (0 + 1) / 1]                                                                                [Stage 1:>                                                          (0 + 1) / 1]                                                                                [Stage 4:>                                                          (0 + 2) / 2]                                                                                [Stage 90:>                                                        (0 + 4) / 24][Stage 90:====>                                                    (2 + 4) / 24][Stage 90:=========>                                               (4 + 4) / 24][Stage 90:===========>                                             (5 + 4) / 24][Stage 90:==============>                                          (6 + 5) / 24][Stage 90:===================>                                     (8 + 4) / 24][Stage 90:=========================>                              (11 + 4) / 24][Stage 90:============================>                           (12 + 4) / 24][Stage 90:================================>                       (14 + 4) / 24][Stage 90:===================================>                    (15 + 4) / 24][Stage 90:=====================================>                  (16 + 4) / 24][Stage 90:==========================================>             (18 + 4) / 24][Stage 90:============================================>           (19 + 4) / 24][Stage 90:=================================================>      (21 + 3) / 24][Stage 90:===================================================>    (22 + 2) / 24][Stage 90:=====================================================>  (23 + 1) / 24]                                                                                [Stage 91:=====================>                                   (9 + 4) / 24][Stage 91:=========================>                              (11 + 4) / 24][Stage 91:===================================>                    (15 + 4) / 24][Stage 91:==========================================>             (18 + 4) / 24][Stage 91:==============================================>         (20 + 4) / 24]                                                                                [Stage 94:>                                                        (0 + 4) / 24][Stage 94:=========>                                               (4 + 4) / 24][Stage 94:===================>                                     (8 + 4) / 24][Stage 94:=======================>                                (10 + 4) / 24][Stage 94:============================>                           (12 + 5) / 24][Stage 94:===================================>                    (15 + 4) / 24][Stage 94:=======================================>                (17 + 4) / 24][Stage 94:==============================================>         (20 + 4) / 24][Stage 94:=================================================>      (21 + 3) / 24]                                                                                [Stage 220:>                                                       (0 + 4) / 39][Stage 220:====>                                                   (3 + 4) / 39][Stage 220:=====>                                                  (4 + 4) / 39][Stage 220:=======>                                                (5 + 4) / 39][Stage 220:==========>                                             (7 + 4) / 39][Stage 220:============>                                           (9 + 4) / 39][Stage 220:===============>                                       (11 + 4) / 39][Stage 220:==================>                                    (13 + 4) / 39][Stage 220:=====================>                                 (15 + 4) / 39][Stage 220:=======================>                               (17 + 4) / 39][Stage 220:==========================>                            (19 + 4) / 39][Stage 220:=============================>                         (21 + 4) / 39][Stage 220:================================>                      (23 + 4) / 39][Stage 220:===================================>                   (25 + 4) / 39][Stage 220:======================================>                (27 + 4) / 39][Stage 220:========================================>              (29 + 4) / 39][Stage 220:===========================================>           (31 + 4) / 39][Stage 220:=============================================>         (32 + 4) / 39][Stage 220:==============================================>        (33 + 4) / 39][Stage 220:====================================================>  (37 + 2) / 39]                                                                                [Stage 221:=====>                                                  (4 + 4) / 39][Stage 221:==========>                                             (7 + 5) / 39][Stage 221:==================>                                    (13 + 4) / 39][Stage 221:=========================>                             (18 + 4) / 39][Stage 221:===============================>                       (22 + 4) / 39][Stage 221:======================================>                (27 + 4) / 39][Stage 221:==========================================>            (30 + 4) / 39][Stage 221:==============================================>        (33 + 4) / 39][Stage 221:===============================================>       (34 + 4) / 39]                                                                                [Stage 224:=====>                                                  (4 + 4) / 39][Stage 224:==========>                                             (7 + 4) / 39][Stage 224:===============>                                       (11 + 4) / 39][Stage 224:===================>                                   (14 + 5) / 39][Stage 224:=========================>                             (18 + 4) / 39][Stage 224:================================>                      (23 + 4) / 39][Stage 224:===========================================>           (31 + 4) / 39][Stage 224:=====================================================> (38 + 1) / 39]                                                                                [Stage 320:==>                                                     (2 + 4) / 54][Stage 320:====>                                                   (4 + 4) / 54][Stage 320:======>                                                 (6 + 4) / 54][Stage 320:=======>                                                (7 + 4) / 54][Stage 320:========>                                               (8 + 4) / 54][Stage 320:===========>                                           (11 + 4) / 54][Stage 320:============>                                          (12 + 4) / 54][Stage 320:===============>                                       (15 + 4) / 54][Stage 320:================>                                      (16 + 4) / 54][Stage 320:=================>                                     (17 + 4) / 54][Stage 320:===================>                                   (19 + 4) / 54][Stage 320:=====================>                                 (21 + 4) / 54][Stage 320:======================>                                (22 + 4) / 54][Stage 320:=======================>                               (23 + 4) / 54][Stage 320:========================>                              (24 + 4) / 54][Stage 320:==========================>                            (26 + 4) / 54][Stage 320:===========================>                           (27 + 4) / 54][Stage 320:==============================>                        (30 + 4) / 54][Stage 320:================================>                      (32 + 4) / 54][Stage 320:==================================>                    (34 + 4) / 54][Stage 320:====================================>                  (36 + 4) / 54][Stage 320:======================================>                (38 + 4) / 54][Stage 320:=========================================>             (41 + 4) / 54][Stage 320:==========================================>            (42 + 4) / 54][Stage 320:===========================================>           (43 + 5) / 54][Stage 320:============================================>          (44 + 4) / 54][Stage 320:==============================================>        (46 + 4) / 54][Stage 320:================================================>      (48 + 4) / 54][Stage 320:===================================================>   (51 + 3) / 54][Stage 320:====================================================>  (52 + 2) / 54]                                                                                [Stage 321:==========>                                            (10 + 4) / 54][Stage 321:===================>                                   (19 + 4) / 54][Stage 321:=============================>                         (29 + 4) / 54][Stage 321:====================================>                  (36 + 4) / 54][Stage 321:============================================>          (44 + 4) / 54][Stage 321:================================================>      (48 + 4) / 54]                                                                                [Stage 324:=====================>                                 (21 + 5) / 54][Stage 324:===========================>                           (27 + 4) / 54][Stage 324:=================================>                     (33 + 4) / 54][Stage 324:=====================================>                 (37 + 4) / 54][Stage 324:=============================================>         (45 + 4) / 54][Stage 324:===============================================>       (47 + 4) / 54][Stage 324:====================================================>  (52 + 2) / 54]                                                                                🚀 Starting Spark pipeline automatically...
+[2026-05-30T23:20:09.613+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:20:09.617+0000] {subprocess.py:93} INFO - 🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧
+[2026-05-30T23:20:09.620+0000] {subprocess.py:93} INFO -    PRODUCTION SPARK PIPELINE
+[2026-05-30T23:20:09.621+0000] {subprocess.py:93} INFO -    Bronze → Silver → Gold
+[2026-05-30T23:20:09.622+0000] {subprocess.py:93} INFO - 🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧🔧
+[2026-05-30T23:20:09.623+0000] {subprocess.py:93} INFO - ============================================================
+[2026-05-30T23:20:09.625+0000] {subprocess.py:93} INFO - SPARK SESSION CREATED
+[2026-05-30T23:20:09.627+0000] {subprocess.py:93} INFO - ============================================================
+[2026-05-30T23:20:09.631+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:20:09.635+0000] {subprocess.py:93} INFO - 🥉 BRONZE LAYER
+[2026-05-30T23:20:09.637+0000] {subprocess.py:93} INFO - ----------------------------------------
+[2026-05-30T23:20:09.639+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:20:09.639+0000] {subprocess.py:93} INFO - 📁 Processing department: SAP
+[2026-05-30T23:20:09.640+0000] {subprocess.py:93} INFO -    Machines found: ['Pompe_circulation_bac_commun_601AAP01', 'Pompe_circulation_bac_commun_601AAP02', 'Pompe_HRS_601ABP04']
+[2026-05-30T23:20:09.641+0000] {subprocess.py:93} INFO -    🖥️  Machine: Pompe_circulation_bac_commun_601AAP01
+[2026-05-30T23:20:09.642+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.643+0000] {subprocess.py:93} INFO -          ✅ acceleration: 1442 rows, metric_type=acceleration
+[2026-05-30T23:20:09.644+0000] {subprocess.py:93} INFO -          ✅ acceleration: 1442 rows
+[2026-05-30T23:20:09.644+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.647+0000] {subprocess.py:93} INFO -          ✅ vibration: 1442 rows, metric_type=vibration
+[2026-05-30T23:20:09.648+0000] {subprocess.py:93} INFO -          ✅ vibration: 1442 rows
+[2026-05-30T23:20:09.649+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.650+0000] {subprocess.py:93} INFO -          ✅ temperature: 1442 rows, metric_type=temperature
+[2026-05-30T23:20:09.650+0000] {subprocess.py:93} INFO -          ✅ temperature: 1442 rows
+[2026-05-30T23:20:09.651+0000] {subprocess.py:93} INFO -    🖥️  Machine: Pompe_circulation_bac_commun_601AAP02
+[2026-05-30T23:20:09.652+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.652+0000] {subprocess.py:93} INFO -          ✅ acceleration: 1371 rows, metric_type=acceleration
+[2026-05-30T23:20:09.653+0000] {subprocess.py:93} INFO -          ✅ acceleration: 1371 rows
+[2026-05-30T23:20:09.653+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.654+0000] {subprocess.py:93} INFO -          ✅ vibration: 1371 rows, metric_type=vibration
+[2026-05-30T23:20:09.655+0000] {subprocess.py:93} INFO -          ✅ vibration: 1371 rows
+[2026-05-30T23:20:09.655+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.656+0000] {subprocess.py:93} INFO -          ✅ temperature: 1371 rows, metric_type=temperature
+[2026-05-30T23:20:09.657+0000] {subprocess.py:93} INFO -          ✅ temperature: 1371 rows
+[2026-05-30T23:20:09.657+0000] {subprocess.py:93} INFO -    🖥️  Machine: Pompe_HRS_601ABP04
+[2026-05-30T23:20:09.658+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.658+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2163 rows, metric_type=acceleration
+[2026-05-30T23:20:09.659+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2163 rows
+[2026-05-30T23:20:09.660+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.664+0000] {subprocess.py:93} INFO -          ✅ vibration: 2163 rows, metric_type=vibration
+[2026-05-30T23:20:09.665+0000] {subprocess.py:93} INFO -          ✅ vibration: 2163 rows
+[2026-05-30T23:20:09.666+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.666+0000] {subprocess.py:93} INFO -          ✅ temperature: 2163 rows, metric_type=temperature
+[2026-05-30T23:20:09.669+0000] {subprocess.py:93} INFO -          ✅ temperature: 2163 rows
+[2026-05-30T23:20:09.670+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:20:09.673+0000] {subprocess.py:93} INFO -    ✅ Bronze saved: /opt/***/data/bronze/SAP
+[2026-05-30T23:20:09.674+0000] {subprocess.py:93} INFO -       Total rows: 14,928
+[2026-05-30T23:20:09.677+0000] {subprocess.py:93} INFO -       Unique parts: 3
+[2026-05-30T23:20:09.677+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:20:09.678+0000] {subprocess.py:93} INFO - 📁 Processing department: AF
+[2026-05-30T23:20:09.679+0000] {subprocess.py:93} INFO -    Machines found: ['POMPE_A_VIDE_603AAC01', 'POMPE_A_VIDE_603AAC06', 'POMPE_A_VIDE_603ABC06', 'POMPE_B_FLASH_COOLER_603ABP01']
+[2026-05-30T23:20:09.680+0000] {subprocess.py:93} INFO -    🖥️  Machine: POMPE_A_VIDE_603AAC01
+[2026-05-30T23:20:09.681+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.681+0000] {subprocess.py:93} INFO -          ✅ acceleration: 721 rows, metric_type=acceleration
+[2026-05-30T23:20:09.682+0000] {subprocess.py:93} INFO -          ✅ acceleration: 721 rows
+[2026-05-30T23:20:09.683+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.683+0000] {subprocess.py:93} INFO -          ✅ vibration: 721 rows, metric_type=vibration
+[2026-05-30T23:20:09.684+0000] {subprocess.py:93} INFO -          ✅ vibration: 721 rows
+[2026-05-30T23:20:09.684+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.685+0000] {subprocess.py:93} INFO -          ✅ temperature: 721 rows, metric_type=temperature
+[2026-05-30T23:20:09.685+0000] {subprocess.py:93} INFO -          ✅ temperature: 721 rows
+[2026-05-30T23:20:09.686+0000] {subprocess.py:93} INFO -    🖥️  Machine: POMPE_A_VIDE_603AAC06
+[2026-05-30T23:20:09.686+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.687+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2884 rows, metric_type=acceleration
+[2026-05-30T23:20:09.688+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2884 rows
+[2026-05-30T23:20:09.688+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.689+0000] {subprocess.py:93} INFO -          ✅ vibration: 2884 rows, metric_type=vibration
+[2026-05-30T23:20:09.689+0000] {subprocess.py:93} INFO -          ✅ vibration: 2884 rows
+[2026-05-30T23:20:09.690+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.692+0000] {subprocess.py:93} INFO -          ✅ temperature: 2884 rows, metric_type=temperature
+[2026-05-30T23:20:09.694+0000] {subprocess.py:93} INFO -          ✅ temperature: 2884 rows
+[2026-05-30T23:20:09.694+0000] {subprocess.py:93} INFO -    🖥️  Machine: POMPE_A_VIDE_603ABC06
+[2026-05-30T23:20:09.695+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.695+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2884 rows, metric_type=acceleration
+[2026-05-30T23:20:09.696+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2884 rows
+[2026-05-30T23:20:09.696+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.696+0000] {subprocess.py:93} INFO -          ✅ vibration: 2884 rows, metric_type=vibration
+[2026-05-30T23:20:09.697+0000] {subprocess.py:93} INFO -          ✅ vibration: 2884 rows
+[2026-05-30T23:20:09.698+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.699+0000] {subprocess.py:93} INFO -          ✅ temperature: 2884 rows, metric_type=temperature
+[2026-05-30T23:20:09.700+0000] {subprocess.py:93} INFO -          ✅ temperature: 2884 rows
+[2026-05-30T23:20:09.700+0000] {subprocess.py:93} INFO -    🖥️  Machine: POMPE_B_FLASH_COOLER_603ABP01
+[2026-05-30T23:20:09.701+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.701+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2252 rows, metric_type=acceleration
+[2026-05-30T23:20:09.702+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2252 rows
+[2026-05-30T23:20:09.703+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.703+0000] {subprocess.py:93} INFO -          ✅ vibration: 2252 rows, metric_type=vibration
+[2026-05-30T23:20:09.704+0000] {subprocess.py:93} INFO -          ✅ vibration: 2252 rows
+[2026-05-30T23:20:09.705+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.706+0000] {subprocess.py:93} INFO -          ✅ temperature: 2252 rows, metric_type=temperature
+[2026-05-30T23:20:09.707+0000] {subprocess.py:93} INFO -          ✅ temperature: 2252 rows
+[2026-05-30T23:20:09.708+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:20:09.709+0000] {subprocess.py:93} INFO -    ✅ Bronze saved: /opt/***/data/bronze/AF
+[2026-05-30T23:20:09.710+0000] {subprocess.py:93} INFO -       Total rows: 26,223
+[2026-05-30T23:20:09.711+0000] {subprocess.py:93} INFO -       Unique parts: 8
+[2026-05-30T23:20:09.712+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:20:09.713+0000] {subprocess.py:93} INFO - 📁 Processing department: CAP
+[2026-05-30T23:20:09.714+0000] {subprocess.py:93} INFO -    Machines found: ['POMPE_DE_CIRCULATION_J_604JAP04', 'POMPE_DE_CIRCULATION_K_604KAP04', 'POMPE_DE_CIRCULATION_L_604LAP04']
+[2026-05-30T23:20:09.714+0000] {subprocess.py:93} INFO -    🖥️  Machine: POMPE_DE_CIRCULATION_J_604JAP04
+[2026-05-30T23:20:09.715+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.715+0000] {subprocess.py:93} INFO -          ✅ acceleration: 3143 rows, metric_type=acceleration
+[2026-05-30T23:20:09.716+0000] {subprocess.py:93} INFO -          ✅ acceleration: 3143 rows
+[2026-05-30T23:20:09.717+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.717+0000] {subprocess.py:93} INFO -          ✅ vibration: 3143 rows, metric_type=vibration
+[2026-05-30T23:20:09.718+0000] {subprocess.py:93} INFO -          ✅ vibration: 3143 rows
+[2026-05-30T23:20:09.718+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.719+0000] {subprocess.py:93} INFO -          ✅ temperature: 3143 rows, metric_type=temperature
+[2026-05-30T23:20:09.719+0000] {subprocess.py:93} INFO -          ✅ temperature: 3143 rows
+[2026-05-30T23:20:09.720+0000] {subprocess.py:93} INFO -    🖥️  Machine: POMPE_DE_CIRCULATION_K_604KAP04
+[2026-05-30T23:20:09.720+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.721+0000] {subprocess.py:93} INFO -          ✅ acceleration: 1996 rows, metric_type=acceleration
+[2026-05-30T23:20:09.722+0000] {subprocess.py:93} INFO -          ✅ acceleration: 1996 rows
+[2026-05-30T23:20:09.723+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.724+0000] {subprocess.py:93} INFO -          ✅ vibration: 1996 rows, metric_type=vibration
+[2026-05-30T23:20:09.724+0000] {subprocess.py:93} INFO -          ✅ vibration: 1996 rows
+[2026-05-30T23:20:09.725+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.726+0000] {subprocess.py:93} INFO -          ✅ temperature: 1996 rows, metric_type=temperature
+[2026-05-30T23:20:09.727+0000] {subprocess.py:93} INFO -          ✅ temperature: 1996 rows
+[2026-05-30T23:20:09.733+0000] {subprocess.py:93} INFO -    🖥️  Machine: POMPE_DE_CIRCULATION_L_604LAP04
+[2026-05-30T23:20:09.734+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.735+0000] {subprocess.py:93} INFO -          ✅ acceleration: 4726 rows, metric_type=acceleration
+[2026-05-30T23:20:09.740+0000] {subprocess.py:93} INFO -          ✅ acceleration: 4726 rows
+[2026-05-30T23:20:09.744+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.746+0000] {subprocess.py:93} INFO -          ✅ vibration: 4726 rows, metric_type=vibration
+[2026-05-30T23:20:09.748+0000] {subprocess.py:93} INFO -          ✅ vibration: 4726 rows
+[2026-05-30T23:20:09.752+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.755+0000] {subprocess.py:93} INFO -          ✅ temperature: 4726 rows, metric_type=temperature
+[2026-05-30T23:20:09.756+0000] {subprocess.py:93} INFO -          ✅ temperature: 4726 rows
+[2026-05-30T23:20:09.758+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:20:09.759+0000] {subprocess.py:93} INFO -    ✅ Bronze saved: /opt/***/data/bronze/CAP
+[2026-05-30T23:20:09.760+0000] {subprocess.py:93} INFO -       Total rows: 29,595
+[2026-05-30T23:20:09.761+0000] {subprocess.py:93} INFO -       Unique parts: 10
+[2026-05-30T23:20:09.764+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:20:09.773+0000] {subprocess.py:93} INFO - 📁 Processing department: ENGRAIS
+[2026-05-30T23:20:09.778+0000] {subprocess.py:93} INFO -    Machines found: ['Elevateur_607AAT01', 'Elevateur_607AAT04', 'Elevateur_607AAT05', 'Elevateur_607AAT06', 'Enrobeur_607AAM04', 'Granulateur_607AAM03', 'Tube_secheur_607AAF02']
+[2026-05-30T23:20:09.779+0000] {subprocess.py:93} INFO -    🖥️  Machine: Elevateur_607AAT01
+[2026-05-30T23:20:09.784+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.785+0000] {subprocess.py:93} INFO -          ✅ acceleration: 4662 rows, metric_type=acceleration
+[2026-05-30T23:20:09.788+0000] {subprocess.py:93} INFO -          ✅ acceleration: 4662 rows
+[2026-05-30T23:20:09.790+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.800+0000] {subprocess.py:93} INFO -          ✅ vibration: 4662 rows, metric_type=vibration
+[2026-05-30T23:20:09.802+0000] {subprocess.py:93} INFO -          ✅ vibration: 4662 rows
+[2026-05-30T23:20:09.806+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.808+0000] {subprocess.py:93} INFO -          ✅ temperature: 4662 rows, metric_type=temperature
+[2026-05-30T23:20:09.812+0000] {subprocess.py:93} INFO -          ✅ temperature: 4662 rows
+[2026-05-30T23:20:09.817+0000] {subprocess.py:93} INFO -    🖥️  Machine: Elevateur_607AAT04
+[2026-05-30T23:20:09.821+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.829+0000] {subprocess.py:93} INFO -          ✅ acceleration: 5768 rows, metric_type=acceleration
+[2026-05-30T23:20:09.835+0000] {subprocess.py:93} INFO -          ✅ acceleration: 5768 rows
+[2026-05-30T23:20:09.836+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.837+0000] {subprocess.py:93} INFO -          ✅ vibration: 5768 rows, metric_type=vibration
+[2026-05-30T23:20:09.838+0000] {subprocess.py:93} INFO -          ✅ vibration: 5768 rows
+[2026-05-30T23:20:09.843+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.849+0000] {subprocess.py:93} INFO -          ✅ temperature: 5768 rows, metric_type=temperature
+[2026-05-30T23:20:09.857+0000] {subprocess.py:93} INFO -          ✅ temperature: 5768 rows
+[2026-05-30T23:20:09.863+0000] {subprocess.py:93} INFO -    🖥️  Machine: Elevateur_607AAT05
+[2026-05-30T23:20:09.867+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.869+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2884 rows, metric_type=acceleration
+[2026-05-30T23:20:09.873+0000] {subprocess.py:93} INFO -          ✅ acceleration: 2884 rows
+[2026-05-30T23:20:09.874+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.875+0000] {subprocess.py:93} INFO -          ✅ vibration: 2884 rows, metric_type=vibration
+[2026-05-30T23:20:09.876+0000] {subprocess.py:93} INFO -          ✅ vibration: 2884 rows
+[2026-05-30T23:20:09.878+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.878+0000] {subprocess.py:93} INFO -          ✅ temperature: 2884 rows, metric_type=temperature
+[2026-05-30T23:20:09.880+0000] {subprocess.py:93} INFO -          ✅ temperature: 2884 rows
+[2026-05-30T23:20:09.881+0000] {subprocess.py:93} INFO -    🖥️  Machine: Elevateur_607AAT06
+[2026-05-30T23:20:09.882+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:09.883+0000] {subprocess.py:93} INFO -          ✅ acceleration: 5216 rows, metric_type=acceleration
+[2026-05-30T23:20:09.884+0000] {subprocess.py:93} INFO -          ✅ acceleration: 5216 rows
+[2026-05-30T23:20:09.887+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:20:09.888+0000] {subprocess.py:93} INFO -          ✅ vibration: 5216 rows, metric_type=vibration
+[2026-05-30T23:20:09.889+0000] {subprocess.py:93} INFO -          ✅ vibration: 5216 rows
+[2026-05-30T23:20:09.890+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:20:09.891+0000] {subprocess.py:93} INFO -          ✅ temperature: 5216 rows, metric_type=temperature
+[2026-05-30T23:20:09.892+0000] {subprocess.py:93} INFO -          ✅ temperature: 5216 rows
+[2026-05-30T23:20:09.893+0000] {subprocess.py:93} INFO -    🖥️  Machine: Enrobeur_607AAM04
+[2026-05-30T23:20:09.894+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:20:36.581+0000] {subprocess.py:93} INFO - 26/05/30 23:20:36 WARN DAGScheduler: Broadcasting large task binary with size 1237.8 KiB
+[2026-05-30T23:23:46.109+0000] {subprocess.py:93} INFO - [Stage 540:>                                                      (1 + 4) / 156][Stage 540:=>                                                     (4 + 4) / 156][Stage 540:=>                                                     (4 + 5) / 156][Stage 540:==>                                                    (7 + 4) / 156][Stage 540:===>                                                  (10 + 4) / 156][Stage 540:===>                                                  (11 + 4) / 156][Stage 540:====>                                                 (13 + 4) / 156][Stage 540:====>                                                 (14 + 4) / 156][Stage 540:=====>                                                (15 + 4) / 156][Stage 540:=====>                                                (16 + 4) / 156][Stage 540:======>                                               (18 + 4) / 156][Stage 540:======>                                               (20 + 4) / 156][Stage 540:=======>                                              (21 + 4) / 156][Stage 540:=======>                                              (22 + 4) / 156][Stage 540:========>                                             (24 + 4) / 156][Stage 540:========>                                             (25 + 4) / 156][Stage 540:=========>                                            (26 + 4) / 156][Stage 540:=========>                                            (28 + 4) / 156][Stage 540:==========>                                           (30 + 4) / 156][Stage 540:==========>                                           (31 + 4) / 156][Stage 540:===========>                                          (32 + 4) / 156][Stage 540:===========>                                          (33 + 4) / 156][Stage 540:===========>                                          (34 + 4) / 156][Stage 540:============>                                         (36 + 4) / 156][Stage 540:============>                                         (37 + 4) / 156][Stage 540:=============>                                        (38 + 4) / 156][Stage 540:==============>                                       (41 + 4) / 156][Stage 540:==============>                                       (42 + 4) / 156][Stage 540:===============>                                      (44 + 4) / 156][Stage 540:===============>                                      (45 + 4) / 156][Stage 540:===============>                                      (46 + 4) / 156][Stage 540:================>                                     (48 + 4) / 156][Stage 540:================>                                     (49 + 4) / 156][Stage 540:=================>                                    (50 + 4) / 156][Stage 540:==================>                                   (52 + 4) / 156][Stage 540:==================>                                   (53 + 4) / 156][Stage 540:==================>                                   (54 + 5) / 156][Stage 540:===================>                                  (56 + 4) / 156][Stage 540:===================>                                  (57 + 3) / 156][Stage 540:====================>                                 (58 + 4) / 156][Stage 540:====================>                                 (60 + 4) / 156][Stage 540:=====================>                                (63 + 4) / 156][Stage 540:======================>                               (64 + 4) / 156][Stage 540:======================>                               (66 + 4) / 156][Stage 540:=======================>                              (67 + 4) / 156][Stage 540:=======================>                              (69 + 4) / 156][Stage 540:========================>                             (70 + 4) / 156][Stage 540:=========================>                            (73 + 4) / 156][Stage 540:=========================>                            (74 + 4) / 156][Stage 540:==========================>                           (76 + 4) / 156][Stage 540:==========================>                           (77 + 4) / 156][Stage 540:===========================>                          (80 + 4) / 156][Stage 540:============================>                         (82 + 4) / 156][Stage 540:=============================>                        (84 + 4) / 156][Stage 540:=============================>                        (85 + 4) / 156][Stage 540:==============================>                       (87 + 4) / 156][Stage 540:==============================>                       (88 + 4) / 156][Stage 540:==============================>                       (89 + 4) / 156][Stage 540:===============================>                      (90 + 4) / 156][Stage 540:===============================>                      (91 + 4) / 156][Stage 540:===============================>                      (92 + 4) / 156][Stage 540:================================>                     (93 + 4) / 156][Stage 540:=================================>                    (96 + 4) / 156][Stage 540:==================================>                   (99 + 4) / 156][Stage 540:=================================>                   (100 + 4) / 156][Stage 540:==================================>                  (102 + 4) / 156][Stage 540:==================================>                  (103 + 4) / 156][Stage 540:===================================>                 (104 + 4) / 156][Stage 540:===================================>                 (104 + 5) / 156][Stage 540:====================================>                (107 + 4) / 156][Stage 540:====================================>                (108 + 4) / 156][Stage 540:=====================================>               (110 + 4) / 156][Stage 540:=====================================>               (111 + 4) / 156][Stage 540:======================================>              (113 + 4) / 156][Stage 540:======================================>              (114 + 4) / 156][Stage 540:=======================================>             (117 + 4) / 156][Stage 540:========================================>            (118 + 4) / 156][Stage 540:========================================>            (119 + 4) / 156][Stage 540:=========================================>           (121 + 4) / 156][Stage 540:==========================================>          (124 + 4) / 156][Stage 540:==========================================>          (125 + 4) / 156][Stage 540:===========================================>         (128 + 4) / 156][Stage 540:============================================>        (131 + 4) / 156][Stage 540:============================================>        (132 + 4) / 156][Stage 540:=============================================>       (135 + 4) / 156][Stage 540:==============================================>      (138 + 4) / 156][Stage 540:===============================================>     (139 + 4) / 156][Stage 540:===============================================>     (141 + 4) / 156][Stage 540:================================================>    (142 + 4) / 156][Stage 540:================================================>    (143 + 4) / 156][Stage 540:=================================================>   (145 + 4) / 156][Stage 540:=================================================>   (146 + 4) / 156][Stage 540:=================================================>   (147 + 4) / 156][Stage 540:==================================================>  (148 + 4) / 156][Stage 540:==================================================>  (150 + 4) / 156][Stage 540:===================================================> (151 + 4) / 156][Stage 540:===================================================> (151 + 5) / 156][Stage 540:===================================================> (152 + 4) / 156][Stage 540:====================================================>(154 + 2) / 156][Stage 540:====================================================>(155 + 1) / 156]                                                                                [Stage 541:==>                                                    (6 + 4) / 156][Stage 541:==>                                                    (8 + 4) / 156][Stage 541:====>                                                 (12 + 4) / 156][Stage 541:======>                                               (19 + 5) / 156][Stage 541:=======>                                              (23 + 4) / 156][Stage 541:==========>                                           (31 + 4) / 156][Stage 541:=============>                                        (39 + 4) / 156][Stage 541:==============>                                       (43 + 4) / 156][Stage 541:===============>                                      (46 + 4) / 156][Stage 541:=================>                                    (50 + 4) / 156][Stage 541:===================>                                  (57 + 4) / 156][Stage 541:====================>                                 (60 + 4) / 156][Stage 541:======================>                               (64 + 4) / 156][Stage 541:========================>                             (72 + 4) / 156][Stage 541:===========================>                          (78 + 4) / 156][Stage 541:============================>                         (82 + 4) / 156][Stage 541:=============================>                        (86 + 4) / 156][Stage 541:===============================>                      (90 + 4) / 156][Stage 541:================================>                     (93 + 4) / 156][Stage 541:================================>                     (94 + 4) / 156][Stage 541:=================================>                    (96 + 5) / 156][Stage 541:=================================>                   (100 + 4) / 156][Stage 541:===================================>                 (104 + 4) / 156][Stage 541:====================================>                (108 + 4) / 156][Stage 541:======================================>              (112 + 4) / 156][Stage 541:=======================================>             (116 + 4) / 156][Stage 541:========================================>            (120 + 4) / 156][Stage 541:=========================================>           (123 + 4) / 156][Stage 541:===========================================>         (128 + 4) / 156][Stage 541:============================================>        (132 + 4) / 156][Stage 541:=============================================>       (135 + 4) / 156][Stage 541:===============================================>     (139 + 4) / 156][Stage 541:=================================================>   (146 + 4) / 156][Stage 541:===================================================> (151 + 4) / 156][Stage 541:====================================================>(155 + 1) / 156]                                                                                [Stage 544:==>                                                    (8 + 4) / 156][Stage 544:====>                                                 (12 + 4) / 156][Stage 544:=====>                                                (16 + 4) / 156][Stage 544:======>                                               (20 + 4) / 156][Stage 544:========>                                             (24 + 4) / 156][Stage 544:=========>                                            (28 + 4) / 156][Stage 544:==========>                                           (30 + 4) / 156][Stage 544:============>                                         (35 + 4) / 156][Stage 544:=============>                                        (39 + 4) / 156][Stage 544:===============>                                      (46 + 4) / 156][Stage 544:===============>                                      (46 + 5) / 156][Stage 544:=================>                                    (50 + 4) / 156][Stage 544:==================>                                   (52 + 5) / 156][Stage 544:===================>                                  (56 + 4) / 156][Stage 544:=====================>                                (62 + 4) / 156][Stage 544:=======================>                              (69 + 4) / 156][Stage 544:=========================>                            (73 + 4) / 156][Stage 544:=========================>                            (74 + 5) / 156][Stage 544:===========================>                          (80 + 5) / 156][Stage 544:=============================>                        (84 + 4) / 156][Stage 544:==============================>                       (87 + 4) / 156][Stage 544:===============================>                      (90 + 4) / 156][Stage 544:===============================>                      (91 + 4) / 156][Stage 544:=================================>                    (97 + 4) / 156][Stage 544:===================================>                 (104 + 4) / 156][Stage 544:=====================================>               (110 + 4) / 156][Stage 544:=======================================>             (116 + 4) / 156][Stage 544:========================================>            (119 + 5) / 156][Stage 544:==========================================>          (126 + 4) / 156][Stage 544:===========================================>         (128 + 4) / 156][Stage 544:============================================>        (131 + 4) / 156][Stage 544:=============================================>       (134 + 4) / 156][Stage 544:==============================================>      (137 + 4) / 156][Stage 544:================================================>    (142 + 4) / 156][Stage 544:=================================================>   (146 + 4) / 156][Stage 544:====================================================>(154 + 2) / 156]                                                                                [Stage 550:=========================>                             (11 + 4) / 24][Stage 550:==================================>                    (15 + 4) / 24][Stage 550:=========================================>             (18 + 4) / 24][Stage 550:=============================================>         (20 + 4) / 24]                                                                                [Stage 556:=================================================>       (7 + 1) / 8]                                                                                [Stage 568:=================================================>       (7 + 1) / 8]                                                                                [Stage 588:============================>                            (4 + 4) / 8]                                                                                [Stage 621:>                                                        (0 + 1) / 1]                                                                                [Stage 646:===============>                                       (11 + 4) / 39][Stage 646:=====================>                                 (15 + 4) / 39][Stage 646:===============================>                       (22 + 4) / 39][Stage 646:======================================>                (27 + 4) / 39][Stage 646:===============================================>       (34 + 4) / 39]                                                                                [Stage 668:==================================>                     (8 + 4) / 13][Stage 669:==============================================>        (11 + 2) / 13]                                                                                [Stage 684:==============================>                         (7 + 4) / 13][Stage 684:==================================>                     (8 + 4) / 13][Stage 685:==================================================>    (12 + 1) / 13][Stage 689:>                                                        (0 + 1) / 1]                                                                                [Stage 701:==============================================>        (11 + 2) / 13][Stage 717:>                                                        (0 + 1) / 1]                                                                                [Stage 719:==============================================>        (11 + 2) / 13][Stage 720:=====================>                                  (5 + 4) / 13][Stage 720:===========>   (10 + 3) / 13][Stage 723:>                (0 + 1) / 1]                                                                                [Stage 742:==============>                                        (14 + 4) / 54][Stage 742:=================>                                     (17 + 4) / 54][Stage 742:=====================>                                 (21 + 4) / 54][Stage 742:=========================>                             (25 + 4) / 54][Stage 742:================================>                      (32 + 4) / 54][Stage 742:====================================>                  (36 + 4) / 54][Stage 742:===========================================>           (43 + 4) / 54][Stage 742:===============================================>       (47 + 4) / 54][Stage 742:====================================================>  (52 + 2) / 54]                                                                                [Stage 763:===================================================>   (17 + 1) / 18][Stage 765:============>                                           (4 + 4) / 18][Stage 765:==========>    (12 + 4) / 18][Stage 768:>                (0 + 0) / 1][Stage 768:>                                                        (0 + 1) / 1]                                                                                [Stage 780:=======================================>               (13 + 4) / 18][Stage 782:=============================================>         (15 + 3) / 18]                                                                                [Stage 797:========================>                               (8 + 4) / 18][Stage 797:============================>                           (9 + 4) / 18][Stage 797:==========================================>            (14 + 4) / 18][Stage 798:==========================================>            (14 + 4) / 18][Stage 799:=======================================>               (13 + 4) / 18][Stage 802:>                                                        (0 + 1) / 1][Stage 813:>                                                        (0 + 1) / 1]                                                                                [Stage 814:============================>                           (9 + 4) / 18][Stage 814:=======================================>               (13 + 4) / 18][Stage 814:================================================>      (16 + 2) / 18][Stage 815:===================================================>   (17 + 1) / 18]                                                                                         ✅ acceleration: 5799 rows, metric_type=acceleration
+[2026-05-30T23:23:46.110+0000] {subprocess.py:93} INFO -          ✅ acceleration: 5799 rows
+[2026-05-30T23:23:46.111+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:23:46.112+0000] {subprocess.py:93} INFO -          ✅ vibration: 5799 rows, metric_type=vibration
+[2026-05-30T23:23:46.113+0000] {subprocess.py:93} INFO -          ✅ vibration: 5799 rows
+[2026-05-30T23:23:46.114+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:23:46.114+0000] {subprocess.py:93} INFO -          ✅ temperature: 5799 rows, metric_type=temperature
+[2026-05-30T23:23:46.115+0000] {subprocess.py:93} INFO -          ✅ temperature: 5799 rows
+[2026-05-30T23:23:46.116+0000] {subprocess.py:93} INFO -    🖥️  Machine: Granulateur_607AAM03
+[2026-05-30T23:23:46.117+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:23:46.117+0000] {subprocess.py:93} INFO -          ✅ acceleration: 5216 rows, metric_type=acceleration
+[2026-05-30T23:23:46.118+0000] {subprocess.py:93} INFO -          ✅ acceleration: 5216 rows
+[2026-05-30T23:23:46.118+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:23:46.119+0000] {subprocess.py:93} INFO -          ✅ vibration: 5216 rows, metric_type=vibration
+[2026-05-30T23:23:46.123+0000] {subprocess.py:93} INFO -          ✅ vibration: 5216 rows
+[2026-05-30T23:23:46.124+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:23:46.125+0000] {subprocess.py:93} INFO -          ✅ temperature: 5216 rows, metric_type=temperature
+[2026-05-30T23:23:46.125+0000] {subprocess.py:93} INFO -          ✅ temperature: 5216 rows
+[2026-05-30T23:23:46.126+0000] {subprocess.py:93} INFO -    🖥️  Machine: Tube_secheur_607AAF02
+[2026-05-30T23:23:46.127+0000] {subprocess.py:93} INFO -          📄 Reading: AccelerationData.csv
+[2026-05-30T23:23:46.128+0000] {subprocess.py:93} INFO -          ✅ acceleration: 5768 rows, metric_type=acceleration
+[2026-05-30T23:23:46.129+0000] {subprocess.py:93} INFO -          ✅ acceleration: 5768 rows
+[2026-05-30T23:23:46.129+0000] {subprocess.py:93} INFO -          📄 Reading: VibrationData.csv
+[2026-05-30T23:23:46.130+0000] {subprocess.py:93} INFO -          ✅ vibration: 5768 rows, metric_type=vibration
+[2026-05-30T23:23:46.131+0000] {subprocess.py:93} INFO -          ✅ vibration: 5768 rows
+[2026-05-30T23:23:46.132+0000] {subprocess.py:93} INFO -          📄 Reading: TemperatureData.csv
+[2026-05-30T23:23:46.132+0000] {subprocess.py:93} INFO -          ✅ temperature: 5768 rows, metric_type=temperature
+[2026-05-30T23:23:46.133+0000] {subprocess.py:93} INFO -          ✅ temperature: 5768 rows
+[2026-05-30T23:23:46.134+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.134+0000] {subprocess.py:93} INFO -    ✅ Bronze saved: /opt/***/data/bronze/ENGRAIS
+[2026-05-30T23:23:46.135+0000] {subprocess.py:93} INFO -       Total rows: 105,939
+[2026-05-30T23:23:46.137+0000] {subprocess.py:93} INFO -       Unique parts: 12
+[2026-05-30T23:23:46.138+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.139+0000] {subprocess.py:93} INFO - 🥈 SILVER LAYER
+[2026-05-30T23:23:46.139+0000] {subprocess.py:93} INFO - ----------------------------------------
+[2026-05-30T23:23:46.140+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.140+0000] {subprocess.py:93} INFO - 📁 Cleaning SAP...
+[2026-05-30T23:23:46.141+0000] {subprocess.py:93} INFO -    Bronze records by metric_type:
+[2026-05-30T23:23:46.141+0000] {subprocess.py:93} INFO -       acceleration: 4,976 records
+[2026-05-30T23:23:46.142+0000] {subprocess.py:93} INFO -       vibration: 4,976 records
+[2026-05-30T23:23:46.142+0000] {subprocess.py:93} INFO -       temperature: 4,976 records
+[2026-05-30T23:23:46.143+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.143+0000] {subprocess.py:93} INFO -    After filtering:
+[2026-05-30T23:23:46.144+0000] {subprocess.py:93} INFO -       Acceleration records: 4976
+[2026-05-30T23:23:46.144+0000] {subprocess.py:93} INFO -       Vibration records: 4976
+[2026-05-30T23:23:46.145+0000] {subprocess.py:93} INFO -       Temperature records: 4976
+[2026-05-30T23:23:46.145+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.146+0000] {subprocess.py:93} INFO -    After merge: 4,976 records
+[2026-05-30T23:23:46.146+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.146+0000] {subprocess.py:93} INFO -    Sample with vibration data:
+[2026-05-30T23:23:46.147+0000] {subprocess.py:93} INFO - +------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:23:46.148+0000] {subprocess.py:93} INFO - |machine_name      |part_code|recorded_at        |acceleration|vibration|temperature|hour|weekday|year|month|day|department|
+[2026-05-30T23:23:46.149+0000] {subprocess.py:93} INFO - +------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:23:46.150+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-04-30 22:36:00|0.39353     |0.39353  |0.39353    |22  |5      |2026|4    |30 |SAP       |
+[2026-05-30T23:23:46.152+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-04-30 23:36:00|0.40702     |0.40702  |0.40702    |23  |5      |2026|4    |30 |SAP       |
+[2026-05-30T23:23:46.153+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-05-01 00:36:00|0.39947     |0.39947  |0.39947    |0   |6      |2026|5    |1  |SAP       |
+[2026-05-30T23:23:46.154+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-05-01 01:36:00|0.40435     |0.40435  |0.40435    |1   |6      |2026|5    |1  |SAP       |
+[2026-05-30T23:23:46.155+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-05-01 02:36:00|0.40524     |0.40524  |0.40524    |2   |6      |2026|5    |1  |SAP       |
+[2026-05-30T23:23:46.155+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-05-01 03:36:00|0.40667     |0.40667  |0.40667    |3   |6      |2026|5    |1  |SAP       |
+[2026-05-30T23:23:46.156+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-05-01 04:36:00|0.39842     |0.39842  |0.39842    |4   |6      |2026|5    |1  |SAP       |
+[2026-05-30T23:23:46.157+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-05-01 05:36:00|0.41396     |0.41396  |0.41396    |5   |6      |2026|5    |1  |SAP       |
+[2026-05-30T23:23:46.158+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-05-01 06:36:00|0.39806     |0.39806  |0.39806    |6   |6      |2026|5    |1  |SAP       |
+[2026-05-30T23:23:46.159+0000] {subprocess.py:93} INFO - |Pompe_HRS_601ABP04|1RV      |2026-05-01 07:36:00|0.39871     |0.39871  |0.39871    |7   |6      |2026|5    |1  |SAP       |
+[2026-05-30T23:23:46.160+0000] {subprocess.py:93} INFO - +------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:23:46.162+0000] {subprocess.py:93} INFO - only showing top 10 rows
+[2026-05-30T23:23:46.162+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.163+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.164+0000] {subprocess.py:93} INFO -    ✅ Silver saved: /opt/***/data/silver/SAP
+[2026-05-30T23:23:46.165+0000] {subprocess.py:93} INFO -       Rows: 4,976
+[2026-05-30T23:23:46.167+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.168+0000] {subprocess.py:93} INFO - 📁 Cleaning AF...
+[2026-05-30T23:23:46.169+0000] {subprocess.py:93} INFO -    Bronze records by metric_type:
+[2026-05-30T23:23:46.169+0000] {subprocess.py:93} INFO -       acceleration: 8,741 records
+[2026-05-30T23:23:46.170+0000] {subprocess.py:93} INFO -       vibration: 8,741 records
+[2026-05-30T23:23:46.171+0000] {subprocess.py:93} INFO -       temperature: 8,741 records
+[2026-05-30T23:23:46.171+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.172+0000] {subprocess.py:93} INFO -    After filtering:
+[2026-05-30T23:23:46.172+0000] {subprocess.py:93} INFO -       Acceleration records: 8741
+[2026-05-30T23:23:46.173+0000] {subprocess.py:93} INFO -       Vibration records: 8741
+[2026-05-30T23:23:46.174+0000] {subprocess.py:93} INFO -       Temperature records: 8741
+[2026-05-30T23:23:46.175+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.176+0000] {subprocess.py:93} INFO -    After merge: 8,741 records
+[2026-05-30T23:23:46.177+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.178+0000] {subprocess.py:93} INFO -    Sample with vibration data:
+[2026-05-30T23:23:46.179+0000] {subprocess.py:93} INFO - +---------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:23:46.182+0000] {subprocess.py:93} INFO - |machine_name         |part_code|recorded_at        |acceleration|vibration|temperature|hour|weekday|year|month|day|department|
+[2026-05-30T23:23:46.183+0000] {subprocess.py:93} INFO - +---------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:23:46.184+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-04-30 22:50:00|0.49046     |0.49046  |0.49046    |22  |5      |2026|4    |30 |AF        |
+[2026-05-30T23:23:46.185+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-04-30 23:50:00|0.48653     |0.48653  |0.48653    |23  |5      |2026|4    |30 |AF        |
+[2026-05-30T23:23:46.186+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-05-01 00:50:00|0.49767     |0.49767  |0.49767    |0   |6      |2026|5    |1  |AF        |
+[2026-05-30T23:23:46.186+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-05-01 01:50:00|0.50805     |0.50805  |0.50805    |1   |6      |2026|5    |1  |AF        |
+[2026-05-30T23:23:46.191+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-05-01 02:50:00|0.50628     |0.50628  |0.50628    |2   |6      |2026|5    |1  |AF        |
+[2026-05-30T23:23:46.191+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-05-01 03:50:00|0.49759     |0.49759  |0.49759    |3   |6      |2026|5    |1  |AF        |
+[2026-05-30T23:23:46.192+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-05-01 04:50:00|0.4948      |0.4948   |0.4948     |4   |6      |2026|5    |1  |AF        |
+[2026-05-30T23:23:46.193+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-05-01 05:50:00|0.50034     |0.50034  |0.50034    |5   |6      |2026|5    |1  |AF        |
+[2026-05-30T23:23:46.194+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-05-01 06:50:00|0.51095     |0.51095  |0.51095    |6   |6      |2026|5    |1  |AF        |
+[2026-05-30T23:23:46.194+0000] {subprocess.py:93} INFO - |POMPE_A_VIDE_603AAC01|4RH      |2026-05-01 07:50:00|0.5114      |0.5114   |0.5114     |7   |6      |2026|5    |1  |AF        |
+[2026-05-30T23:23:46.195+0000] {subprocess.py:93} INFO - +---------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:23:46.199+0000] {subprocess.py:93} INFO - only showing top 10 rows
+[2026-05-30T23:23:46.200+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.201+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.202+0000] {subprocess.py:93} INFO -    ✅ Silver saved: /opt/***/data/silver/AF
+[2026-05-30T23:23:46.203+0000] {subprocess.py:93} INFO -       Rows: 8,741
+[2026-05-30T23:23:46.204+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.205+0000] {subprocess.py:93} INFO - 📁 Cleaning CAP...
+[2026-05-30T23:23:46.206+0000] {subprocess.py:93} INFO -    Bronze records by metric_type:
+[2026-05-30T23:23:46.207+0000] {subprocess.py:93} INFO -       acceleration: 9,865 records
+[2026-05-30T23:23:46.207+0000] {subprocess.py:93} INFO -       vibration: 9,865 records
+[2026-05-30T23:23:46.208+0000] {subprocess.py:93} INFO -       temperature: 9,865 records
+[2026-05-30T23:23:46.209+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.209+0000] {subprocess.py:93} INFO -    After filtering:
+[2026-05-30T23:23:46.210+0000] {subprocess.py:93} INFO -       Acceleration records: 9865
+[2026-05-30T23:23:46.213+0000] {subprocess.py:93} INFO -       Vibration records: 9865
+[2026-05-30T23:23:46.214+0000] {subprocess.py:93} INFO -       Temperature records: 9865
+[2026-05-30T23:23:46.215+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.215+0000] {subprocess.py:93} INFO -    After merge: 9,865 records
+[2026-05-30T23:23:46.216+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.217+0000] {subprocess.py:93} INFO -    Sample with vibration data:
+[2026-05-30T23:23:46.218+0000] {subprocess.py:93} INFO - +-------------------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:23:46.218+0000] {subprocess.py:93} INFO - |machine_name                   |part_code|recorded_at        |acceleration|vibration|temperature|hour|weekday|year|month|day|department|
+[2026-05-30T23:23:46.219+0000] {subprocess.py:93} INFO - +-------------------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:23:46.220+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-19 09:35:53|0.36062     |0.36062  |0.36062    |9   |5      |2026|2    |19 |CAP       |
+[2026-05-30T23:23:46.221+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-19 10:20:00|0.36702     |0.36702  |0.36702    |10  |5      |2026|2    |19 |CAP       |
+[2026-05-30T23:23:46.222+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-19 11:20:00|0.36214     |0.36214  |0.36214    |11  |5      |2026|2    |19 |CAP       |
+[2026-05-30T23:23:46.222+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-19 12:20:00|0.35862     |0.35862  |0.35862    |12  |5      |2026|2    |19 |CAP       |
+[2026-05-30T23:23:46.223+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-19 13:20:00|0.35553     |0.35553  |0.35553    |13  |5      |2026|2    |19 |CAP       |
+[2026-05-30T23:23:46.224+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-19 23:29:06|0.36191     |0.36191  |0.36191    |23  |5      |2026|2    |19 |CAP       |
+[2026-05-30T23:23:46.225+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-20 00:20:00|0.35865     |0.35865  |0.35865    |0   |6      |2026|2    |20 |CAP       |
+[2026-05-30T23:23:46.225+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-20 01:20:00|0.35956     |0.35956  |0.35956    |1   |6      |2026|2    |20 |CAP       |
+[2026-05-30T23:23:46.227+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-20 02:20:00|0.35697     |0.35697  |0.35697    |2   |6      |2026|2    |20 |CAP       |
+[2026-05-30T23:23:46.228+0000] {subprocess.py:93} INFO - |POMPE_DE_CIRCULATION_J_604JAP04|1RV      |2026-02-20 03:20:00|0.35802     |0.35802  |0.35802    |3   |6      |2026|2    |20 |CAP       |
+[2026-05-30T23:23:46.229+0000] {subprocess.py:93} INFO - +-------------------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:23:46.230+0000] {subprocess.py:93} INFO - only showing top 10 rows
+[2026-05-30T23:23:46.231+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.232+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:23:46.233+0000] {subprocess.py:93} INFO -    ✅ Silver saved: /opt/***/data/silver/CAP
+[2026-05-30T23:26:06.141+0000] {subprocess.py:93} INFO - [Stage 838:===>                                                   (9 + 4) / 156][Stage 838:====>                                                 (12 + 4) / 156][Stage 838:======>                                               (18 + 4) / 156][Stage 838:========>                                             (24 + 5) / 156][Stage 838:==========>                                           (30 + 5) / 156][Stage 838:============>                                         (35 + 4) / 156][Stage 838:============>                                         (37 + 4) / 156][Stage 838:=============>                                        (39 + 4) / 156][Stage 838:==============>                                       (41 + 4) / 156][Stage 838:==============>                                       (42 + 4) / 156][Stage 838:===============>                                      (44 + 5) / 156][Stage 838:===============>                                      (45 + 4) / 156][Stage 838:==================>                                   (52 + 4) / 156][Stage 838:===================>                                  (56 + 5) / 156][Stage 838:====================>                                 (60 + 4) / 156][Stage 838:======================>                               (64 + 4) / 156][Stage 838:======================>                               (66 + 4) / 156][Stage 838:========================>                             (70 + 5) / 156][Stage 838:==========================>                           (76 + 4) / 156][Stage 838:===========================>                          (80 + 4) / 156][Stage 838:=============================>                        (84 + 4) / 156][Stage 838:===============================>                      (92 + 4) / 156][Stage 838:=================================>                   (100 + 4) / 156][Stage 838:===================================>                 (105 + 4) / 156][Stage 838:====================================>                (107 + 5) / 156][Stage 838:=====================================>               (110 + 4) / 156][Stage 838:======================================>              (113 + 4) / 156][Stage 838:========================================>            (120 + 4) / 156][Stage 838:==========================================>          (126 + 4) / 156][Stage 838:============================================>        (130 + 4) / 156][Stage 838:==============================================>      (136 + 4) / 156][Stage 838:===============================================>     (139 + 4) / 156][Stage 838:================================================>    (143 + 4) / 156][Stage 838:=================================================>   (147 + 4) / 156][Stage 838:===================================================> (151 + 4) / 156][Stage 838:====================================================>(155 + 1) / 156]                                                                                [Stage 841:===================>                                   (18 + 4) / 52][Stage 841:==========================>                            (25 + 4) / 52][Stage 841:==============================>                        (29 + 4) / 52][Stage 841:======================================>                (36 + 4) / 52][Stage 841:==========================================>            (40 + 4) / 52][Stage 841:==================================================>    (48 + 4) / 52]                                                                                [Stage 844:====================>                                  (19 + 4) / 52][Stage 844:==========================>                            (25 + 4) / 52][Stage 844:===============================>                       (30 + 4) / 52][Stage 844:=======================================>               (37 + 4) / 52][Stage 844:===========================================>           (41 + 4) / 52][Stage 844:=================================================>     (47 + 4) / 52][Stage 844:=====================================================> (51 + 1) / 52]                                                                                [Stage 847:==============================>                        (29 + 4) / 52][Stage 847:=========================================>             (39 + 4) / 52][Stage 847:=============================================>         (43 + 4) / 52][Stage 847:=====================================================> (51 + 1) / 52]                                                                                [Stage 850:=======================>                               (22 + 4) / 52][Stage 850:================================>                      (31 + 4) / 52][Stage 850:=======================================>               (37 + 4) / 52][Stage 850:============================================>          (42 + 4) / 52][Stage 850:===================================================>   (49 + 3) / 52]                                                                                [Stage 853:========================>                              (23 + 4) / 52][Stage 853:===========================>                           (26 + 4) / 52][Stage 853:================================>                      (31 + 4) / 52][Stage 853:========================================>              (38 + 4) / 52][Stage 853:=====================================================> (51 + 1) / 52]                                                                                [Stage 856:=====================>                                 (20 + 4) / 52][Stage 856:===========================>                           (26 + 4) / 52][Stage 856:============================>                          (27 + 4) / 52][Stage 856:============================>                          (27 + 5) / 52][Stage 856:================================>                      (31 + 4) / 52][Stage 856:=================================>                     (32 + 4) / 52][Stage 856:=====================================>                 (35 + 4) / 52][Stage 856:======================================>                (36 + 5) / 52][Stage 856:=========================================>             (39 + 4) / 52][Stage 856:=========================================>             (39 + 6) / 52][Stage 856:=============================================>         (43 + 4) / 52][Stage 856:==============================================>        (44 + 4) / 52][Stage 856:===============================================>       (45 + 5) / 52][Stage 856:================================================>      (46 + 4) / 52][Stage 856:====================================================>  (50 + 2) / 52][Stage 856:=====================================================> (51 + 1) / 52]                                                                                [Stage 859:========>                                               (8 + 4) / 52][Stage 859:============>                                          (12 + 4) / 52][Stage 859:==============>                                        (14 + 5) / 52][Stage 859:===================>                                   (18 + 4) / 52][Stage 859:=======================>                               (22 + 4) / 52][Stage 859:===========================>                           (26 + 4) / 52][Stage 859:=================================>                     (32 + 4) / 52][Stage 859:=====================================>                 (35 + 4) / 52][Stage 859:==========================================>            (40 + 4) / 52][Stage 859:==============================================>        (44 + 4) / 52][Stage 859:=====================================================> (51 + 1) / 52][Stage 860:==========>                                            (10 + 4) / 52][Stage 860:=============>                                         (13 + 5) / 52][Stage 860:====================>                                  (19 + 4) / 52][Stage 860:==========================>                            (25 + 4) / 52][Stage 860:==============================>                        (29 + 4) / 52][Stage 860:================================>                      (31 + 5) / 52][Stage 860:=====================================>                 (35 + 5) / 52][Stage 860:=========================================>             (39 + 4) / 52][Stage 860:=============================================>         (43 + 4) / 52][Stage 860:=================================================>     (47 + 4) / 52][Stage 861:=============>                                         (13 + 4) / 52][Stage 861:=======================>                               (22 + 4) / 52][Stage 861:========>      (30 + 4) / 52][Stage 864:>                (0 + 0) / 1][Stage 861:===========>   (39 + 4) / 52][Stage 864:>                (0 + 0) / 1][Stage 861:=============> (48 + 4) / 52][Stage 864:>                (0 + 0) / 1][Stage 864:>                                                        (0 + 1) / 1]                                                                                [Stage 876:================>                                      (16 + 4) / 52][Stage 876:=====================>                                 (20 + 4) / 52][Stage 876:================================>                      (31 + 4) / 52][Stage 876:===================================>                   (34 + 4) / 52][Stage 876:==========================================>            (40 + 4) / 52][Stage 876:==============================================>        (44 + 4) / 52][Stage 877:=====================>                                 (20 + 4) / 52][Stage 877:=========================>                             (24 + 4) / 52][Stage 877:=============================>                         (28 + 4) / 52][Stage 877:================================>                      (31 + 4) / 52][Stage 877:===================================>                   (34 + 4) / 52][Stage 877:==========================================>            (40 + 4) / 52][Stage 877:===============================================>       (45 + 4) / 52][Stage 877:==================================================>    (48 + 4) / 52][Stage 878:====>                                                   (4 + 4) / 52][Stage 878:=====>                                                  (5 + 4) / 52][Stage 878:===========>                                           (11 + 4) / 52][Stage 878:===>           (12 + 4) / 52][Stage 881:>                (0 + 0) / 1][Stage 878:====>          (15 + 4) / 52][Stage 881:>                (0 + 0) / 1][Stage 878:====>          (16 + 4) / 52][Stage 881:>                (0 + 0) / 1][Stage 878:=====>         (19 + 5) / 52][Stage 881:>                (0 + 0) / 1][Stage 878:=======>       (25 + 4) / 52][Stage 881:>                (0 + 0) / 1][Stage 878:========>      (29 + 4) / 52][Stage 881:>                (0 + 0) / 1][Stage 878:==========>    (35 + 4) / 52][Stage 881:>                (0 + 0) / 1][Stage 878:============>  (42 + 4) / 52][Stage 881:>                (0 + 0) / 1][Stage 881:>                                                        (0 + 1) / 1][Stage 886:>                                                        (0 + 1) / 1]                                                                                [Stage 893:=====================>                                 (20 + 4) / 52][Stage 893:=========================>                             (24 + 4) / 52][Stage 893:=============================>                         (28 + 4) / 52][Stage 893:=================================>                     (32 + 4) / 52][Stage 893:======================================>                (36 + 4) / 52][Stage 893:=========================================>             (39 + 4) / 52][Stage 893:==========================================>            (40 + 4) / 52][Stage 893:==============================================>        (44 + 4) / 52][Stage 893:=================================================>     (47 + 4) / 52][Stage 893:=====================================================> (51 + 1) / 52][Stage 894:==============>                                        (14 + 4) / 52][Stage 894:===================>                                   (18 + 4) / 52][Stage 894:=======================>                               (22 + 4) / 52][Stage 894:===========================>                           (26 + 4) / 52][Stage 894:===============================>                       (30 + 4) / 52][Stage 894:===================================>                   (34 + 4) / 52][Stage 894:========================================>              (38 + 5) / 52][Stage 894:================================================>      (46 + 4) / 52][Stage 894:====================================================>  (50 + 2) / 52][Stage 895:=========>                                              (9 + 4) / 52][Stage 895:===============>                                       (15 + 4) / 52][Stage 895:========================>                              (23 + 4) / 52][Stage 895:========>      (31 + 4) / 52][Stage 898:>                (0 + 0) / 1][Stage 895:=========>     (33 + 4) / 52][Stage 898:>                (0 + 0) / 1][Stage 895:==========>    (36 + 4) / 52][Stage 898:>                (0 + 0) / 1][Stage 895:===========>   (39 + 4) / 52][Stage 898:>                (0 + 0) / 1][Stage 895:============>  (42 + 4) / 52][Stage 898:>                (0 + 0) / 1][Stage 895:============>  (45 + 4) / 52][Stage 898:>                (0 + 0) / 1][Stage 895:==============>(50 + 2) / 52][Stage 898:>                (0 + 1) / 1][Stage 898:>                                                        (0 + 1) / 1][Stage 903:>                                                        (0 + 1) / 1][Stage 909:>                                                        (0 + 1) / 1][Stage 909:=========================================================(1 + 0) / 1]                                                                                [Stage 910:====>                                                   (4 + 4) / 52][Stage 910:=======>                                                (7 + 4) / 52][Stage 910:==========>                                            (10 + 4) / 52][Stage 910:================>                                      (16 + 4) / 52][Stage 910:===========================>                           (26 + 4) / 52][Stage 910:===============================>                       (30 + 4) / 52][Stage 910:======================================>                (36 + 4) / 52][Stage 910:============================================>          (42 + 4) / 52][Stage 910:================================================>      (46 + 4) / 52][Stage 911:============>                                          (12 + 4) / 52][Stage 911:================>                                      (16 + 4) / 52][Stage 911:====================>                                  (19 + 4) / 52][Stage 911:=========================>                             (24 + 4) / 52][Stage 911:=============================>                         (28 + 4) / 52][Stage 911:=================================>                     (32 + 4) / 52][Stage 911:======================================>                (36 + 4) / 52][Stage 911:============================================>          (42 + 4) / 52][Stage 911:==============================================>        (44 + 4) / 52][Stage 911:==================================================>    (48 + 4) / 52][Stage 912:===============>                                       (15 + 4) / 52][Stage 912:=====>         (19 + 4) / 52][Stage 915:>                (0 + 0) / 1][Stage 912:======>        (22 + 4) / 52][Stage 915:>                (0 + 0) / 1][Stage 912:=======>       (27 + 4) / 52][Stage 915:>                (0 + 0) / 1][Stage 912:========>      (31 + 4) / 52][Stage 915:>                (0 + 0) / 1][Stage 912:==========>    (37 + 4) / 52][Stage 915:>                (0 + 0) / 1][Stage 912:============>  (44 + 4) / 52][Stage 915:>                (0 + 0) / 1][Stage 915:>                                                        (0 + 1) / 1]                                                                                [Stage 1023:==============>                                         (2 + 5) / 8]                                                                                26/05/30 23:26:06 ERROR Executor: Exception in task 2.0 in stage 1081.0 (TID 3818)
+[2026-05-30T23:26:06.147+0000] {subprocess.py:93} INFO - java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:06.151+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:06.153+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:06.156+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:06.163+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:06.164+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:06.166+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:06.170+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:06.171+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:06.172+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.175+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.175+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.176+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.177+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.180+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.180+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.182+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.183+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.184+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.185+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.186+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.188+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.189+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.190+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.191+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.191+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.192+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:06.193+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:06.196+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:06.198+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:06.199+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:06.200+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:06.200+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:06.201+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:06.202+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:06.206+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:06.208+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:06.210+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:06.211+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:06.212+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:06.212+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:06.213+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:06.216+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:06.220+0000] {subprocess.py:93} INFO - 26/05/30 23:26:06 ERROR Executor: Exception in task 1.0 in stage 1081.0 (TID 3817)
+[2026-05-30T23:26:06.222+0000] {subprocess.py:93} INFO - java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:06.224+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:06.226+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:06.228+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:06.230+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:06.231+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:06.235+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:06.236+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:06.236+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:06.237+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.238+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.241+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.246+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.249+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.251+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.252+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.254+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.256+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.257+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.259+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.260+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.261+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.269+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.270+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.280+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.286+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.287+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:06.289+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:06.290+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:06.294+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:06.296+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:06.298+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:06.300+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:06.301+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:06.304+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:06.306+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:06.310+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:06.316+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:06.318+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:06.319+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:06.320+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:06.326+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:06.329+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:06.331+0000] {subprocess.py:93} INFO - 26/05/30 23:26:06 ERROR Executor: Exception in task 0.0 in stage 1081.0 (TID 3816)
+[2026-05-30T23:26:06.332+0000] {subprocess.py:93} INFO - java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:06.333+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:06.333+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:06.334+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:06.335+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:06.336+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:06.346+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:06.348+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:06.349+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:06.350+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.351+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.352+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.357+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.358+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.359+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.362+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.362+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.363+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.364+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.369+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.371+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.372+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.373+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.373+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.374+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.374+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.375+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:06.376+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:06.376+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:06.377+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:06.378+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:06.379+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:06.379+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:06.380+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:06.381+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:06.382+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:06.384+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:06.385+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:06.386+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:06.387+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:06.387+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:06.388+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:06.389+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:06.389+0000] {subprocess.py:93} INFO - 26/05/30 23:26:06 ERROR Executor: Exception in task 3.0 in stage 1081.0 (TID 3819)
+[2026-05-30T23:26:06.390+0000] {subprocess.py:93} INFO - java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:06.391+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:06.391+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:06.392+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:06.393+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:06.393+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:06.394+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:06.394+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:06.395+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:06.396+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.396+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.398+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.399+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.402+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.403+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.406+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.407+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.408+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.409+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.411+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.413+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.417+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.417+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.418+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.419+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.420+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.420+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:06.421+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:06.422+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:06.423+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:06.425+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:06.425+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:06.426+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:06.427+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:06.429+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:06.430+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:06.431+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:06.431+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:06.433+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:06.435+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:06.437+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:06.439+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:06.441+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:06.444+0000] {subprocess.py:93} INFO - 26/05/30 23:26:06 WARN TaskSetManager: Lost task 1.0 in stage 1081.0 (TID 3817) (584c6a772482 executor driver): java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:06.446+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:06.447+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:06.451+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:06.452+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:06.460+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:06.462+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:06.463+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:06.464+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:06.465+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.470+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.470+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.475+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.476+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.477+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.477+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.478+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.480+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.481+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.482+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.483+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.484+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.485+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.486+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.490+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.491+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.492+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:06.492+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:06.493+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:06.493+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:06.494+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:06.497+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:06.498+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:06.499+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:06.501+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:06.504+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:06.506+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:06.509+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:06.510+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:06.511+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:06.512+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:06.513+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:06.515+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:06.515+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.518+0000] {subprocess.py:93} INFO - 26/05/30 23:26:06 ERROR TaskSetManager: Task 1 in stage 1081.0 failed 1 times; aborting job
+[2026-05-30T23:26:06.521+0000] {subprocess.py:93} INFO - 26/05/30 23:26:06 ERROR FileFormatWriter: Aborting job 7c5df19c-de7a-4ba8-a48a-fcf3da0e17b0.
+[2026-05-30T23:26:06.522+0000] {subprocess.py:93} INFO - org.apache.spark.SparkException: Job aborted due to stage failure: Task 1 in stage 1081.0 failed 1 times, most recent failure: Lost task 1.0 in stage 1081.0 (TID 3817) (584c6a772482 executor driver): java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:06.523+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:06.524+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:06.525+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:06.526+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:06.527+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:06.528+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:06.529+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:06.530+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:06.531+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.532+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.533+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.534+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.535+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.536+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.537+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.537+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.538+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.539+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.540+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.541+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.542+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.542+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.543+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.544+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.545+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.546+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:06.547+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:06.553+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:06.554+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:06.555+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:06.555+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:06.556+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:06.557+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:06.557+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:06.559+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:06.560+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:06.560+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:06.564+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:06.565+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:06.566+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:06.567+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:06.567+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:06.568+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.569+0000] {subprocess.py:93} INFO - Driver stacktrace:
+[2026-05-30T23:26:06.569+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2898)
+[2026-05-30T23:26:06.570+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2834)
+[2026-05-30T23:26:06.570+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2833)
+[2026-05-30T23:26:06.571+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+[2026-05-30T23:26:06.571+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+[2026-05-30T23:26:06.572+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+[2026-05-30T23:26:06.573+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2833)
+[2026-05-30T23:26:06.574+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:1253)
+[2026-05-30T23:26:06.574+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:1253)
+[2026-05-30T23:26:06.575+0000] {subprocess.py:93} INFO - 	at scala.Option.foreach(Option.scala:407)
+[2026-05-30T23:26:06.575+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:1253)
+[2026-05-30T23:26:06.576+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:3102)
+[2026-05-30T23:26:06.577+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3036)
+[2026-05-30T23:26:06.578+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3025)
+[2026-05-30T23:26:06.579+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+[2026-05-30T23:26:06.580+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:995)
+[2026-05-30T23:26:06.581+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2393)
+[2026-05-30T23:26:06.581+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.$anonfun$executeWrite$4(FileFormatWriter.scala:307)
+[2026-05-30T23:26:06.581+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.writeAndCommit(FileFormatWriter.scala:271)
+[2026-05-30T23:26:06.582+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.executeWrite(FileFormatWriter.scala:304)
+[2026-05-30T23:26:06.582+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.write(FileFormatWriter.scala:190)
+[2026-05-30T23:26:06.582+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.run(InsertIntoHadoopFsRelationCommand.scala:190)
+[2026-05-30T23:26:06.583+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult$lzycompute(commands.scala:113)
+[2026-05-30T23:26:06.583+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult(commands.scala:111)
+[2026-05-30T23:26:06.584+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.command.DataWritingCommandExec.executeCollect(commands.scala:125)
+[2026-05-30T23:26:06.584+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.$anonfun$applyOrElse$1(QueryExecution.scala:107)
+[2026-05-30T23:26:06.585+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$6(SQLExecution.scala:125)
+[2026-05-30T23:26:06.585+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:201)
+[2026-05-30T23:26:06.586+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$1(SQLExecution.scala:108)
+[2026-05-30T23:26:06.586+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:900)
+[2026-05-30T23:26:06.587+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:66)
+[2026-05-30T23:26:06.588+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.applyOrElse(QueryExecution.scala:107)
+[2026-05-30T23:26:06.588+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.applyOrElse(QueryExecution.scala:98)
+[2026-05-30T23:26:06.589+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.TreeNode.$anonfun$transformDownWithPruning$1(TreeNode.scala:461)
+[2026-05-30T23:26:06.590+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.CurrentOrigin$.withOrigin(origin.scala:76)
+[2026-05-30T23:26:06.590+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.TreeNode.transformDownWithPruning(TreeNode.scala:461)
+[2026-05-30T23:26:06.591+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.org$apache$spark$sql$catalyst$plans$logical$AnalysisHelper$$super$transformDownWithPruning(LogicalPlan.scala:32)
+[2026-05-30T23:26:06.592+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.AnalysisHelper.transformDownWithPruning(AnalysisHelper.scala:267)
+[2026-05-30T23:26:06.594+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.AnalysisHelper.transformDownWithPruning$(AnalysisHelper.scala:263)
+[2026-05-30T23:26:06.595+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.transformDownWithPruning(LogicalPlan.scala:32)
+[2026-05-30T23:26:06.595+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.transformDownWithPruning(LogicalPlan.scala:32)
+[2026-05-30T23:26:06.596+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.TreeNode.transformDown(TreeNode.scala:437)
+[2026-05-30T23:26:06.597+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.eagerlyExecuteCommands(QueryExecution.scala:98)
+[2026-05-30T23:26:06.599+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.commandExecuted$lzycompute(QueryExecution.scala:85)
+[2026-05-30T23:26:06.603+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.commandExecuted(QueryExecution.scala:83)
+[2026-05-30T23:26:06.604+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.assertCommandExecuted(QueryExecution.scala:142)
+[2026-05-30T23:26:06.608+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.runCommand(DataFrameWriter.scala:869)
+[2026-05-30T23:26:06.610+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.saveToV1Source(DataFrameWriter.scala:391)
+[2026-05-30T23:26:06.613+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.saveInternal(DataFrameWriter.scala:364)
+[2026-05-30T23:26:06.614+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:243)
+[2026-05-30T23:26:06.616+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.parquet(DataFrameWriter.scala:802)
+[2026-05-30T23:26:06.617+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[2026-05-30T23:26:06.620+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+[2026-05-30T23:26:06.621+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[2026-05-30T23:26:06.621+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+[2026-05-30T23:26:06.623+0000] {subprocess.py:93} INFO - 	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+[2026-05-30T23:26:06.624+0000] {subprocess.py:93} INFO - 	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+[2026-05-30T23:26:06.625+0000] {subprocess.py:93} INFO - 	at py4j.Gateway.invoke(Gateway.java:282)
+[2026-05-30T23:26:06.626+0000] {subprocess.py:93} INFO - 	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+[2026-05-30T23:26:06.627+0000] {subprocess.py:93} INFO - 	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+[2026-05-30T23:26:06.628+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+[2026-05-30T23:26:06.628+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+[2026-05-30T23:26:06.629+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:06.629+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:06.630+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:06.631+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:06.632+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:06.633+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:06.633+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:06.634+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:06.635+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:06.636+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:06.637+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.638+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.639+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.640+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.641+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.641+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.642+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.643+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.643+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.644+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.645+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.645+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.646+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.647+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.648+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.649+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.650+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.651+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:06.654+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:06.654+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:06.655+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:06.656+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:06.656+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:06.657+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:06.657+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:06.658+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:06.659+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:06.659+0000] {subprocess.py:93} INFO - 	... 1 more
+[2026-05-30T23:26:06.660+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:06.661+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:06.662+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:06.663+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:06.664+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:06.666+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:06.859+0000] {subprocess.py:93} INFO -       Rows: 9,865
+[2026-05-30T23:26:06.859+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.860+0000] {subprocess.py:93} INFO - 📁 Cleaning ENGRAIS...
+[2026-05-30T23:26:06.861+0000] {subprocess.py:93} INFO -    Bronze records by metric_type:
+[2026-05-30T23:26:06.862+0000] {subprocess.py:93} INFO -       acceleration: 35,313 records
+[2026-05-30T23:26:06.863+0000] {subprocess.py:93} INFO -       vibration: 35,313 records
+[2026-05-30T23:26:06.864+0000] {subprocess.py:93} INFO -       temperature: 35,313 records
+[2026-05-30T23:26:06.865+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.866+0000] {subprocess.py:93} INFO -    After filtering:
+[2026-05-30T23:26:06.867+0000] {subprocess.py:93} INFO -       Acceleration records: 35313
+[2026-05-30T23:26:06.868+0000] {subprocess.py:93} INFO -       Vibration records: 35313
+[2026-05-30T23:26:06.869+0000] {subprocess.py:93} INFO -       Temperature records: 35313
+[2026-05-30T23:26:06.869+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.870+0000] {subprocess.py:93} INFO -    After merge: 35,313 records
+[2026-05-30T23:26:06.871+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.872+0000] {subprocess.py:93} INFO -    Sample with vibration data:
+[2026-05-30T23:26:06.872+0000] {subprocess.py:93} INFO - +------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:26:06.873+0000] {subprocess.py:93} INFO - |machine_name      |part_code|recorded_at        |acceleration|vibration|temperature|hour|weekday|year|month|day|department|
+[2026-05-30T23:26:06.873+0000] {subprocess.py:93} INFO - +------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:26:06.874+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-04-30 22:19:00|0.08739     |0.08739  |0.08739    |22  |5      |2026|4    |30 |ENGRAIS   |
+[2026-05-30T23:26:06.875+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-04-30 23:19:00|0.08908     |0.08908  |0.08908    |23  |5      |2026|4    |30 |ENGRAIS   |
+[2026-05-30T23:26:06.875+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-05-01 00:19:00|0.09157     |0.09157  |0.09157    |0   |6      |2026|5    |1  |ENGRAIS   |
+[2026-05-30T23:26:06.876+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-05-01 01:19:00|0.10474     |0.10474  |0.10474    |1   |6      |2026|5    |1  |ENGRAIS   |
+[2026-05-30T23:26:06.876+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-05-01 02:19:00|0.09167     |0.09167  |0.09167    |2   |6      |2026|5    |1  |ENGRAIS   |
+[2026-05-30T23:26:06.877+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-05-01 03:19:00|0.09072     |0.09072  |0.09072    |3   |6      |2026|5    |1  |ENGRAIS   |
+[2026-05-30T23:26:06.879+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-05-01 04:19:00|0.09277     |0.09277  |0.09277    |4   |6      |2026|5    |1  |ENGRAIS   |
+[2026-05-30T23:26:06.879+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-05-01 05:19:00|0.09013     |0.09013  |0.09013    |5   |6      |2026|5    |1  |ENGRAIS   |
+[2026-05-30T23:26:06.880+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-05-01 06:19:00|0.10422     |0.10422  |0.10422    |6   |6      |2026|5    |1  |ENGRAIS   |
+[2026-05-30T23:26:06.881+0000] {subprocess.py:93} INFO - |Elevateur_607AAT01|10RH     |2026-05-01 07:19:00|0.09344     |0.09344  |0.09344    |7   |6      |2026|5    |1  |ENGRAIS   |
+[2026-05-30T23:26:06.882+0000] {subprocess.py:93} INFO - +------------------+---------+-------------------+------------+---------+-----------+----+-------+----+-----+---+----------+
+[2026-05-30T23:26:06.883+0000] {subprocess.py:93} INFO - only showing top 10 rows
+[2026-05-30T23:26:06.884+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.884+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.885+0000] {subprocess.py:93} INFO -    ✅ Silver saved: /opt/***/data/silver/ENGRAIS
+[2026-05-30T23:26:06.885+0000] {subprocess.py:93} INFO -       Rows: 35,313
+[2026-05-30T23:26:06.886+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.886+0000] {subprocess.py:93} INFO - 🥇 GOLD LAYER
+[2026-05-30T23:26:06.887+0000] {subprocess.py:93} INFO - ----------------------------------------
+[2026-05-30T23:26:06.887+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.888+0000] {subprocess.py:93} INFO - 📁 Predicting for SAP...
+[2026-05-30T23:26:06.888+0000] {subprocess.py:93} INFO -    Parts to predict: ['3RV', '1RV', '2RV']
+[2026-05-30T23:26:06.889+0000] {subprocess.py:93} INFO -       📍 Predicting for part: 3RV (Pompe)
+[2026-05-30T23:26:06.890+0000] {subprocess.py:93} INFO -          Vibration data points: 1899
+[2026-05-30T23:26:06.890+0000] {subprocess.py:93} INFO -          Current vibration: 0.36798
+[2026-05-30T23:26:06.891+0000] {subprocess.py:93} INFO -          ✅ Current: 0.36798 | Risk: Faible → 12h: 0.38 | Risk: Faible
+[2026-05-30T23:26:06.891+0000] {subprocess.py:93} INFO -       📍 Predicting for part: 1RV (Moteur 1)
+[2026-05-30T23:26:06.892+0000] {subprocess.py:93} INFO -          Vibration data points: 1178
+[2026-05-30T23:26:06.892+0000] {subprocess.py:93} INFO -          Current vibration: 0.38312
+[2026-05-30T23:26:06.893+0000] {subprocess.py:93} INFO -          ✅ Current: 0.38312 | Risk: Faible → 12h: 0.39 | Risk: Faible
+[2026-05-30T23:26:06.894+0000] {subprocess.py:93} INFO -       📍 Predicting for part: 2RV (Moteur 2)
+[2026-05-30T23:26:06.895+0000] {subprocess.py:93} INFO -          Vibration data points: 1899
+[2026-05-30T23:26:06.895+0000] {subprocess.py:93} INFO -          Current vibration: 0.2262
+[2026-05-30T23:26:06.896+0000] {subprocess.py:93} INFO -          ✅ Current: 0.2262 | Risk: Faible → 12h: 0.23 | Risk: Faible
+[2026-05-30T23:26:06.896+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.897+0000] {subprocess.py:93} INFO - ❌ Pipeline Error: An error occurred while calling o6088.parquet.
+[2026-05-30T23:26:06.897+0000] {subprocess.py:93} INFO - : org.apache.spark.SparkException: Job aborted due to stage failure: Task 1 in stage 1081.0 failed 1 times, most recent failure: Lost task 1.0 in stage 1081.0 (TID 3817) (584c6a772482 executor driver): java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:06.897+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:06.898+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:06.898+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:06.898+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:06.899+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:06.899+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:06.899+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:06.900+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:06.900+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.900+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.900+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.901+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.901+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.901+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.902+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.902+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.902+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.902+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.903+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.903+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.903+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.904+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.904+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:06.904+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:06.904+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:06.905+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:06.905+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:06.905+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:06.906+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:06.906+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:06.906+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:06.907+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:06.907+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:06.909+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:06.911+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:06.912+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:06.914+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:06.916+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:06.917+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:06.921+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:06.922+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:06.924+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:06.926+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:06.930+0000] {subprocess.py:93} INFO - Driver stacktrace:
+[2026-05-30T23:26:06.931+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2898)
+[2026-05-30T23:26:06.932+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2834)
+[2026-05-30T23:26:06.933+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2833)
+[2026-05-30T23:26:06.934+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+[2026-05-30T23:26:06.935+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+[2026-05-30T23:26:06.936+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+[2026-05-30T23:26:06.937+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2833)
+[2026-05-30T23:26:06.939+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:1253)
+[2026-05-30T23:26:06.940+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:1253)
+[2026-05-30T23:26:06.940+0000] {subprocess.py:93} INFO - 	at scala.Option.foreach(Option.scala:407)
+[2026-05-30T23:26:06.941+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:1253)
+[2026-05-30T23:26:06.942+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:3102)
+[2026-05-30T23:26:06.943+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3036)
+[2026-05-30T23:26:06.944+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3025)
+[2026-05-30T23:26:06.945+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+[2026-05-30T23:26:06.946+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:995)
+[2026-05-30T23:26:06.947+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2393)
+[2026-05-30T23:26:06.948+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.$anonfun$executeWrite$4(FileFormatWriter.scala:307)
+[2026-05-30T23:26:06.949+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.writeAndCommit(FileFormatWriter.scala:271)
+[2026-05-30T23:26:06.949+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.executeWrite(FileFormatWriter.scala:304)
+[2026-05-30T23:26:06.950+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.write(FileFormatWriter.scala:190)
+[2026-05-30T23:26:06.951+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.run(InsertIntoHadoopFsRelationCommand.scala:190)
+[2026-05-30T23:26:06.952+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult$lzycompute(commands.scala:113)
+[2026-05-30T23:26:06.955+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult(commands.scala:111)
+[2026-05-30T23:26:06.956+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.command.DataWritingCommandExec.executeCollect(commands.scala:125)
+[2026-05-30T23:26:06.958+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.$anonfun$applyOrElse$1(QueryExecution.scala:107)
+[2026-05-30T23:26:06.959+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$6(SQLExecution.scala:125)
+[2026-05-30T23:26:06.962+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:201)
+[2026-05-30T23:26:06.963+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$1(SQLExecution.scala:108)
+[2026-05-30T23:26:06.964+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:900)
+[2026-05-30T23:26:06.965+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:66)
+[2026-05-30T23:26:06.966+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.applyOrElse(QueryExecution.scala:107)
+[2026-05-30T23:26:06.968+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.applyOrElse(QueryExecution.scala:98)
+[2026-05-30T23:26:06.969+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.TreeNode.$anonfun$transformDownWithPruning$1(TreeNode.scala:461)
+[2026-05-30T23:26:06.970+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.CurrentOrigin$.withOrigin(origin.scala:76)
+[2026-05-30T23:26:06.971+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.TreeNode.transformDownWithPruning(TreeNode.scala:461)
+[2026-05-30T23:26:06.972+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.org$apache$spark$sql$catalyst$plans$logical$AnalysisHelper$$super$transformDownWithPruning(LogicalPlan.scala:32)
+[2026-05-30T23:26:06.974+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.AnalysisHelper.transformDownWithPruning(AnalysisHelper.scala:267)
+[2026-05-30T23:26:06.975+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.AnalysisHelper.transformDownWithPruning$(AnalysisHelper.scala:263)
+[2026-05-30T23:26:06.976+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.transformDownWithPruning(LogicalPlan.scala:32)
+[2026-05-30T23:26:06.977+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.transformDownWithPruning(LogicalPlan.scala:32)
+[2026-05-30T23:26:06.978+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.TreeNode.transformDown(TreeNode.scala:437)
+[2026-05-30T23:26:06.979+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.eagerlyExecuteCommands(QueryExecution.scala:98)
+[2026-05-30T23:26:06.979+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.commandExecuted$lzycompute(QueryExecution.scala:85)
+[2026-05-30T23:26:06.980+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.commandExecuted(QueryExecution.scala:83)
+[2026-05-30T23:26:06.981+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.assertCommandExecuted(QueryExecution.scala:142)
+[2026-05-30T23:26:06.983+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.runCommand(DataFrameWriter.scala:869)
+[2026-05-30T23:26:06.984+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.saveToV1Source(DataFrameWriter.scala:391)
+[2026-05-30T23:26:06.985+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.saveInternal(DataFrameWriter.scala:364)
+[2026-05-30T23:26:06.986+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:243)
+[2026-05-30T23:26:06.986+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.parquet(DataFrameWriter.scala:802)
+[2026-05-30T23:26:06.987+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[2026-05-30T23:26:06.988+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+[2026-05-30T23:26:06.989+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[2026-05-30T23:26:06.991+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+[2026-05-30T23:26:06.992+0000] {subprocess.py:93} INFO - 	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+[2026-05-30T23:26:06.993+0000] {subprocess.py:93} INFO - 	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+[2026-05-30T23:26:06.995+0000] {subprocess.py:93} INFO - 	at py4j.Gateway.invoke(Gateway.java:282)
+[2026-05-30T23:26:06.997+0000] {subprocess.py:93} INFO - 	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+[2026-05-30T23:26:06.998+0000] {subprocess.py:93} INFO - 	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+[2026-05-30T23:26:06.999+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+[2026-05-30T23:26:07.000+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+[2026-05-30T23:26:07.001+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:07.002+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:07.003+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:07.004+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:07.005+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:07.006+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:07.007+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:07.008+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:07.009+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:07.010+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:07.011+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.011+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.014+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.015+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.019+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.020+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.022+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.023+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.025+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.026+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.028+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.029+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.030+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.031+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.032+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.033+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.034+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.035+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:07.036+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:07.044+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:07.045+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:07.046+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:07.047+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:07.048+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:07.048+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:07.049+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:07.050+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:07.052+0000] {subprocess.py:93} INFO - 	... 1 more
+[2026-05-30T23:26:07.053+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:07.056+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:07.059+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:07.060+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:07.061+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:07.062+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:07.063+0000] {subprocess.py:93} INFO - Traceback (most recent call last):
+[2026-05-30T23:26:07.064+0000] {subprocess.py:93} INFO -   File "/opt/***/scripts/spark_pipeline/main_pipeline.py", line 118, in run_full_pipeline
+[2026-05-30T23:26:07.065+0000] {subprocess.py:93} INFO -     gold.process_department(df, dept)
+[2026-05-30T23:26:07.066+0000] {subprocess.py:93} INFO -   File "/opt/***/scripts/spark_pipeline/gold.py", line 165, in process_department
+[2026-05-30T23:26:07.071+0000] {subprocess.py:93} INFO -     result.write.mode("overwrite").parquet(output_path)
+[2026-05-30T23:26:07.071+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/pyspark/sql/readwriter.py", line 1721, in parquet
+[2026-05-30T23:26:07.075+0000] {subprocess.py:93} INFO -     self._jwrite.parquet(path)
+[2026-05-30T23:26:07.076+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/py4j/java_gateway.py", line 1362, in __call__
+[2026-05-30T23:26:07.077+0000] {subprocess.py:93} INFO -     return_value = get_return_value(
+[2026-05-30T23:26:07.078+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/pyspark/errors/exceptions/captured.py", line 179, in deco
+[2026-05-30T23:26:07.080+0000] {subprocess.py:93} INFO -     return f(*a, **kw)
+[2026-05-30T23:26:07.081+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/py4j/protocol.py", line 327, in get_return_value
+[2026-05-30T23:26:07.081+0000] {subprocess.py:93} INFO -     raise Py4JJavaError(
+[2026-05-30T23:26:07.087+0000] {subprocess.py:93} INFO - py4j.protocol.Py4JJavaError: An error occurred while calling o6088.parquet.
+[2026-05-30T23:26:07.091+0000] {subprocess.py:93} INFO - : org.apache.spark.SparkException: Job aborted due to stage failure: Task 1 in stage 1081.0 failed 1 times, most recent failure: Lost task 1.0 in stage 1081.0 (TID 3817) (584c6a772482 executor driver): java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:07.091+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:07.092+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:07.093+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:07.095+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:07.098+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:07.099+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:07.100+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:07.100+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:07.101+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.101+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.101+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.102+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.104+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.105+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.106+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.107+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.108+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.108+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.109+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.109+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.109+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.110+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.110+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.111+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.111+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.112+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:07.112+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:07.113+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:07.113+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:07.114+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:07.115+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:07.116+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:07.116+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:07.117+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:07.118+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:07.119+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:07.120+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:07.121+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:07.121+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:07.122+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:07.122+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:07.123+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:07.123+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:07.124+0000] {subprocess.py:93} INFO - Driver stacktrace:
+[2026-05-30T23:26:07.124+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2898)
+[2026-05-30T23:26:07.125+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2834)
+[2026-05-30T23:26:07.125+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2833)
+[2026-05-30T23:26:07.125+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+[2026-05-30T23:26:07.126+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+[2026-05-30T23:26:07.126+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+[2026-05-30T23:26:07.126+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2833)
+[2026-05-30T23:26:07.127+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:1253)
+[2026-05-30T23:26:07.127+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:1253)
+[2026-05-30T23:26:07.127+0000] {subprocess.py:93} INFO - 	at scala.Option.foreach(Option.scala:407)
+[2026-05-30T23:26:07.128+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:1253)
+[2026-05-30T23:26:07.128+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:3102)
+[2026-05-30T23:26:07.128+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3036)
+[2026-05-30T23:26:07.128+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3025)
+[2026-05-30T23:26:07.129+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+[2026-05-30T23:26:07.129+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:995)
+[2026-05-30T23:26:07.129+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2393)
+[2026-05-30T23:26:07.130+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.$anonfun$executeWrite$4(FileFormatWriter.scala:307)
+[2026-05-30T23:26:07.130+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.writeAndCommit(FileFormatWriter.scala:271)
+[2026-05-30T23:26:07.130+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.executeWrite(FileFormatWriter.scala:304)
+[2026-05-30T23:26:07.131+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.FileFormatWriter$.write(FileFormatWriter.scala:190)
+[2026-05-30T23:26:07.131+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.run(InsertIntoHadoopFsRelationCommand.scala:190)
+[2026-05-30T23:26:07.131+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult$lzycompute(commands.scala:113)
+[2026-05-30T23:26:07.132+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult(commands.scala:111)
+[2026-05-30T23:26:07.132+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.command.DataWritingCommandExec.executeCollect(commands.scala:125)
+[2026-05-30T23:26:07.134+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.$anonfun$applyOrElse$1(QueryExecution.scala:107)
+[2026-05-30T23:26:07.137+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$6(SQLExecution.scala:125)
+[2026-05-30T23:26:07.138+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:201)
+[2026-05-30T23:26:07.138+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$1(SQLExecution.scala:108)
+[2026-05-30T23:26:07.139+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:900)
+[2026-05-30T23:26:07.139+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:66)
+[2026-05-30T23:26:07.139+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.applyOrElse(QueryExecution.scala:107)
+[2026-05-30T23:26:07.140+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution$$anonfun$eagerlyExecuteCommands$1.applyOrElse(QueryExecution.scala:98)
+[2026-05-30T23:26:07.140+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.TreeNode.$anonfun$transformDownWithPruning$1(TreeNode.scala:461)
+[2026-05-30T23:26:07.140+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.CurrentOrigin$.withOrigin(origin.scala:76)
+[2026-05-30T23:26:07.141+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.TreeNode.transformDownWithPruning(TreeNode.scala:461)
+[2026-05-30T23:26:07.141+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.org$apache$spark$sql$catalyst$plans$logical$AnalysisHelper$$super$transformDownWithPruning(LogicalPlan.scala:32)
+[2026-05-30T23:26:07.141+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.AnalysisHelper.transformDownWithPruning(AnalysisHelper.scala:267)
+[2026-05-30T23:26:07.142+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.AnalysisHelper.transformDownWithPruning$(AnalysisHelper.scala:263)
+[2026-05-30T23:26:07.142+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.transformDownWithPruning(LogicalPlan.scala:32)
+[2026-05-30T23:26:07.143+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.plans.logical.LogicalPlan.transformDownWithPruning(LogicalPlan.scala:32)
+[2026-05-30T23:26:07.143+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.catalyst.trees.TreeNode.transformDown(TreeNode.scala:437)
+[2026-05-30T23:26:07.144+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.eagerlyExecuteCommands(QueryExecution.scala:98)
+[2026-05-30T23:26:07.144+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.commandExecuted$lzycompute(QueryExecution.scala:85)
+[2026-05-30T23:26:07.145+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.commandExecuted(QueryExecution.scala:83)
+[2026-05-30T23:26:07.145+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.QueryExecution.assertCommandExecuted(QueryExecution.scala:142)
+[2026-05-30T23:26:07.146+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.runCommand(DataFrameWriter.scala:869)
+[2026-05-30T23:26:07.149+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.saveToV1Source(DataFrameWriter.scala:391)
+[2026-05-30T23:26:07.150+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.saveInternal(DataFrameWriter.scala:364)
+[2026-05-30T23:26:07.151+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:243)
+[2026-05-30T23:26:07.152+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameWriter.parquet(DataFrameWriter.scala:802)
+[2026-05-30T23:26:07.153+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[2026-05-30T23:26:07.154+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+[2026-05-30T23:26:07.160+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[2026-05-30T23:26:07.161+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+[2026-05-30T23:26:07.165+0000] {subprocess.py:93} INFO - 	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+[2026-05-30T23:26:07.171+0000] {subprocess.py:93} INFO - 	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+[2026-05-30T23:26:07.173+0000] {subprocess.py:93} INFO - 	at py4j.Gateway.invoke(Gateway.java:282)
+[2026-05-30T23:26:07.177+0000] {subprocess.py:93} INFO - 	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+[2026-05-30T23:26:07.181+0000] {subprocess.py:93} INFO - 	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+[2026-05-30T23:26:07.186+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+[2026-05-30T23:26:07.191+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+[2026-05-30T23:26:07.202+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2026-05-30T23:26:07.205+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: Cannot run program "C:\Users\sally\AppData\Local\Programs\Python\Python311\python.exe": error=13, Permission denied
+[2026-05-30T23:26:07.213+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+[2026-05-30T23:26:07.214+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+[2026-05-30T23:26:07.217+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.startDaemon(PythonWorkerFactory.scala:239)
+[2026-05-30T23:26:07.220+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.createThroughDaemon(PythonWorkerFactory.scala:139)
+[2026-05-30T23:26:07.227+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonWorkerFactory.create(PythonWorkerFactory.scala:107)
+[2026-05-30T23:26:07.231+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkEnv.createPythonWorker(SparkEnv.scala:124)
+[2026-05-30T23:26:07.232+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.BasePythonRunner.compute(PythonRunner.scala:174)
+[2026-05-30T23:26:07.236+0000] {subprocess.py:93} INFO - 	at org.apache.spark.api.python.PythonRDD.compute(PythonRDD.scala:67)
+[2026-05-30T23:26:07.236+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.245+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.249+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.251+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.252+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.257+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.258+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.259+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.260+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.281+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.299+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.320+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.333+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.338+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.347+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2026-05-30T23:26:07.351+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:367)
+[2026-05-30T23:26:07.355+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:331)
+[2026-05-30T23:26:07.361+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2026-05-30T23:26:07.365+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+[2026-05-30T23:26:07.366+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2026-05-30T23:26:07.368+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+[2026-05-30T23:26:07.370+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2026-05-30T23:26:07.376+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2026-05-30T23:26:07.379+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2026-05-30T23:26:07.380+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+[2026-05-30T23:26:07.381+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2026-05-30T23:26:07.382+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2026-05-30T23:26:07.383+0000] {subprocess.py:93} INFO - 	... 1 more
+[2026-05-30T23:26:07.384+0000] {subprocess.py:93} INFO - Caused by: java.io.IOException: error=13, Permission denied
+[2026-05-30T23:26:07.385+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+[2026-05-30T23:26:07.390+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+[2026-05-30T23:26:07.393+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+[2026-05-30T23:26:07.394+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+[2026-05-30T23:26:07.396+0000] {subprocess.py:93} INFO - 	... 35 more
+[2026-05-30T23:26:07.397+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:07.518+0000] {subprocess.py:93} INFO - 
+[2026-05-30T23:26:07.521+0000] {subprocess.py:93} INFO - 🛑 Spark session stopped
+[2026-05-30T23:26:07.522+0000] {subprocess.py:93} INFO - ✅ Pipeline finished
+[2026-05-30T23:26:08.319+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-05-30T23:26:08.354+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=i_sense_pipeline, task_id=run_spark_pipeline, execution_date=20260530T231443, start_date=20260530T231557, end_date=20260530T232608
+[2026-05-30T23:26:08.420+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2026-05-30T23:26:08.477+0000] {taskinstance.py:3281} INFO - 0 downstream tasks scheduled from follow-on schedule check
