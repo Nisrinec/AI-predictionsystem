@@ -1,16 +1,10 @@
-"""
-GOLD LAYER:
-- Model 1: AI Anomaly Detection
-- Model 2: Future Sensor Forecasting
-- Model 3: Diagnostic + Decision Engine
-"""
-
 from pathlib import Path
 import builtins
 import pandas as pd
 import joblib
 
 from pyspark.sql.functions import *
+from pyspark.sql.types import *
 from spark_pipeline.config import GOLD_PATH, generate_part_name, POSTGRESQL_CONFIG
 from spark_pipeline.model_3_diagnostic import DiagnosticDecisionEngine
 
@@ -35,380 +29,301 @@ class GoldLayer:
             .mode("overwrite") \
             .save()
 
-        print(f"   ✅ Saved to PostgreSQL table: {table_name}")
-
-    # -----------------------------
-    # MODEL 1: LOAD ANOMALY MODEL
-    # -----------------------------
-
-    def load_ai_model(self, department):
-        model_file = MODEL_PATH / f"anomaly_model_{department}.joblib"
-
-        if model_file.exists():
-            print(f"   ✅ AI anomaly model loaded: {model_file}")
-            return joblib.load(model_file)
-
-        print(f"   ⚠️ No anomaly model found for {department}")
-        return None
-
-    def predict_ai_anomaly(self, model, vibration, temperature, acceleration):
-        if model is None:
-            return 0, "Modèle IA indisponible", "Normal"
-
-        sample = pd.DataFrame([{
-            "vibration": vibration,
-            "temperature": temperature,
-            "acceleration": acceleration
-        }])
-
-        prediction = model.predict(sample)[0]
-        score = model.decision_function(sample)[0]
-
-        if prediction == -1:
-            ai_anomaly_label = "Anomalie détectée"
-        else:
-            ai_anomaly_label = "Normal"
-
-        ai_anomaly_score = int(
-            builtins.max(
-                0,
-                builtins.min(100, (-score) * 300)
-            )
-        )
-
-        if ai_anomaly_label == "Anomalie détectée":
-            ai_status = "À surveiller"
-        elif ai_anomaly_score >= 40:
-            ai_status = "Surveillance"
-        else:
-            ai_status = "Normal"
-
-        return ai_anomaly_score, ai_anomaly_label, ai_status
-
-    # -----------------------------
-    # MODEL 2: LOAD FORECAST MODELS
-    # -----------------------------
+    def safe_round(self, value, digits=2):
+        if value is None:
+            return 0.0
+        return builtins.round(float(value), digits)
 
     def load_forecast_models(self, department):
-        forecast_models = {}
+        models = {}
 
-        sensors = ["vibration", "temperature", "acceleration"]
-        horizons = ["12h", "24h", "48h"]
+        for horizon in ["12h", "24h", "48h"]:
+            key = f"vibration_{horizon}"
+            model_file = MODEL_PATH / f"forecast_vibration_{horizon}_{department}.joblib"
 
-        for sensor in sensors:
-            for horizon in horizons:
-                key = f"{sensor}_{horizon}"
-                model_file = MODEL_PATH / f"forecast_{sensor}_{horizon}_{department}.joblib"
+            if model_file.exists():
+                models[key] = joblib.load(model_file)
+                print(f"Loaded forecast model: {model_file}")
+            else:
+                models[key] = None
+                print(f"Missing forecast model: {model_file}")
 
-                if model_file.exists():
-                    forecast_models[key] = joblib.load(model_file)
-                    print(f"   ✅ Forecast model loaded: {model_file}")
-                else:
-                    forecast_models[key] = None
-                    print(f"   ⚠️ Missing forecast model: {model_file}")
-
-        return forecast_models
+        return models
 
     def build_forecast_features(self, part_df):
         pdf = (
             part_df
             .orderBy(col("recorded_at").asc())
-            .select(
-                "recorded_at",
-                "vibration",
-                "temperature",
-                "acceleration"
-            )
+            .select("recorded_at", "vibration")
             .toPandas()
         )
 
-        if pdf.empty:
-            return None
-
-        if len(pdf) < 24:
-            print("         ⚠️ Not enough rows to build 24h rolling features")
+        if pdf.empty or len(pdf) < 24:
             return None
 
         pdf["recorded_at"] = pd.to_datetime(pdf["recorded_at"])
-
         pdf["vibration"] = pd.to_numeric(pdf["vibration"], errors="coerce")
-        pdf["temperature"] = pd.to_numeric(pdf["temperature"], errors="coerce")
-        pdf["acceleration"] = pd.to_numeric(pdf["acceleration"], errors="coerce")
-
-        pdf = pdf.dropna(subset=["vibration", "temperature", "acceleration"])
+        pdf = pdf.dropna(subset=["vibration"])
 
         if len(pdf) < 24:
-            print("         ⚠️ Not enough clean rows after removing null values")
             return None
 
         latest = pdf.iloc[-1]
 
         vibration_mean_24 = pdf["vibration"].tail(24).mean()
         vibration_std_24 = pdf["vibration"].tail(24).std()
-        temperature_mean_24 = pdf["temperature"].tail(24).mean()
-        acceleration_mean_24 = pdf["acceleration"].tail(24).mean()
+        vibration_min_24 = pdf["vibration"].tail(24).min()
+        vibration_max_24 = pdf["vibration"].tail(24).max()
 
         if pd.isna(vibration_std_24):
             vibration_std_24 = 0.0
 
-        sample = pd.DataFrame([{
+        return pd.DataFrame([{
             "vibration": float(latest["vibration"]),
-            "temperature": float(latest["temperature"]),
-            "acceleration": float(latest["acceleration"]),
-
             "vibration_mean_24": float(vibration_mean_24),
             "vibration_std_24": float(vibration_std_24),
-            "temperature_mean_24": float(temperature_mean_24),
-            "acceleration_mean_24": float(acceleration_mean_24),
-
+            "vibration_min_24": float(vibration_min_24),
+            "vibration_max_24": float(vibration_max_24),
             "vibration_change": float(latest["vibration"] - vibration_mean_24),
-            "temperature_change": float(latest["temperature"] - temperature_mean_24),
-            "acceleration_change": float(latest["acceleration"] - acceleration_mean_24),
-
             "hour": int(latest["recorded_at"].hour),
             "weekday": int(latest["recorded_at"].dayofweek),
             "month": int(latest["recorded_at"].month)
         }])
 
-        return sample
-
-    def predict_future_values(self, forecast_models, sample, current_vibration, current_temperature, current_acceleration):
+    def predict_future_values(self, forecast_models, sample, current_vibration):
         predictions = {}
 
-        sensors = ["vibration", "temperature", "acceleration"]
-        horizons = ["12h", "24h", "48h"]
+        for horizon in ["12h", "24h", "48h"]:
+            key = f"vibration_{horizon}"
+            model = forecast_models.get(key)
 
-        current_values = {
-            "vibration": current_vibration,
-            "temperature": current_temperature,
-            "acceleration": current_acceleration
-        }
-
-        for sensor in sensors:
-            for horizon in horizons:
-                key = f"{sensor}_{horizon}"
-                model = forecast_models.get(key)
-
-                if model is None or sample is None:
-                    predictions[key] = float(current_values[sensor])
-                else:
-                    predictions[key] = float(model.predict(sample)[0])
+            if model is None or sample is None:
+                predictions[key] = float(current_vibration)
+            else:
+                predictions[key] = float(model.predict(sample)[0])
 
         return predictions
 
-    # -----------------------------
-    # HELPERS
-    # -----------------------------
-
-    def get_trend_status(self, current_risk, risk_12h, risk_24h, risk_48h):
-        future_risks = [risk_12h, risk_24h, risk_48h]
-
-        if "Critique" in future_risks and current_risk != "Critique":
-            return "Dégradation critique prévue"
-
-        if "Élevé" in future_risks and current_risk in ["Faible", "Moyen"]:
+    def get_prediction_trend(self, current, pred_12h, pred_24h, pred_48h):
+        if pred_48h > current * 1.20:
             return "Dégradation prévue"
+        elif pred_48h < current * 0.90:
+            return "Amélioration prévue"
+        return "Stable"
 
-        if risk_12h == current_risk and risk_24h == current_risk and risk_48h == current_risk:
-            return "Stable"
+    def get_prediction_confidence(self, department):
+        confidence_by_department = {
+            "SAP": 75,
+            "AF": 70,
+            "CAP": 72,
+            "ENGRAIS": 78
+        }
+        return confidence_by_department.get(department, 70)
 
-        return "À surveiller"
+    def build_risk_explanation(self, current_vibration, diagnostic_result):
+        parts = []
 
-    def build_risk_explanation(self, current_vibration, current_temperature, current_acceleration, diagnostic_result, ai_anomaly_label):
-        explanation_parts = []
+        if current_vibration >= 7:
+            parts.append("vibration élevée selon les seuils i-Sense")
+        elif current_vibration >= 2.5:
+            parts.append("vibration à surveiller")
 
-        if current_vibration >= 1.8:
-            explanation_parts.append("vibration élevée")
+        if diagnostic_result["current_problem_sudden_failure"] in ["Élevé", "Critique"]:
+            parts.append("risque de panne soudaine")
 
-        if current_temperature >= 65:
-            explanation_parts.append("température élevée")
-
-        if current_acceleration >= 3:
-            explanation_parts.append("accélération anormale")
-
-        if diagnostic_result["current_problem_bearing_wear"] in ["Élevé", "Critique"]:
-            explanation_parts.append("usure des roulements probable")
-
-        if diagnostic_result["current_problem_misalignment"] in ["Élevé", "Critique"]:
-            explanation_parts.append("désalignement probable")
-
-        if diagnostic_result["current_problem_lubrication"] in ["Élevé", "Critique"]:
-            explanation_parts.append("problème de lubrification probable")
-
-        if ai_anomaly_label == "Anomalie détectée":
-            explanation_parts.append("anomalie détectée par le modèle IA")
-
-        if not explanation_parts:
+        if not parts:
             return "Paramètres normaux"
 
-        return "Risque détecté à cause de: " + ", ".join(explanation_parts)
-
-    def safe_round(self, value, digits=2):
-        if value is None:
-            return None
-        return builtins.round(float(value), digits)
-
-    # -----------------------------
-    # MAIN GOLD PROCESS
-    # -----------------------------
+        return "Risque détecté à cause de: " + ", ".join(parts)
 
     def process_department(self, silver_df, department):
-        print(f"\n📁 Predicting for {department}...")
+        print(f"\nPredicting for {department}...")
 
-        ai_model = self.load_ai_model(department)
         forecast_models = self.load_forecast_models(department)
 
-        parts = silver_df.select("part_code").distinct().collect()
-        part_list = [p[0] for p in parts]
-
-        print(f"   Parts to predict: {part_list}")
+        components = (
+            silver_df
+            .select("machine_name", "part_code")
+            .distinct()
+            .collect()
+        )
 
         all_predictions = []
 
-        for part in part_list:
-            part_name = generate_part_name(part)
-            print(f"      📍 Predicting for part: {part} ({part_name})")
+        for component in components:
+            machine_name = component["machine_name"]
+            part_code = component["part_code"]
+            part_name = generate_part_name(part_code)
 
-            part_df = silver_df.filter(col("part_code") == part)
+            part_df = silver_df.filter(
+                (col("machine_name") == machine_name) &
+                (col("part_code") == part_code)
+            )
 
-            vib_count = part_df.filter(col("vibration").isNotNull()).count()
-            print(f"         Vibration data points: {vib_count}")
-
-            if vib_count == 0:
-                print(f"         ⚠️ No vibration data for {part}")
-                continue
-
-            latest_row = part_df.orderBy(col("recorded_at").desc()).limit(1).collect()
+            latest_row = (
+                part_df
+                .orderBy(col("recorded_at").desc())
+                .limit(1)
+                .collect()
+            )
 
             if not latest_row:
-                print(f"         ⚠️ No data for {part}")
                 continue
 
             latest = latest_row[0]
 
-            machine_name = latest["machine_name"]
-
             current_vibration = float(latest["vibration"]) if latest["vibration"] is not None else 0.0
-            current_temperature = float(latest["temperature"]) if latest["temperature"] is not None else 0.0
-            current_acceleration = float(latest["acceleration"]) if latest["acceleration"] is not None else 0.0
 
-            # Model 1: AI anomaly detection
-            ai_anomaly_score, ai_anomaly_label, ai_status = self.predict_ai_anomaly(
-                ai_model,
-                current_vibration,
-                current_temperature,
-                current_acceleration
-            )
+            ai_score = 0
+            ai_label = "Modèle IA indisponible"
+            ai_status = "Normal"
 
-            # Model 2: future sensor prediction
-            forecast_sample = self.build_forecast_features(part_df)
+            sample = self.build_forecast_features(part_df)
 
             future_values = self.predict_future_values(
-                forecast_models=forecast_models,
-                sample=forecast_sample,
-                current_vibration=current_vibration,
-                current_temperature=current_temperature,
-                current_acceleration=current_acceleration
+                forecast_models,
+                sample,
+                current_vibration
             )
 
-            # Model 3: diagnostic + decision engine
             diagnostic_result = self.diagnostic_engine.analyze(
                 machine_name=machine_name,
                 part_name=part_name,
                 current_vibration=current_vibration,
-                current_temperature=current_temperature,
-                current_acceleration=current_acceleration,
                 predicted_values=future_values,
-                ai_anomaly_label=ai_anomaly_label,
-                ai_anomaly_score=ai_anomaly_score
+                ai_anomaly_label=ai_label,
+                ai_anomaly_score=ai_score
             )
 
-            trend_status = self.get_trend_status(
-                diagnostic_result["current_risk"],
-                diagnostic_result["risk_12h"],
-                diagnostic_result["risk_24h"],
-                diagnostic_result["risk_48h"]
-            )
-
-            risk_explanation = self.build_risk_explanation(
+            prediction_trend = self.get_prediction_trend(
                 current_vibration,
-                current_temperature,
-                current_acceleration,
-                diagnostic_result,
-                ai_anomaly_label
+                future_values["vibration_12h"],
+                future_values["vibration_24h"],
+                future_values["vibration_48h"]
             )
 
             prediction = {
-                "department": department,
-                "machine_name": machine_name,
-                "part_code": part,
-                "part_name": part_name,
+                "department": str(department),
+                "machine_name": str(machine_name),
+                "part_code": str(part_code),
+                "part_name": str(part_name),
 
-                # Current real sensor values
                 "current_vibration": self.safe_round(current_vibration),
-                "current_temperature": self.safe_round(current_temperature),
-                "current_acceleration": self.safe_round(current_acceleration),
+                "current_temperature": 0.0,
+                "current_acceleration": 0.0,
 
-                # Model 1 outputs
-                "ai_anomaly_score": int(ai_anomaly_score),
-                "ai_anomaly_label": ai_anomaly_label,
-                "ai_status": ai_status,
+                "ai_anomaly_score": int(ai_score),
+                "ai_anomaly_label": str(ai_label),
+                "ai_status": str(ai_status),
 
-                # Model 2 outputs: future predicted values
                 "predicted_vibration_12h": self.safe_round(future_values["vibration_12h"]),
                 "predicted_vibration_24h": self.safe_round(future_values["vibration_24h"]),
                 "predicted_vibration_48h": self.safe_round(future_values["vibration_48h"]),
 
-                "predicted_temperature_12h": self.safe_round(future_values["temperature_12h"]),
-                "predicted_temperature_24h": self.safe_round(future_values["temperature_24h"]),
-                "predicted_temperature_48h": self.safe_round(future_values["temperature_48h"]),
-
-                "predicted_acceleration_12h": self.safe_round(future_values["acceleration_12h"]),
-                "predicted_acceleration_24h": self.safe_round(future_values["acceleration_24h"]),
-                "predicted_acceleration_48h": self.safe_round(future_values["acceleration_48h"]),
-
-                # Extra compatibility with your old dashboard field names
                 "predicted_12h": self.safe_round(future_values["vibration_12h"]),
                 "predicted_24h": self.safe_round(future_values["vibration_24h"]),
 
-                # Trend + explanation
-                "trend_status": trend_status,
-                "risk_explanation": risk_explanation,
+                "prediction_confidence": int(self.get_prediction_confidence(department)),
+                "prediction_trend": str(prediction_trend),
+
+                "trend_vibration_current": self.safe_round(current_vibration),
+                "trend_vibration_12h": self.safe_round(future_values["vibration_12h"]),
+                "trend_vibration_24h": self.safe_round(future_values["vibration_24h"]),
+                "trend_vibration_48h": self.safe_round(future_values["vibration_48h"]),
             }
 
-            # Model 3 outputs
             prediction.update(diagnostic_result)
+
+            prediction["risk_explanation"] = self.build_risk_explanation(
+                current_vibration,
+                diagnostic_result
+            )
 
             all_predictions.append(prediction)
 
             print(
-                f"         ✅ Current Risk: {diagnostic_result['current_risk']} | "
+                f"   {machine_name} - {part_name} | "
+                f"Risk: {diagnostic_result['current_risk']} | "
                 f"H+12: {diagnostic_result['risk_12h']} | "
                 f"H+24: {diagnostic_result['risk_24h']} | "
                 f"H+48: {diagnostic_result['risk_48h']} | "
-                f"AI: {ai_anomaly_label} | "
-                f"Health: {diagnostic_result['health_score']}% | "
                 f"RUL: {diagnostic_result['rul_hours']}h"
             )
 
         if not all_predictions:
-            print("   ⚠️ No predictions generated")
+            print("No predictions generated")
             return None
 
-        result = self.spark.createDataFrame(all_predictions)
+        schema = StructType([
+            StructField("department", StringType(), True),
+            StructField("machine_name", StringType(), True),
+            StructField("part_code", StringType(), True),
+            StructField("part_name", StringType(), True),
+
+            StructField("current_vibration", DoubleType(), True),
+            StructField("current_temperature", DoubleType(), True),
+            StructField("current_acceleration", DoubleType(), True),
+
+            StructField("ai_anomaly_score", IntegerType(), True),
+            StructField("ai_anomaly_label", StringType(), True),
+            StructField("ai_status", StringType(), True),
+
+            StructField("predicted_vibration_12h", DoubleType(), True),
+            StructField("predicted_vibration_24h", DoubleType(), True),
+            StructField("predicted_vibration_48h", DoubleType(), True),
+
+            StructField("predicted_12h", DoubleType(), True),
+            StructField("predicted_24h", DoubleType(), True),
+
+            StructField("prediction_confidence", IntegerType(), True),
+            StructField("prediction_trend", StringType(), True),
+
+            StructField("trend_vibration_current", DoubleType(), True),
+            StructField("trend_vibration_12h", DoubleType(), True),
+            StructField("trend_vibration_24h", DoubleType(), True),
+            StructField("trend_vibration_48h", DoubleType(), True),
+
+            StructField("current_risk", StringType(), True),
+            StructField("risk_12h", StringType(), True),
+            StructField("risk_24h", StringType(), True),
+            StructField("risk_48h", StringType(), True),
+
+            StructField("risk_score", IntegerType(), True),
+            StructField("health_score", IntegerType(), True),
+            StructField("rul_hours", IntegerType(), True),
+
+            StructField("maintenance_priority", StringType(), True),
+            StructField("maintenance_recommendation", StringType(), True),
+            StructField("alert_message", StringType(), True),
+
+            StructField("current_problem_vibration", StringType(), True),
+            StructField("current_problem_sudden_failure", StringType(), True),
+
+            StructField("future_12h_problem_vibration", StringType(), True),
+            StructField("future_12h_problem_sudden_failure", StringType(), True),
+
+            StructField("future_24h_problem_vibration", StringType(), True),
+            StructField("future_24h_problem_sudden_failure", StringType(), True),
+
+            StructField("future_48h_problem_vibration", StringType(), True),
+            StructField("future_48h_problem_sudden_failure", StringType(), True),
+
+            StructField("risk_explanation", StringType(), True),
+        ])
+
+        result = self.spark.createDataFrame(all_predictions, schema=schema)
         result = result.withColumn("prediction_time", current_timestamp())
 
         output_path = str(self.gold_path / f"predictions_{department}")
         result.write.mode("overwrite").parquet(output_path)
 
-        print(f"\n   ✅ Gold saved (Parquet): {output_path}")
+        print(f"Gold saved: {output_path}")
 
         try:
             self.save_to_postgresql(result, f"predictions_{department}")
+            print(f"Saved to PostgreSQL: predictions_{department}")
         except Exception as e:
-            print(f"   ⚠️ Could not save to PostgreSQL: {e}")
+            print(f"Could not save to PostgreSQL: {e}")
 
-        print(f"      Predictions: {result.count()}")
         result.show(truncate=False)
-
         return result

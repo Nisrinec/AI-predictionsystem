@@ -52,7 +52,7 @@ async function getDeptSummaryFromDB() {
             
             for (const part of parts) {
                 // Get the latest metrics for this part from your sensor_data table
-                const metricsResponse = await fetch(`${API_URL}/sensor-data/part/${part.id}/latest`, {
+                const metricsResponse = await fetch(`${API_URL}/machine_parts/part_name/${part.id}/latest`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 

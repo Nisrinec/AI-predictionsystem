@@ -1,5 +1,3 @@
-# scripts/train_forecast_models.py
-
 from pathlib import Path
 import pandas as pd
 import joblib
@@ -18,7 +16,6 @@ DEPARTMENTS = ["SAP", "AF", "CAP", "ENGRAIS"]
 
 MODELS_PATH.mkdir(parents=True, exist_ok=True)
 
-# If your data is hourly
 ROWS_12H = 12
 ROWS_24H = 24
 ROWS_48H = 48
@@ -33,7 +30,7 @@ def find_datetime_column(df):
     return None
 
 
-def read_sensor_file(file_path, sensor_name):
+def read_vibration_file(file_path):
     if not file_path.exists():
         return None
 
@@ -56,7 +53,7 @@ def read_sensor_file(file_path, sensor_name):
         part_code = col_name.split("-")[0]
 
         temp = df[[dt_col, col_name]].copy()
-        temp.columns = ["recorded_at", sensor_name]
+        temp.columns = ["recorded_at", "vibration"]
         temp["part_code"] = part_code
 
         rows.append(temp)
@@ -68,33 +65,15 @@ def read_sensor_file(file_path, sensor_name):
 
 
 def read_machine_data(machine_path, department, machine_name):
-    vibration = read_sensor_file(machine_path / "VibrationData.csv", "vibration")
-    temperature = read_sensor_file(machine_path / "TemperatureData.csv", "temperature")
-    acceleration = read_sensor_file(machine_path / "AccelerationData.csv", "acceleration")
+    vibration = read_vibration_file(machine_path / "VibrationData.csv")
 
     if vibration is None:
         return None
 
-    merged = vibration
+    vibration["department"] = department
+    vibration["machine_name"] = machine_name
 
-    if temperature is not None:
-        merged = merged.merge(
-            temperature,
-            on=["recorded_at", "part_code"],
-            how="left"
-        )
-
-    if acceleration is not None:
-        merged = merged.merge(
-            acceleration,
-            on=["recorded_at", "part_code"],
-            how="left"
-        )
-
-    merged["department"] = department
-    merged["machine_name"] = machine_name
-
-    return merged
+    return vibration
 
 
 def add_features(df):
@@ -102,15 +81,8 @@ def add_features(df):
 
     group_cols = ["machine_name", "part_code"]
 
-    df["temperature"] = df.groupby(group_cols)["temperature"].transform(
-        lambda x: x.fillna(x.median())
-    )
-
-    df["acceleration"] = df.groupby(group_cols)["acceleration"].transform(
-        lambda x: x.fillna(x.median())
-    )
-
-    df = df.dropna(subset=["vibration", "temperature", "acceleration"])
+    df["vibration"] = pd.to_numeric(df["vibration"], errors="coerce")
+    df = df.dropna(subset=["vibration"])
 
     df["vibration_mean_24"] = df.groupby(group_cols)["vibration"].transform(
         lambda x: x.rolling(24, min_periods=3).mean()
@@ -120,17 +92,15 @@ def add_features(df):
         lambda x: x.rolling(24, min_periods=3).std()
     )
 
-    df["temperature_mean_24"] = df.groupby(group_cols)["temperature"].transform(
-        lambda x: x.rolling(24, min_periods=3).mean()
+    df["vibration_min_24"] = df.groupby(group_cols)["vibration"].transform(
+        lambda x: x.rolling(24, min_periods=3).min()
     )
 
-    df["acceleration_mean_24"] = df.groupby(group_cols)["acceleration"].transform(
-        lambda x: x.rolling(24, min_periods=3).mean()
+    df["vibration_max_24"] = df.groupby(group_cols)["vibration"].transform(
+        lambda x: x.rolling(24, min_periods=3).max()
     )
 
     df["vibration_change"] = df["vibration"] - df["vibration_mean_24"]
-    df["temperature_change"] = df["temperature"] - df["temperature_mean_24"]
-    df["acceleration_change"] = df["acceleration"] - df["acceleration_mean_24"]
 
     df["hour"] = df["recorded_at"].dt.hour
     df["weekday"] = df["recorded_at"].dt.dayofweek
@@ -142,54 +112,30 @@ def add_features(df):
         "48h": ROWS_48H
     }
 
-    models_to_try = {
-        "temperature": ["12h", "24h", "48h"],
-        "vibration": ["12h", "24h", "48h"],
-        "acceleration": ["12h"]
-    }
-
-    for sensor, horizons in models_to_try.items():
-        for horizon in horizons:
-            df[f"target_{sensor}_{horizon}"] = (
-                df.groupby(group_cols)[sensor].shift(-rows_map[horizon])
-            )
+    for horizon, rows_ahead in rows_map.items():
+        df[f"target_vibration_{horizon}"] = (
+            df.groupby(group_cols)["vibration"].shift(-rows_ahead)
+        )
 
     df = df.dropna()
 
     return df
 
 
-def should_keep_model(sensor, horizon, r2):
-    if sensor == "temperature":
-        return True
-
-    if sensor == "acceleration" and horizon == "12h" and r2 > MIN_R2_TO_KEEP:
-        return True
-
-    if sensor == "vibration" and r2 > MIN_R2_TO_KEEP:
-        return True
-
-    return False
-
-
-def train_model(data, department, sensor, horizon):
+def train_model(data, department, horizon):
     features = [
         "vibration",
-        "temperature",
-        "acceleration",
         "vibration_mean_24",
         "vibration_std_24",
-        "temperature_mean_24",
-        "acceleration_mean_24",
+        "vibration_min_24",
+        "vibration_max_24",
         "vibration_change",
-        "temperature_change",
-        "acceleration_change",
         "hour",
         "weekday",
         "month"
     ]
 
-    target_col = f"target_{sensor}_{horizon}"
+    target_col = f"target_vibration_{horizon}"
 
     X = data[features]
     y = data[target_col]
@@ -220,18 +166,18 @@ def train_model(data, department, sensor, horizon):
     mae = mean_absolute_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
 
-    print(f"{department} | {sensor} | {horizon} | MAE = {mae:.4f} | R2 = {r2:.4f}")
+    print(f"{department} | vibration | {horizon} | MAE = {mae:.4f} | R2 = {r2:.4f}")
 
-    if should_keep_model(sensor, horizon, r2):
-        model_file = MODELS_PATH / f"forecast_{sensor}_{horizon}_{department}.joblib"
+    if r2 > MIN_R2_TO_KEEP:
+        model_file = MODELS_PATH / f"forecast_vibration_{horizon}_{department}.joblib"
         joblib.dump(model, model_file)
         print(f"✅ Saved: {model_file}")
     else:
-        print(f"❌ Not saved: {department} | {sensor} | {horizon} because R2 is not positive")
+        print(f"❌ Not saved: {department} | vibration | {horizon} because R2 is negative")
 
 
 def train_department(department):
-    print(f"\nTraining forecast models for {department}")
+    print(f"\nTraining vibration forecast models for {department}")
 
     dept_path = HISTORICAL_PATH / department
 
@@ -266,15 +212,8 @@ def train_department(department):
 
     print(f"Training rows: {len(data)}")
 
-    models_to_try = {
-        "temperature": ["12h", "24h", "48h"],
-        "vibration": ["12h", "24h", "48h"],
-        "acceleration": ["12h"]
-    }
-
-    for sensor, horizons in models_to_try.items():
-        for horizon in horizons:
-            train_model(data, department, sensor, horizon)
+    for horizon in ["12h", "24h", "48h"]:
+        train_model(data, department, horizon)
 
 
 def main():
