@@ -89,24 +89,26 @@ class DiagnosticDecisionEngine:
             return "Surveillance renforcée recommandée"
         return "Paramètres normaux"
 
-    def generate_alert(self, machine_name, part_name, problems, risk, rul_hours, vibration):
+    def generate_alert(self, machine_name, part_name, problems, risk, rul_hours, vibration, ai_anomaly_label="Normal"):
         alerts = []
 
+        if ai_anomaly_label == "Anomalie détectée":
+           alerts.append("anomalie IA détectée")
+
         if problems["problem_vibration"] in ["Élevé", "Critique"]:
-            alerts.append(f"vibration élevée {vibration:.2f} mm/s")
+           alerts.append(f"vibration élevée {vibration:.2f} mm/s")
 
         if problems["problem_sudden_failure"] in ["Élevé", "Critique"]:
-            alerts.append("risque de panne soudaine")
+           alerts.append("risque de panne soudaine")
 
         if not alerts:
-            return "Aucune alerte critique"
+           return "Aucune alerte critique"
 
         return (
-            f"{machine_name} - {part_name}: "
-            + ", ".join(alerts)
-            + f" | RUL estimée: ~{rul_hours}h | Sévérité: {risk}"
-        )
-
+           f"{machine_name} - {part_name}: "
+           + ", ".join(alerts)
+           + f" | RUL estimée: ~{rul_hours}h | Sévérité: {risk}"
+       )
     def analyze(
         self,
         machine_name,
@@ -154,13 +156,15 @@ class DiagnosticDecisionEngine:
             ai_anomaly_label
         )
 
+        
         alert_message = self.generate_alert(
             machine_name,
             part_name,
             current_problems,
             current_risk,
             rul_hours,
-            current_vibration
+            current_vibration,
+            ai_anomaly_label
         )
 
         health_score = 100 - risk_score
