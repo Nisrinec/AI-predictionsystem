@@ -10,6 +10,7 @@ from pyspark.sql.types import (
     StringType,
     DoubleType,
     IntegerType,
+    TimestampType
 )
 
 from spark_pipeline.config import GOLD_PATH, generate_part_name, POSTGRESQL_CONFIG
@@ -340,6 +341,7 @@ class GoldLayer:
 
             prediction = {
                 "department": str(department),
+                "last_measurement_time": latest["recorded_at"],
                 "machine_name": str(machine_name),
                 "part_code": str(part_code),
                 "part_name": str(part_name),
@@ -402,6 +404,7 @@ class GoldLayer:
             StructField("machine_name", StringType(), True),
             StructField("part_code", StringType(), True),
             StructField("part_name", StringType(), True),
+            StructField("last_measurement_time", TimestampType(), True),
 
             StructField("current_vibration", DoubleType(), True),
             StructField("current_temperature", DoubleType(), True),

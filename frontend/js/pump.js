@@ -610,45 +610,22 @@ function normalizePartCode(value) {
 function getPredictionForPart(part, pump) {
     if (!pump.predictions || pump.predictions.length === 0) return null;
 
-    const partCodes = [
-        part.point_column,
-        part.part_code,
-        part.code,
-        part.part_name
-    ].map(normalizePartCode).filter(Boolean);
+    const pointCode = normalizePartCode(part.point_column);
 
     return pump.predictions.find(pred => {
-        const predCodes = [
-            pred.part_code,
-            pred.part_name
-        ].map(normalizePartCode).filter(Boolean);
-
-        return partCodes.some(pc =>
-            predCodes.some(dc => pc === dc || pc.includes(dc) || dc.includes(pc))
-        );
+        const predCode = normalizePartCode(pred.part_code);
+        return predCode === pointCode;
     });
 }
 
 function getDiagnosticForPart(part, pump) {
     if (!pump.diagnostics || pump.diagnostics.length === 0) return null;
 
-    const partCodes = [
-        part.point_column,
-        part.part_code,
-        part.code,
-        part.part_name
-    ].map(normalizePartCode).filter(Boolean);
+    const pointCode = normalizePartCode(part.point_column);
 
     return pump.diagnostics.find(d => {
-        const diagCodes = [
-            d.part_code,
-            d.code,
-            d.part_name
-        ].map(normalizePartCode).filter(Boolean);
-
-        return partCodes.some(pc =>
-            diagCodes.some(dc => pc === dc || pc.includes(dc) || dc.includes(pc))
-        );
+        const diagCode = normalizePartCode(d.part_code);
+        return diagCode === pointCode;
     });
 }
 
@@ -681,6 +658,12 @@ function buildPartMetrics(part, pump) {
         risk12: p.risk_12h || "Faible",
         risk24: p.risk_24h || "Faible",
         risk48: p.risk_48h || "Faible",
+        predictionTime:
+            p.prediction_time || null,
+
+        lastMeasurement:
+            p.last_measurement_time || null,
+
         health: Number(p.health_score || 100),
         rul: Number(p.rul_hours || 0),
         recommendation: p.maintenance_recommendation || "Paramètres normaux",
@@ -987,6 +970,36 @@ async function renderPumpDashboardRedesigned(pumpId) {
 
                         <div class="metric-row">
                             <span class="metric-label">Santé / RUL</span>
+                            <div class="metric-row">
+    <span class="metric-label">
+        Dernière mesure
+    </span>
+
+    <span class="metric-value">
+        ${
+            m.lastMeasurement
+            ? new Date(m.lastMeasurement)
+                .toLocaleString('fr-FR')
+            : '-'
+        }
+    </span>
+</div>
+
+
+<div class="metric-row">
+    <span class="metric-label">
+        Dernière prédiction
+    </span>
+
+    <span class="metric-value">
+        ${
+            m.predictionTime
+            ? new Date(m.predictionTime)
+                .toLocaleString('fr-FR')
+            : '-'
+        }
+    </span>
+</div>
                             <span class="metric-value">${m.health}% · ${m.rul}h</span>
                         </div>
 

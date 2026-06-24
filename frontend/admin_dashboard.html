@@ -196,7 +196,33 @@
 
     // Machine Parts CRUD
     async function createMachinePart(data) { try { const r = await fetch(`${API_URL}/machine-parts`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); if (!r.ok) throw new Error(); await fetchMachineParts(); showNotification('Pièce ajoutée', 'success'); closeModal(); renderMachinePartsSection(); } catch(e) { showNotification('Erreur création', 'error'); } }
-    async function updateMachinePart(id, data) { try { const r = await fetch(`${API_URL}/machine-parts/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); if (!r.ok) throw new Error(); await fetchMachineParts(); showNotification('Pièce modifiée', 'success'); closeModal(); renderMachinePartsSection(); } catch(e) { showNotification('Erreur modification', 'error'); } }
+    async function updateMachinePart(id, data) {
+    try {
+        console.log("UPDATE PART ID:", id);
+        console.log("UPDATE PART DATA:", data);
+
+        const r = await fetch(`${API_URL}/machine-parts/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const responseText = await r.text();
+        console.log("UPDATE RESPONSE STATUS:", r.status);
+        console.log("UPDATE RESPONSE TEXT:", responseText);
+
+        if (!r.ok) throw new Error(responseText);
+
+        await fetchMachineParts();
+        showNotification('Pièce modifiée', 'success');
+        closeModal();
+        renderMachinePartsSection();
+
+    } catch (e) {
+        console.error("Erreur modification pièce:", e);
+        showNotification('Erreur modification: ' + e.message, 'error');
+    }
+}
     async function deleteMachinePartAPI(id) { if (!confirm('Supprimer cette pièce ?')) return; try { const r = await fetch(`${API_URL}/machine-parts/${id}`, { method: 'DELETE' }); if (!r.ok) throw new Error(); await fetchMachineParts(); showNotification('Pièce supprimée', 'success'); renderMachinePartsSection(); } catch(e) { showNotification('Erreur suppression', 'error'); } }
 
     // User CRUD
@@ -228,70 +254,206 @@
     function saveDepartmentForm() { const name = document.getElementById('deptName')?.value, code = document.getElementById('deptCode')?.value, desc = document.getElementById('deptDescription')?.value; if (!name || !code) { showNotification('Champs requis', 'error'); return; } const data = { department_name: name, department_code: code, description: desc || null }; if (currentEditId) updateDepartment(currentEditId, data); else createDepartment(data); }
 
     // Machine Part Modal
-    function openMachinePartModal(editId = null) { 
-        currentModalType = 'machinePart'; 
-        currentEditId = editId; 
-        const part = editId ? machineParts.find(p => p.id === editId) : null; 
-        const isEdit = !!part; 
-        document.getElementById('modalTitle').innerText = isEdit ? 'Modifier pièce' : 'Ajouter pièce'; 
-        const machineOptions = machines.map(m => `<option value="${m.machine_id}" ${(part && part.machine_id === m.machine_id) || selectedMachineId === m.machine_id ? 'selected' : ''}>${escapeHtml(m.machine_name)} (${escapeHtml(m.machine_code)})</option>`).join(''); 
-        document.getElementById('modalBody').innerHTML = `<form>
-            <div class="form-group"><label>Machine *</label><select id="partMachineId" ${isEdit ? 'disabled' : ''} required>${machineOptions}</select></div>
-            <div class="form-group"><label>Nom pièce *</label><input type="text" id="partName" value="${escapeHtml(part?.part_name || '')}" placeholder="Moteur, Pompe, Réducteur..."></div>
-            <div class="form-group"><label>Point column</label><input type="text" id="pointColumn" value="${escapeHtml(part?.point_column || '')}" placeholder="Ex: 1RV-O"></div>
-            <div class="form-group"><label><input type="checkbox" id="isPrimary" ${part?.is_primary ? 'checked' : ''}> Pièce principale</label></div>
-        </form>`; 
-        openModal(); 
-    }
-    function saveMachinePartForm() { 
-        const machine_id = document.getElementById('partMachineId')?.value; 
-        const part_name = document.getElementById('partName')?.value; 
-        const point_column = document.getElementById('pointColumn')?.value; 
-        const is_primary = document.getElementById('isPrimary')?.checked; 
-        if (!machine_id || !part_name) { 
-            showNotification('Machine et nom requis', 'error'); 
-            return; 
-        } 
-        const data = { 
-            machine_id: parseInt(machine_id), 
-            part_name, 
-            point_column: point_column || null, 
-            is_primary 
-        }; 
-        if (currentEditId) updateMachinePart(currentEditId, data); 
-        else createMachinePart(data); 
+    function getMachinePartId(part) {
+    return part.id || part.part_id || part.machine_part_id;
+}
+
+// Machine Part Modal
+function openMachinePartModal(editId = null) {
+    currentModalType = 'machinePart';
+    currentEditId = editId;
+
+    const part = editId
+        ? machineParts.find(p => String(getMachinePartId(p)) === String(editId))
+        : null;
+
+    const isEdit = !!part;
+
+    document.getElementById('modalTitle').innerText =
+        isEdit ? 'Modifier pièce' : 'Ajouter pièce';
+
+    const machineOptions = machines.map(m => `
+        <option value="${m.machine_id}" ${
+            (part && Number(part.machine_id) === Number(m.machine_id)) ||
+            (!part && Number(selectedMachineId) === Number(m.machine_id))
+                ? 'selected'
+                : ''
+        }>
+            ${escapeHtml(m.machine_name)} (${escapeHtml(m.machine_code)})
+        </option>
+    `).join('');
+
+    document.getElementById('modalBody').innerHTML = `
+        <form>
+            <div class="form-group">
+                <label>Machine *</label>
+                <select id="partMachineId" required>
+                    ${machineOptions}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Nom pièce *</label>
+                <input 
+                    type="text" 
+                    id="partName" 
+                    value="${escapeHtml(part?.part_name || '')}" 
+                    placeholder="Moteur, Pompe, Réducteur..."
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Point column</label>
+                <input 
+                    type="text" 
+                    id="pointColumn" 
+                    value="${escapeHtml(part?.point_column || '')}" 
+                    placeholder="Ex: 1RV-O"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="isPrimary" ${part?.is_primary ? 'checked' : ''}>
+                    Pièce principale
+                </label>
+            </div>
+        </form>
+    `;
+
+    openModal();
+}
+
+function saveMachinePartForm() {
+    const machine_id = document.getElementById('partMachineId')?.value;
+    const part_name = document.getElementById('partName')?.value?.trim();
+    const point_column = document.getElementById('pointColumn')?.value?.trim();
+    const is_primary = document.getElementById('isPrimary')?.checked || false;
+
+    if (!machine_id || !part_name) {
+        showNotification('Machine et nom requis', 'error');
+        return;
     }
 
-    // Render Parts Section
-    function renderMachinePartsSection() { 
-        const parts = machineParts.filter(p => p.machine_id === selectedMachineId); 
-        const machine = machines.find(m => m.machine_id === selectedMachineId); 
-        if (!machine) return; 
-        let partsSection = document.getElementById('machinePartsSection'); 
-        const html = `<div class="section-card" style="margin-top:24px;"><div class="section-header"><h3><i class="fas fa-microchip"></i> Pièces - ${escapeHtml(machine.machine_name)}</h3><button class="btn-primary" onclick="openMachinePartModal()"><i class="fas fa-plus"></i> Ajouter</button></div><div class="table-wrapper"><table class="data-table"><thead><tr><th>Nom</th><th>Point column</th><th>Principale</th><th>Actions</th></tr></thead><tbody id="partsTableBody"></tbody></table></div></div>`; 
-        if (!partsSection) { 
-            const container = document.getElementById('dynamicContent'); 
-            const newDiv = document.createElement('div'); 
-            newDiv.id = 'machinePartsSection'; 
-            newDiv.innerHTML = html; 
-            container.appendChild(newDiv); 
-            partsSection = newDiv; 
-        } else { 
-            partsSection.innerHTML = html; 
-        } 
-        const tbody = document.getElementById('partsTableBody'); 
-        if (tbody) { 
-            if (parts.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Aucune pièce</td></tr>'; 
-            else tbody.innerHTML = parts.map(p => `<tr>
-                <td><strong>${escapeHtml(p.part_name)}</strong></td>
+    const data = {
+        machine_id: parseInt(machine_id),
+        part_name,
+        point_column: point_column || null,
+        is_primary
+    };
+
+    if (currentEditId) {
+        updateMachinePart(currentEditId, data);
+    } else {
+        createMachinePart(data);
+    }
+}
+
+// Render Parts Section
+function renderMachinePartsSection() {
+    const parts = machineParts.filter(p =>
+        Number(p.machine_id) === Number(selectedMachineId)
+    );
+
+    const machine = machines.find(m =>
+        Number(m.machine_id) === Number(selectedMachineId)
+    );
+
+    if (!machine) return;
+
+    let partsSection = document.getElementById('machinePartsSection');
+
+    const html = `
+        <div class="section-card" style="margin-top:24px;">
+            <div class="section-header">
+                <h3>
+                    <i class="fas fa-microchip"></i>
+                    Pièces - ${escapeHtml(machine.machine_name)}
+                </h3>
+
+                <button class="btn-primary" onclick="openMachinePartModal()">
+                    <i class="fas fa-plus"></i> Ajouter
+                </button>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Point column</th>
+                            <th>Principale</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="partsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    if (!partsSection) {
+        const container = document.getElementById('dynamicContent');
+        const newDiv = document.createElement('div');
+        newDiv.id = 'machinePartsSection';
+        newDiv.innerHTML = html;
+        container.appendChild(newDiv);
+    } else {
+        partsSection.innerHTML = html;
+    }
+
+    const tbody = document.getElementById('partsTableBody');
+    if (!tbody) return;
+
+    if (parts.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align:center;">Aucune pièce</td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = parts.map(p => {
+        const id = getMachinePartId(p);
+
+        return `
+            <tr>
+                <td><code>${escapeHtml(String(id || '—'))}</code></td>
+
+                <td><strong>${escapeHtml(p.part_name || '—')}</strong></td>
+
                 <td><code>${escapeHtml(p.point_column || '—')}</code></td>
-                <td>${p.is_primary ? '<span class="badge badge-primary">Principale</span>' : '<span class="badge badge-warning">Secondaire</span>'}</td>
-                <td><button class="btn-outline" onclick="openMachinePartModal(${p.id})"><i class="fas fa-edit"></i> Modifier</button> <button class="btn-danger" onclick="deleteMachinePartAPI(${p.id})"><i class="fas fa-trash"></i> Suppr.</button></td>
-            </tr>`).join(''); 
-        } 
-    }
-    function selectMachineAndViewParts(machineId) { selectedMachineId = machineId; renderMachinePartsSection(); }
 
+                <td>
+                    ${
+                        p.is_primary
+                            ? '<span class="badge badge-primary">Principale</span>'
+                            : '<span class="badge badge-warning">Secondaire</span>'
+                    }
+                </td>
+
+                <td>
+                    <button class="btn-outline" onclick="openMachinePartModal(${id})">
+                        <i class="fas fa-edit"></i> Modifier
+                    </button>
+
+                    <button class="btn-danger" onclick="deleteMachinePartAPI(${id})">
+                        <i class="fas fa-trash"></i> Suppr.
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function selectMachineAndViewParts(machineId) {
+    selectedMachineId = Number(machineId);
+    renderMachinePartsSection();
+}
     // Render views
     function renderDashboard() { 
         currentView = "dashboard"; 

@@ -31,7 +31,7 @@
 
         /* SIDEBAR - fixed, never scrolls */
         .sidebar {
-            width: 320px;
+            width: 360px;
             background: #ffffff;
             border-right: 1px solid #e2edf2;
             display: flex;
@@ -92,10 +92,42 @@
             border-left: 1px dashed #cde0e8; padding-left: 16px;
         }
         .pumps-sublist.show { display: flex; }
-        .pump-item {
-            padding: 6px 10px; font-size: 0.8rem; font-weight: 500; color: #517e92;
-            display: flex; align-items: center; gap: 10px; border-radius: 8px; cursor: pointer;
-        }
+       .pump-item{
+    padding:6px 10px;
+
+    font-size:0.8rem;
+    font-weight:500;
+
+    color:#517e92;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    min-width:0;
+}
+
+.pump-name{
+    flex:1;
+    min-width:0;
+
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+.pump-item i{
+    flex-shrink:0;
+}
+
+.pump-status{
+    flex-shrink:0;
+}
+        
         .pump-item:hover { background: #eaf6f0; color: #2c9e6b; }
         .pump-status { margin-left: auto; font-size: 0.65rem; background: #eaf2e8; padding: 2px 8px; border-radius: 20px; color: #2c6e4f; }
 
@@ -433,8 +465,61 @@
     alert(`📧 SIMULATION: Email envoyé à responsable@ipredict.com\nObjet: ALERTE - ${pumpName} est EN PANNE !\n\nMachine: ${pumpName}\nStatut: Critique (RUL < 100h)\nIntervention requise immédiatement.`);
     console.log(`[EMAIL] To: responsable@ipredict.com - ${pumpName} en panne`);
 }
+function setupGlobalSearch() {
+    const searchInput = document.getElementById("globalSearch");
+    if (!searchInput) return;
+
+    searchInput.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+
+        const deptItems = document.querySelectorAll(".dept-item");
+        const pumpItems = document.querySelectorAll(".pump-item");
+
+        if (!query) {
+            deptItems.forEach(item => item.style.display = "flex");
+            pumpItems.forEach(item => item.style.display = "flex");
+
+            document.querySelectorAll(".pumps-sublist").forEach(list => {
+                list.style.display = "none";
+            });
+
+            return;
+        }
+
+        deptItems.forEach(dept => {
+            const deptText = dept.textContent.toLowerCase();
+            const deptKey = dept.getAttribute("data-dept");
+            const pumpList = document.getElementById(`pumps-${deptKey}`);
+            let hasMatchingPump = false;
+
+            if (pumpList) {
+                const pumps = pumpList.querySelectorAll(".pump-item");
+
+                pumps.forEach(pump => {
+                    const pumpText = pump.textContent.toLowerCase();
+
+                    if (pumpText.includes(query)) {
+                        pump.style.display = "flex";
+                        hasMatchingPump = true;
+                    } else {
+                        pump.style.display = "none";
+                    }
+                });
+
+                pumpList.style.display = hasMatchingPump ? "flex" : "none";
+            }
+
+            if (deptText.includes(query) || hasMatchingPump) {
+                dept.style.display = "flex";
+            } else {
+                dept.style.display = "none";
+            }
+        });
+    });
+}
     // Verify all required functions are loaded
     window.addEventListener('load', function() {
+        setupGlobalSearch();
         console.log('=== Final Verification ===');
         console.log('loadDepartmentsAndMachines:', typeof loadDepartmentsAndMachines);
         console.log('renderOverallDashboard:', typeof renderOverallDashboard);
@@ -448,7 +533,5 @@
         }
     });
 </script>
-</script>
 </body>
-</html>
 </html>

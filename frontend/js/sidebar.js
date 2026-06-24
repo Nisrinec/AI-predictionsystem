@@ -43,8 +43,11 @@ function renderSidebarFromDatabase() {
             const pumpKey = `machine_${machine.machine_id}`;
             dropdownHtml += `
                 <div class="pump-item" data-pump-id="${pumpKey}" data-machine-id="${machine.machine_id}" data-pump-name="${escapeHtml(machine.machine_name)}">
-                    <i class="fas fa-oil-can"></i> ${escapeHtml(machine.machine_name)}
-                    <span class="pump-status">${machine.status || 'En ligne'}</span>
+                    <i class="fas fa-oil-can"></i>
+<span class="pump-name" title="${escapeHtml(machine.machine_name)}">
+    ${escapeHtml(machine.machine_name)}
+</span>
+<span class="pump-status">${machine.status || 'En ligne'}</span>
                 </div>
             `;
         });
